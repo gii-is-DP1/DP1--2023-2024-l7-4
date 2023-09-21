@@ -40,6 +40,17 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+
+		<developer>
+ 		<id>Fran</id>
+ 		<name>Francisco</name>
+ 		<email>fracapgar1@aul.us.es</email>
+ 		<url>https://github.com/gii-is-DP1/DP1--2023-2024-l7-4</url>
+ 		<roles>
+ 		<role>developer</role>
+ 		</roles>
+	</developer>
+
 	</developers>
 
 	<dependencies>		
