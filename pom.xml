@@ -40,6 +40,22 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+	
+	<developer>
+ 		<id>Ale</id>
+ 		<name>Alexander</name>
+ 		<email>alepingar@aul.us.es</email>
+ 		<url></url>
+ 		<roles>
+ 		<role>boss</role>
+ 		</roles>
+ 		<properties>
+ 			<picUrl>
+					https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name=large
+			</picUrl>
+ 		</properties>
+	</developer>
+ 		
 	</developers>
 
 	<dependencies>		
