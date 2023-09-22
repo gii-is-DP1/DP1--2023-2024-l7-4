@@ -40,6 +40,15 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+		<developer>
+ 			<id>danfercab</id>
+ 			<name>Daniel</name>
+ 			<email>danfercab@alum.us.es</email>
+ 			<url>https://github.com/DaniFdezCab</url>
+ 			<roles>
+ 				<role>developer</role>
+ 			</roles>
+ 		</developer>
 	</developers>
 
 	<dependencies>		
