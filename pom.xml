@@ -40,7 +40,17 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+		
+		<developer>
+			<name>oscmenmar</name>
+			<email>oscarmenendezmarquez@gmail.com</email>
+			<url>https://github.com/oscarmenendezz</url>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
 	</developers>
+
 
 	<dependencies>		
 
