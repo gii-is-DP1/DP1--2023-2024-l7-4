@@ -40,6 +40,15 @@
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
 		</developer>
+		<developer>
+ 			<id>carmarbar9</id>
+ 			<name>Carlos</name>
+ 			<email>carmarbar9@alum.us.es</email>
+ 			<url>https://github.com/carmarbar9</url>
+ 			<roles>
+ 				<role>developer</role>
+ 			</roles>
+ 		</developer>
 	</developers>
 
 	<dependencies>		
