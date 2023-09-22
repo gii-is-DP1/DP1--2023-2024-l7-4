@@ -10,7 +10,7 @@
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.1.1</version>
 	</parent>
-	<name>Project choice</name>
+	<name>Pocket Civic</name>
 
 	<properties>
 
@@ -39,6 +39,16 @@
 			<name>JAParejo</name>
 			<email>japarejo@gmail.com</email>
 			<url>http://www.isa.us.es</url>
+		</developer>
+
+		<developer>
+ 			<id>fracapgar1</id>
+ 			<name>francisco</name>
+ 			<email>fracapgar1@alum.us.es</email>
+ 			<url>https://github.com/franciiscocg</url>
+ 			<roles>
+ 				<role>developer</role>
+ 			</roles>
 		</developer>
 	
 		<developer>
