@@ -41,21 +41,25 @@
 			<url>http://www.isa.us.es</url>
 		</developer>
 	
-	<developer>
- 		<id>Ale</id>
- 		<name>Alexander</name>
- 		<email>alepingar@aul.us.es</email>
- 		<url></url>
- 		<roles>
- 		<role>boss</role>
- 		</roles>
- 		<properties>
- 			<picUrl>
-					https://pbs.twimg.com/media/Eh4n9GhUMAAdO8x?format=jpg&name=large
-			</picUrl>
- 		</properties>
-	</developer>
+		<developer>
+ 			<id>alepingar</id>
+ 			<name>Alexander</name>
+ 			<email>alepingar@alum.us.es</email>
+ 			<url>https://github.com/alepingar</url>
+ 			<roles>
+ 				<role>developer</role>
+ 			</roles>
+		</developer>
  		
+		<developer>
+ 			<id>danfercab</id>
+ 			<name>Daniel</name>
+ 			<email>danfercab@alum.us.es</email>
+ 			<url>https://github.com/DaniFdezCab</url>
+ 			<roles>
+ 				<role>developer</role>
+ 			</roles>
+ 		</developer>
 	</developers>
 
 	<dependencies>		
