@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("url /api/v1/developers")
+@RequestMapping("url/api/v1/developers")
 public class DevelopersController {
     List<Developer> developers;
-
 
     @GetMapping
     public List<Developer> getDevelopers(){
