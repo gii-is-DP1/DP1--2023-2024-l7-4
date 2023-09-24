@@ -80,7 +80,6 @@ INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id,
 INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (11, 'Alvaro', 'Martin', '325 Cornflakes St.', 'Cádiz', '683425487', 20, 3);
 INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (12, 'Magico', 'Gonzalez', '233 Parking Kingston St.', 'Bruselas', '685345487', 21, 3);
 INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (13, 'Daniel', 'Fernandez', 'Plaza la Redondilla', 'Berlin', '644337702', 22, 2);
-INSERT INTO owners(id, first_name, last_name, address, city, telephone, user_id, clinic) VALUES (14, 'Francisco', 'Capote', 'El Prado', 'Merida', '619878979', 13, 2);
 
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (1, 'Leo', '2010-09-07', 1, 1);
 INSERT INTO pets(id,name,birth_date,type_id,owner_id) VALUES (2, 'Basil', '2012-08-06', 6, 2);
