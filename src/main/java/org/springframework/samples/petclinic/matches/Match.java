@@ -3,7 +3,11 @@ package org.springframework.samples.petclinic.matches;
 import java.util.List;
 
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.samples.petclinic.criterio.Critery;
 import org.springframework.samples.petclinic.model.BaseEntity;
+import org.springframework.samples.petclinic.player.Player;
+import org.springframework.samples.petclinic.power.Power;
+import org.springframework.samples.petclinic.round.Round;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
