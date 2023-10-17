@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.player;
 
 import org.springframework.samples.petclinic.matches.Match;
 import org.springframework.samples.petclinic.power.Power;
+import org.springframework.samples.petclinic.territory.Territory;
 import org.springframework.samples.petclinic.userKingdom.UserKingdom;
 
 import jakarta.persistence.Column;
