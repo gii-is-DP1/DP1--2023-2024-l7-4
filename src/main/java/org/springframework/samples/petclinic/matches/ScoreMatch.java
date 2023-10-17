@@ -1,6 +1,5 @@
-package org.springframework.samples.petclinic.territory;
+package org.springframework.samples.petclinic.matches;
 
-import org.springframework.samples.petclinic.matches.Match;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
 
@@ -9,27 +8,24 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-
+@Entity
 @Getter
 @Setter
-@Entity
-@Table(name = "players")
-public class Territory extends BaseEntity{
+@Table(name="scoreMatches")
+public class ScoreMatch extends BaseEntity{
     
-    @Column(name = "terrType")
+    @Column(name = "score")
     @NotNull
-    TerritoryType terrType;
+    Integer score;
 
-    @Column(name = "position")
+    @Column(name = "totalBuildings")
     @NotNull
-    @Max(61)
-    Integer numberCell;
-    
+    Integer totalBuildings;
+
     @OneToMany
     @NotNull
     @JoinColumn(name = "player", referencedColumnName = "id")
@@ -39,6 +35,4 @@ public class Territory extends BaseEntity{
     @NotNull
     @JoinColumn(name = "matches", referencedColumnName = "id")
     private Match match;
-
-
 }
