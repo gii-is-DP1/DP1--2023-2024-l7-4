@@ -2,12 +2,12 @@ package org.springframework.samples.petclinic.matches;
 
 import java.util.List;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.samples.petclinic.criterio.Critery;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.power.Power;
 import org.springframework.samples.petclinic.round.Round;
+import org.springframework.samples.petclinic.territory.Territory;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,7 +20,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Builder.Default;
 
 @Entity
 @Getter
@@ -52,27 +51,32 @@ public class Match extends BaseEntity{
     @OneToMany
     @Max(4)
     @Min(1)
+    @NotNull
     @JoinColumn(name = "player", referencedColumnName = "id")
     private Player player;
 
     @OneToMany
     @Max(6)
     @Min(1)
+    @NotNull
     @JoinColumn(name = "critery")
     private Critery critery;
 
     @OneToMany
     @Max(7)
+    @NotNull
     @JoinColumn(name = "power", referencedColumnName = "id")
     private Power power;
 
     @OneToMany
     @Min(1)
+    @NotNull
     @JoinColumn(name = "round", referencedColumnName = "id")
     private Round round;
 
     @OneToMany
     @Max(61)
+    @NotNull
     @JoinColumn(name ="territory", referencedColumnName = "id")
     private Territory territory;
     

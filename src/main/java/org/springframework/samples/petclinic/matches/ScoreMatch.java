@@ -1,6 +1,5 @@
-package org.springframework.samples.petclinic.power;
+package org.springframework.samples.petclinic.matches;
 
-import org.springframework.samples.petclinic.matches.Match;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
 
@@ -10,19 +9,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Table(name = "power")
-public class Power extends BaseEntity{
+@Getter
+@Setter
+@Table(name="scoreMatches")
+public class ScoreMatch extends BaseEntity{
     
-    @Column(name = "PowerType")
-    private PowerType powerType;
+    @Column(name = "score")
+    @NotNull
+    Integer score;
 
-    @Column(name = "isUsed")
-    private Boolean isUsed;
-
-    @Column(name = "Description")
-    private String description;
+    @Column(name = "totalBuildings")
+    @NotNull
+    Integer totalBuildings;
 
     @OneToMany
     @NotNull
@@ -33,6 +35,4 @@ public class Power extends BaseEntity{
     @NotNull
     @JoinColumn(name = "matches", referencedColumnName = "id")
     private Match match;
-
-   
 }

@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.power;
+package org.springframework.samples.petclinic.territory;
 
 import org.springframework.samples.petclinic.matches.Match;
 import org.springframework.samples.petclinic.model.BaseEntity;
@@ -9,21 +9,27 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Getter
+@Setter
 @Entity
-@Table(name = "power")
-public class Power extends BaseEntity{
+@Table(name = "players")
+public class Territory extends BaseEntity{
     
-    @Column(name = "PowerType")
-    private PowerType powerType;
+    @Column(name = "terrType")
+    @NotNull
+    TerritoryType terrType;
 
-    @Column(name = "isUsed")
-    private Boolean isUsed;
-
-    @Column(name = "Description")
-    private String description;
-
+    @Column(name = "position")
+    @NotNull
+    @Max(61)
+    Integer numberCell;
+    
     @OneToMany
     @NotNull
     @JoinColumn(name = "player", referencedColumnName = "id")
@@ -34,5 +40,5 @@ public class Power extends BaseEntity{
     @JoinColumn(name = "matches", referencedColumnName = "id")
     private Match match;
 
-   
+
 }
