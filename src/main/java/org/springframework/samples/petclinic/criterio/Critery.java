@@ -1,11 +1,8 @@
 package org.springframework.samples.petclinic.criterio;
 
-import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
-
+import org.springframework.samples.petclinic.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -15,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "criteria")
-public class Critery {
+public class Critery extends BaseEntity{
     
 
     @Column(name = "victoryPoints")
@@ -35,9 +32,5 @@ public class Critery {
     @Column(name = "number")
     @NotEmpty
     Integer number;
-
-    @ManyToOne
-	@JoinColumn(name = "matches", referencedColumnName = "id")
-    private Match matches;
 
 }

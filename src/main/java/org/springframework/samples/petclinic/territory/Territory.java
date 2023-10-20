@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.territory;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.petclinic.matches.Match;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
@@ -7,7 +9,7 @@ import org.springframework.samples.petclinic.player.Player;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
@@ -30,14 +32,16 @@ public class Territory extends BaseEntity{
     @Max(61)
     Integer numberCell;
     
-    @OneToMany
+    @ManyToOne
     @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "player", referencedColumnName = "id")
     private Player player;
 
-    @OneToMany
+    @ManyToOne
     @NotNull
-    @JoinColumn(name = "matches", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "match", referencedColumnName = "id")
     private Match match;
 
 

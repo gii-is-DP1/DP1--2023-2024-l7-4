@@ -1,17 +1,22 @@
 package org.springframework.samples.petclinic.matches;
 
 import java.util.List;
+import java.util.Set;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.petclinic.criterio.Critery;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.power.Power;
-import org.springframework.samples.petclinic.round.Round;
-import org.springframework.samples.petclinic.territory.Territory;
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -46,40 +51,27 @@ public class Match extends BaseEntity{
     @NotNull
     private String winner;
 
-
-     
-    @OneToMany
-    @Max(4)
-    @Min(1)
+    @ManyToOne
     @NotNull
     @JoinColumn(name = "player", referencedColumnName = "id")
-    private Player player;
+    private Player creator;
+
+    @OneToMany(mappedBy = "match", orphanRemoval = true)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Set<Player> joinedPlayers;
 
     @OneToMany
     @Max(6)
     @Min(1)
     @NotNull
-    @JoinColumn(name = "critery")
-    private Critery critery;
+    @JoinColumn(name = "critery", referencedColumnName = "id")
+    private List<Critery> criteria;
 
     @OneToMany
     @Max(7)
     @NotNull
     @JoinColumn(name = "power", referencedColumnName = "id")
-    private Power power;
-
-    @OneToMany
-    @Min(1)
-    @NotNull
-    @JoinColumn(name = "round", referencedColumnName = "id")
-    private Round round;
-
-    @OneToMany
-    @Max(61)
-    @NotNull
-    @JoinColumn(name ="territory", referencedColumnName = "id")
-    private Territory territory;
-    
-
+    private List<Power> powers;
 
 }
