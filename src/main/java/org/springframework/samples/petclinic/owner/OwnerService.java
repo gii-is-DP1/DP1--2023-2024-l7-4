@@ -44,7 +44,7 @@ public class OwnerService {
 		this.ownerRepository = ownerRepository;
 		this.petService = petService;
 	}
-
+	
 	@Transactional(readOnly = true)
 	public Iterable<Owner> findAll() throws DataAccessException {
 		return ownerRepository.findAll();

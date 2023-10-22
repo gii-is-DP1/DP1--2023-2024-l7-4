@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.user.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -40,6 +41,11 @@ public class UserDetailsImpl implements UserDetails {
 				authorities);
 	}
 
+	/*
+	public static UserDetailsImpl build(Player player){
+		
+	}
+*/
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
