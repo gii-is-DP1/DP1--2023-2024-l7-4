@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.player;
 
-import org.springframework.samples.petclinic.matches.Match;
 import org.springframework.samples.petclinic.userKingdom.UserKingdom;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,15 +15,10 @@ import lombok.Setter;
 @Table(name = "players")
 public class Player extends UserKingdom{
 
-	@Column(name = "total_puntuation")
-    Integer total_puntuation;
+	@Column(name = "total_score")
+    Integer total_score;
 
     @Column(name = "total_bloqs")
-	Integer total_blo;
-
-    @ManyToOne
-    @JoinColumn(name = "match", referencedColumnName = "id")
-    private Match match;
-
+	Integer total_bloqs;
     
 }

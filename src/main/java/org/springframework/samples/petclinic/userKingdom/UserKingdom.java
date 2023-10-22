@@ -26,7 +26,7 @@ public class UserKingdom extends BaseEntity {
 
     @Column(name = "avatar")
 	@NotEmpty
-	protected String lastavatarName;
+	protected String avatar;
 
     @Column(name = "nickname")
 	@NotEmpty

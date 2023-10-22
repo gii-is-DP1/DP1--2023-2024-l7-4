@@ -17,6 +17,4 @@ public class requests extends BaseEntity{
     @Column(name = "state")
 	@NotEmpty
 	protected Boolean state;
-
-	
 }
