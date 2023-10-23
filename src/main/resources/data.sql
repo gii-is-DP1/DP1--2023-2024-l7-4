@@ -15,7 +15,7 @@ INSERT INTO clinics(id, name, address, telephone, plan, clinic_owner) VALUES (2,
 INSERT INTO clinics(id, name, address, telephone, plan, clinic_owner) VALUES (3, 'Clinic 3', 'Av. Reina Mercedes, 70', '955382238', 'BASIC', 2);
 
 -- Ten owner user, named owner1 with passwor 0wn3r
-INSERT INTO authorities(id,authority) VALUES (3,'OWNER');
+INSERT INTO authorities(id,authority) VALUES (3,'PLAYER');
 INSERT INTO appusers(id,username,password,authority) VALUES (4,'owner1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
 INSERT INTO appusers(id,username,password,authority) VALUES (5,'owner2','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
 INSERT INTO appusers(id,username,password,authority) VALUES (6,'owner3','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
@@ -33,17 +33,16 @@ INSERT INTO appusers(id,username,password,authority) VALUES (21,'alepingar','$2a
 INSERT INTO appusers(id,username,password,authority) VALUES (23,'fracapgar1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3);
 
 
-INSERT INTO authorities(id,authority) VALUES (5,'PLAYER');
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
-(1, 'Daniel', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sudani', 'danifercaba@gmail.com','danfercab','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',5,0,0);
+(1, 'Daniel', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sudani', 'danifercaba@gmail.com','danfercab','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,0,0);
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
-(2, 'Francisco', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sucapo', 'capot@gmail.com','fracapgar1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',5,13,0);
+(2, 'Francisco', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sucapo', 'capot@gmail.com','fracapgar1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,13,0);
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
-(3, 'Alvaro', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sualva', 'alvaro@gmail.com','alvmarmun1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',5,22,0);
+(3, 'Alvaro', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sualva', 'alvaro@gmail.com','alvmarmun1','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,22,0);
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
-(4, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com','pepforbin','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',5,1,0);
+(4, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com','pepforbin','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,1,0);
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
-(5, 'Conrado', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com','conrast','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',5,17,0);
+(5, 'Conrado', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com','conrast','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,17,0);
 
 
 

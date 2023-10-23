@@ -15,7 +15,7 @@ export default function PlayerListAdmin() {
   const [visible, setVisible] = useState(false);
   const [players, setPlayers] = useFetchState(
     [],
-    `/api/v1/players/sorted`,
+    `/api/v1/players?sorted=true`,
     jwt,
     setMessage,
     setVisible

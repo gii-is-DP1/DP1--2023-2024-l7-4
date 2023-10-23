@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.player;
 
+import org.springframework.samples.petclinic.user.User;
 import org.springframework.samples.petclinic.userKingdom.UserKingdom;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

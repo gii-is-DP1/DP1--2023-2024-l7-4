@@ -28,6 +28,12 @@ public class PlayerService {
         return (List<Player>) playerRepository.sortedPlayersByPuntuation();
     }
 
+    
+//FALTA CRUD SOBRE PLAYER
+
+
+
+
     public Object existsPlayer(String username) {
         if(playerRepository.existsPlayer(username) != null){ return true; }
         else{ return false; }        
