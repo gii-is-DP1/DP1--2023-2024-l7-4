@@ -18,5 +18,4 @@ public class Player extends UserKingdom{
 
     @Column(name = "total_bloqs")
 	Integer total_bloqs;
-    
 }

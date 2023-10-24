@@ -21,7 +21,7 @@ import {
         <td className="text-center"> {a.winner} </td>
         <td className="text-center"> {a.joinedPlayers} </td>
         <td className="text-center">    
-        <Button outline color="success" > 
+        <Button outline color="success"> 
           <Link 
             to={`/mygames/view`}   className="btn sm"                
             style={{ textDecoration: "none" }}>Ver</Link> 
@@ -53,4 +53,6 @@ import {
         </div>
         
         );
-    }
+    };
+
+    

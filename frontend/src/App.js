@@ -54,7 +54,8 @@ import RankingPlayers from "./players/Ranking";
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import MyGamesF from "./myGames/myGamesF";
-
+import Chat from "./Chat";
+import FriendsList from "./FiendsList";
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <div role="alert">
@@ -180,6 +181,8 @@ function App() {
           {ownerRoutes}
           {vetRoutes}
         </Routes>
+        <Chat />
+        <FriendsList />
       </ErrorBoundary>
     </div>
   );
