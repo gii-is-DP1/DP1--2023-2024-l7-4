@@ -38,7 +38,7 @@ public class PlayerRestController {
 
 
     @GetMapping
-	public ResponseEntity<List<Player>> findAll(@RequestParam(required = false, name = "sorted") Boolean sorted) {
+	public ResponseEntity<List<Player>> findAll(@RequestParam(required = false, name = "sorted") boolean sorted) {
         if(sorted) return new ResponseEntity<>((List<Player>) this.playerService.sortedPlayersByPuntuation(), HttpStatus.OK);
         else return new ResponseEntity<>((List<Player>) this.playerService.findAll(), HttpStatus.OK);
     }

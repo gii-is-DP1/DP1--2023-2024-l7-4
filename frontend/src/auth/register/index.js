@@ -46,7 +46,7 @@ export default function Register() {
               else {
                 tokenService.setUser(data);
                 tokenService.updateLocalAccessToken(data.token);
-                window.location.href = "";
+                window.location.href = "/";
               }
             })
             .catch((message) => {

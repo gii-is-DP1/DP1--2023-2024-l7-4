@@ -51,6 +51,8 @@ import AchievementList from "./achievements/achievementList";
 import AchievementEdit from "./achievements/achievementEdit";
 import AchievementListPlayer from "./achievements/achievementListPlayer";
 import RankingPlayers from "./players/Ranking";
+import PlayerListAdmin from "./admin/players/PlayerListAdmin";
+import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -105,6 +107,8 @@ function App() {
           <Route path="/achievements/" exact={true} element={<PrivateRoute><AchievementList /></PrivateRoute>} />
           <Route path="/achievements/:achievementId" exact={true} element={<PrivateRoute><AchievementEdit/></PrivateRoute>} />
           <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
+          <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
+          <Route path="/players/:username" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
 
         </>)
     }

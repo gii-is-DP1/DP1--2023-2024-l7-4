@@ -56,8 +56,7 @@ public class PlayerService {
     }
 
     public Boolean existsPlayer(String username) {
-        if(playerRepository.existsPlayer(username).isEmpty()){ return true; }
-        else{ return false; }        
+        return !playerRepository.existsPlayer(username).isEmpty();
     }
 
 }
