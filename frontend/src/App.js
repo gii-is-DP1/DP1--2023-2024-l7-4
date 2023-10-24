@@ -53,6 +53,7 @@ import AchievementListPlayer from "./achievements/achievementListPlayer";
 import RankingPlayers from "./players/Ranking";
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
+import MyGamesF from "./myGames/myGamesF";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -117,6 +118,9 @@ function App() {
         <>
           <Route path="/achievements/" exact={true} element={<PrivateRoute><AchievementListPlayer /></PrivateRoute>} />
           <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
+          <Route path="/mygames" exact={true} element={<PrivateRoute><MyGamesF/></PrivateRoute>} />
+          {/*<Route path="/profile" exact={true} element={<PrivateRoute><Profile/></PrivateRoute>} />*/}
+
 
         </>)
     }
