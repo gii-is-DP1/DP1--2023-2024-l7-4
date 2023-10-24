@@ -38,15 +38,13 @@ import org.springframework.security.authentication.BadCredentialsException;
 public class AuthController {
 
 	private final AuthenticationManager authenticationManager;
-	private final UserService userService;
 	private final JwtUtils jwtUtils;
 	private final AuthService authService;
 	private final PlayerService playerService;
 
 	@Autowired
-	public AuthController(AuthenticationManager authenticationManager, UserService userService, JwtUtils jwtUtils,
+	public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils,
 			AuthService authService, PlayerService playerService) {
-		this.userService = userService;
 		this.jwtUtils = jwtUtils;
 		this.authenticationManager = authenticationManager;
 		this.authService = authService;
@@ -81,11 +79,11 @@ public class AuthController {
 	
 	@PostMapping("/signup")
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-		if (userService.existsUser(signUpRequest.getUsername()).equals(true) || playerService.existsPlayer(signUpRequest.getUsername()).equals(true)) {
+		if (playerService.existsPlayer(signUpRequest.getUsername()).equals(true)) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 		}
-		authService.createUser(signUpRequest);
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		authService.createPlayer(signUpRequest);
+		return ResponseEntity.ok(new MessageResponse("Player registered successfully!"));
 	}
 
 }
