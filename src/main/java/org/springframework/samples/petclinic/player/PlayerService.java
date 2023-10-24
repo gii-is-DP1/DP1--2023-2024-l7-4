@@ -32,8 +32,8 @@ public class PlayerService {
     }
 
     @Transactional(readOnly = true)
-	public Player findPlayerById(int id) throws DataAccessException {
-		return this.playerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player", "ID", id));
+	public Player findPlayer(int id) throws DataAccessException {
+		return this.playerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
 	}
 
     @Transactional
@@ -44,14 +44,14 @@ public class PlayerService {
 
     @Transactional
     public Player updatePlayer(Player player, int id) throws DataAccessException {
-        Player toUpdate = findPlayerById(id);
+        Player toUpdate = findPlayer(id);
         BeanUtils.copyProperties(player, toUpdate, "id");
         return savePlayer(toUpdate);
     }
 
     @Transactional
     public void deletePlayer( int id) throws DataAccessException {
-        Player toDelete = findPlayerById(id);
+        Player toDelete = findPlayer(id);
         playerRepository.delete(toDelete);
     }
 

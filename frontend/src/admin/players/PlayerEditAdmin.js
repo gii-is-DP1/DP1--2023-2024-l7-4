@@ -76,6 +76,75 @@ export default function PlayerEditAdmin() {
       {modal}
       <div className="auth-form-container">
         <Form onSubmit={handleSubmit}>
+        <div className="custom-form-input">
+            <Label for="name" className="custom-form-input-label">
+              Name
+            </Label>
+            <Input
+              type="text"
+              required
+              name="name"
+              id="name"
+              value={player.name || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div><div className="custom-form-input">
+            <Label for="surname" className="custom-form-input-label">
+              Surname
+            </Label>
+            <Input
+              type="text"
+              required
+              name="surname"
+              id="surname"
+              value={player.surname || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="avatar" className="custom-form-input-label">
+              Avatar
+            </Label>
+            <Input
+              type="text"
+              required
+              name="avatar"
+              id="avatar"
+              value={player.avatar || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="email" className="custom-form-input-label">
+              Email
+            </Label>
+            <Input
+              type="text"
+              required
+              name="email"
+              id="email"
+              value={player.email || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
+          <div className="custom-form-input">
+            <Label for="nickname" className="custom-form-input-label">
+              Nickname
+            </Label>
+            <Input
+              type="text"
+              required
+              name="nickname"
+              id="nickname"
+              value={player.nickname || ""}
+              onChange={handleChange}
+              className="custom-input"
+            />
+          </div>
           <div className="custom-form-input">
             <Label for="username" className="custom-form-input-label">
               Username

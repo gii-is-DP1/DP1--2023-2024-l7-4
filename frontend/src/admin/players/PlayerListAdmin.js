@@ -68,17 +68,17 @@ export default function PlayerEditAdmin() {
       <h1 className="text-center">Players</h1>
       {alerts.map((a) => a.alert)}
       {modal}
-      <Button color="success" tag={Link} to="/users/new">
-        Add User
+      <Button color="success" tag={Link} to="/players/new">
+        Add Player
       </Button>
       <div>
         <Table aria-label="players" className="mt-4">
           <thead>
             <tr>
-                <th>Nickname</th>
-                <th>Username</th>
-                <th>Authority</th>
-                <th>Actions</th>
+              <th>Nickname</th>
+              <th>Username</th>
+              <th>Authority</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>{playerList}</tbody>
