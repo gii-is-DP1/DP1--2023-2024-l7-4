@@ -1,29 +1,20 @@
 package org.springframework.samples.petclinic.matches;
 
 import java.util.List;
+import java.util.Set;
 
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.samples.petclinic.model.BaseEntity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Builder.Default;
 
-@Entity
-@Getter
-@Setter
-@Table(name="matches")
 public class Match extends BaseEntity{
-    
+        
     @Column(name = "matchTime")
     @NotEmpty
     @NotNull
@@ -43,35 +34,16 @@ public class Match extends BaseEntity{
     @NotNull
     private String winner;
 
+    @Column(name = "joinedPlayers")
+    @JsonIgnore
+    @NotEmpty
+    private Set<Player> joinedPlayers;
 
-     
-    @OneToMany
-    @Max(4)
-    @Min(1)
+
+    @ManyToOne
+    @NotNull
     @JoinColumn(name = "player", referencedColumnName = "id")
-    private Player player;
-
-    @OneToMany
-    @Max(6)
-    @Min(1)
-    @JoinColumn(name = "critery")
-    private Critery critery;
-
-    @OneToMany
-    @Max(7)
-    @JoinColumn(name = "power", referencedColumnName = "id")
-    private Power power;
-
-    @OneToMany
-    @Min(1)
-    @JoinColumn(name = "round", referencedColumnName = "id")
-    private Round round;
-
-    @OneToMany
-    @Max(61)
-    @JoinColumn(name ="territory", referencedColumnName = "id")
-    private Territory territory;
-    
+    private Player creator;
 
 
 }
