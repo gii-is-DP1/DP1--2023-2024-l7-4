@@ -2,7 +2,6 @@ package org.springframework.samples.petclinic.auth.payload.request;
 
 import jakarta.validation.constraints.NotBlank;
 
-import org.springframework.samples.petclinic.clinic.Clinic;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,27 +12,27 @@ public class SignupRequest {
 	
 	// User
 	@NotBlank
-	private String username;
+	private String name;
 	
 	@NotBlank
-	private String authority;
+	private String surname;
+
+	@NotBlank
+	private String email;
+	
+	@NotBlank
+	private String avatar;
+
+	@NotBlank
+	private String nickname;
+
+	@NotBlank
+	private String username;
 
 	@NotBlank
 	private String password;
-	
-	//Both
-	@NotBlank
-	private String firstName;
-	
-	@NotBlank
-	private String lastName;
-	
-	@NotBlank
-	private String city;
-	//Owner
 
-	private String address;
-	private String telephone;
-	private Clinic clinic;
+	
+	
 
 }
