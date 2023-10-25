@@ -43,6 +43,11 @@ public class PlayerRestController {
         else return new ResponseEntity<>((List<Player>) this.playerService.findAll(), HttpStatus.OK);
     }
 
+	@GetMapping(value = "{id}")
+	public ResponseEntity<Player> findById(@PathVariable("id") Integer id) {
+		return new ResponseEntity<>(playerService.findPlayer(id), HttpStatus.OK);
+	}
+
     @PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Player> create(@RequestBody @Valid Player player) throws URISyntaxException {
@@ -56,14 +61,14 @@ public class PlayerRestController {
 	@PutMapping(value = "{playerId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<Player> update(@PathVariable("playerId") int playerId, @RequestBody @Valid Player player) {
-		RestPreconditions.checkNotNull(playerService.findPlayerById(playerId), "Player", "ID", playerId);
+		RestPreconditions.checkNotNull(playerService.findPlayer(playerId), "Player", "ID", playerId);
 		return new ResponseEntity<>(this.playerService.updatePlayer(player, playerId), HttpStatus.OK);
 	}
 
 	@DeleteMapping(value = "{playerId}")
 	@ResponseStatus(HttpStatus.OK)
 	public ResponseEntity<MessageResponse> delete(@PathVariable("playerId") int id) {
-		RestPreconditions.checkNotNull(playerService.findPlayerById(id), "Player", "ID", id);
+		RestPreconditions.checkNotNull(playerService.findPlayer(id), "Player", "ID", id);
 		playerService.deletePlayer(id);
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}
