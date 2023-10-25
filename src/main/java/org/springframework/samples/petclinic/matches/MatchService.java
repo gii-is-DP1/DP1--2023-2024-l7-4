@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.match;
+package org.springframework.samples.petclinic.matches;
 
 import java.util.Collection;
 import java.util.List;
