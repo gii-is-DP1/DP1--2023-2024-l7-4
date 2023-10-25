@@ -14,7 +14,8 @@ import lombok.Setter;
 @Setter
 @Table(name="requests")
 public class requests extends BaseEntity{
-    @Column(name = "state")
+    
+	@Column(name = "state")
 	@NotEmpty
 	protected Boolean state;
 }
