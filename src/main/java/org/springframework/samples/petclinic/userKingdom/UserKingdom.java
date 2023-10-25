@@ -32,7 +32,7 @@ public class UserKingdom extends BaseEntity {
 	@NotEmpty
 	protected String nickname;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
 	@NotEmpty
 	protected String email;
 

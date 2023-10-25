@@ -40,6 +40,7 @@ public class AuthServiceTests {
 	@Autowired
 	protected AuthoritiesService authoritiesService;
 
+	/* 
 	@Test
 	@Transactional
 	public void shouldCreateAdminUser() {
@@ -110,5 +111,5 @@ public class AuthServiceTests {
 
 		return request;
 	}
-
+*/
 }

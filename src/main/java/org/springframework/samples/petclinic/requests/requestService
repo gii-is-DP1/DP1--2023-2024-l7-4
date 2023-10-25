@@ -1,0 +1,22 @@
+public class requestService {
+    
+    private RequestRepository requestRepository;
+
+    @Autowired
+    public requestService(RequestRepository requestRepository){
+        this.requestRepository= requestRepository;
+    }
+    //crear, borrar, obtener req de un user;
+    @Transactional
+    public requests saveRequest(@Valid requests newRequest) {
+        return requestRepository.save(newRequest);
+    }
+
+    @Transactional
+    public void deleteRequest(int id){
+        requestRepository.deleteById(id);
+    }
+    @Transactional
+    public List<requests> getRequest(){
+        return requestRepository.findAll;
+    }
