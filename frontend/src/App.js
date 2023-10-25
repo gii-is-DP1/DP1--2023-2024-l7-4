@@ -74,7 +74,7 @@ function App() {
           <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
           <Route path="/players/:playerId" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
           <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
-  
+
         </>)
     }
     if (role === "PLAYER") {
@@ -83,6 +83,7 @@ function App() {
           <Route path="/achievements/" exact={true} element={<PrivateRoute><AchievementListPlayer /></PrivateRoute>} />
           <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
           <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
+
         </>)
     }
   })

@@ -110,7 +110,7 @@ function AppNavbar() {
         userLogout = (
             <>
                 <NavItem className="d-flex">
-                    <NavLink style={{ color: "white" }} className="justify-content-end" id="login" tag={Link} to={"/players/edit/" + {username}}>{username}</NavLink>
+                    <NavLink style={{ color: "white" }} className="justify-content-end" id="login" tag={Link} to={`/players/edit/${username}`}>{username}</NavLink>
                 </NavItem>
                 <NavItem className="d-flex">
                     <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
@@ -125,7 +125,7 @@ function AppNavbar() {
             <Navbar expand="md" dark color="dark">
                 <NavbarBrand href="/">
                     <img alt="logo" src="/logo1-recortado.png" style={{ height: 40, width: 40 }} />
-                    LOS MAPAS DEL REINO
+                    MAPS OF THE KINGDOM
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>

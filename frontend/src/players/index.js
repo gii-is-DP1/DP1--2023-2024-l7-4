@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Container, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Button, Container, Form, FormGroup, Input, Label} from 'reactstrap';
 
 class PlayerEdit extends Component {
 
@@ -17,6 +17,7 @@ class PlayerEdit extends Component {
         total_bloqs: '',
       };
 
+      
     constructor(props) {
         super(props);
         this.state = {
@@ -26,7 +27,7 @@ class PlayerEdit extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
         this.jwt = JSON.parse(window.localStorage.getItem("jwt"));
         let pathArray = window.location.pathname.split('/');
-        this.id = pathArray[2];
+        this.username = pathArray[3];
     }
 
     async componentDidMount() {
@@ -69,9 +70,7 @@ class PlayerEdit extends Component {
         const { item } = this.state;
         const title = <h2> Edit Player</h2>;
 
-        return <div>
-            {/* <AppNavbar /> */}
-            <Container>
+        return <div className='auth-page-container'>
                 {title}
                 <Form onSubmit={this.handleSubmit}>
                     <FormGroup>
@@ -99,7 +98,6 @@ class PlayerEdit extends Component {
                         <Button color="secondary" tag={Link} to="/">Cancel</Button>
                     </FormGroup>
                 </Form>
-            </Container>
         </div>
     }
 }
