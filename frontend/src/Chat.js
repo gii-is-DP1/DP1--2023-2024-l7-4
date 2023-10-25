@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useContext } from 'react';
 
 class Chat extends Component {
   constructor() {
@@ -33,22 +33,25 @@ class Chat extends Component {
   render() {
     return (
       <div className="chat-container">
+        <div className="text">
+        <text> </text>
+        </div>
         <div className="chat-messages">
           {this.state.messages.map((message, index) => (
             <div key={index} className="message">
               {message}
-              <button  onClick={() => this.handleDeleteMessage(index)}>Borrar</button>
-              <button onClick={() => this.handleReportarMessage(index)}>Reportar</button>
+              <button  onClick={() => this.handleDeleteMessage(index)}>Delete</button>
+              <button onClick={() => this.handleReportarMessage(index)}>Report</button>
             </div>
           ))}
         </div>
         <input
           type="text"
-          placeholder="Escribe tu mensaje..."
+          placeholder="Write your message..."
           value={this.state.newMessage}
           onChange={this.handleInputChange}
         />
-        <button onClick={this.handleSendMessage}>Enviar</button>
+        <button onClick={this.handleSendMessage}>Send</button>
       </div>
     );
   }

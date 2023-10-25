@@ -24,7 +24,7 @@ import {
         <Button outline color="success"> 
           <Link 
             to={`/mygames/view`}   className="btn sm"                
-            style={{ textDecoration: "none" }}>Ver</Link> 
+            style={{ textDecoration: "none" }}>See</Link> 
         </Button> 
         </td>
         </tr>
@@ -43,7 +43,7 @@ import {
         <th className="text-center">ScoreCrit</th>
         <th className="text-center">Winner</th>
         <th className="text-center">Players</th>
-        <th className="text-center">Estadistica</th>
+        <th className="text-center">Statistic</th>
         </tr>
         </thead>
         <tbody>{myGamesList}</tbody>

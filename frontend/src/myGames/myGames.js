@@ -1,5 +1,5 @@
 import {
-    Table
+    Table, Button
     } from "reactstrap";
     import tokenService from "../services/token.service";
     import useFetchState from "../util/useFetchState";
@@ -19,6 +19,13 @@ import {
         <td className="text-center"> {a.scoreCrit} </td>
         <td className="text-center"> {a.winner} </td>
         <td className="text-center"> {a.joinedPlayers} </td>
+        <td className="text-center">    
+        <Button outline color="success"> 
+          <Link 
+            to={`/mygames/view`}   className="btn sm"                
+            style={{ textDecoration: "none" }}>See</Link> 
+        </Button> 
+        </td>
         </tr>
         );
         });
@@ -35,6 +42,7 @@ import {
         <th className="text-center">ScoreCrit</th>
         <th className="text-center">Winner</th>
         <th className="text-center">Players</th>
+        <th className="text-center">Statistic</th>
         </tr>
         </thead>
         <tbody>{myGamesList}</tbody>
@@ -42,5 +50,8 @@ import {
         </div>
         </div>
         </div>
+        
         );
-    }
+    };
+
+    

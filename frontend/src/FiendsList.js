@@ -19,7 +19,7 @@ function FriendsList() {
 
   return (
     <div className="friends-list-container">
-      <h1>Lista de Amigos</h1>
+      <h1>Friend List</h1>
       <ul className="friends-list">
         {friends.map((friend, index) => (
           <li key={index}>{friend}</li>
@@ -31,14 +31,14 @@ function FriendsList() {
         value={newFriend}
         onChange={(e) => setNewFriend(e.target.value)}
       />
-      <button onClick={addFriend}>Agregar Amigo</button>
+      <button onClick={addFriend}>Add Friend</button>
 
-      <h2>Solicitudes Pendientes</h2>
+      <h2>Awaiting requests</h2>
       <ul>
         {pendingRequests.map((request, index) => (
           <li key={index}>
             {request}
-            <button onClick={() => sendFriendRequest(request)}>Aceptar</button>
+            <button onClick={() => sendFriendRequest(request)}>Accept</button>
           </li>
         ))}
       </ul>

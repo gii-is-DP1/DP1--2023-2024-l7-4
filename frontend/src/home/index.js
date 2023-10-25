@@ -7,10 +7,10 @@ export default function Home(){
     return(
         <div className="home-page-container">
             <div className="hero-div">
-                <h1>LosMapasDelReino</h1>
+                <h1>MAPS OF THE KINGDOM</h1>
                 <h3>---</h3>
                 <img src={logo}/>
-                <h3>BIENVENIDO CONSTRUCTOR</h3>                
+                <h3>WELCOME CONSTRUCTOR</h3>                
             </div>
         </div>
     );
