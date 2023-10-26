@@ -33,10 +33,11 @@ import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import MyGamesF from "./myGames/myGamesF";
 import Chat from "./Chat";
 import FriendsList from "./FiendsList";
-import PlayerEdit from "./players/playerEdit"
 import SelectionParty from "./play/selectionParty"
 import ListMatches from "./play/listMatches"
 import CreationForm from "./play/creationForm"
+import PlayerEdit from "./players";
+
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -79,7 +80,7 @@ function App() {
           <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
           <Route path="/players/:playerId" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
           <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
-  
+        
         </>)
     }
     if (role === "PLAYER") {
@@ -119,7 +120,7 @@ function App() {
   })
   if (!jwt) {
     publicRoutes = (
-      <>        
+      <>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
@@ -128,7 +129,6 @@ function App() {
   } else {
     userRoutes = (
       <>
-        {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
       </>
