@@ -56,7 +56,7 @@ function AppNavbar() {
                     </NavItem>
                 </>
             )
-        }
+        }})
 
     if (!jwt) {
         publicLinks = (
@@ -80,8 +80,8 @@ function AppNavbar() {
             </NavItem>
             </>
         )
-
-    } else {
+        }
+     else {
         
         userLogout = (
             <>
@@ -94,7 +94,7 @@ function AppNavbar() {
             </>
         )
 
-    }})
+    }
 
     return (
         <div>
