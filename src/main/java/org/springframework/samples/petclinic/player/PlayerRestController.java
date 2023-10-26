@@ -48,6 +48,11 @@ public class PlayerRestController {
 		return new ResponseEntity<>(playerService.findPlayer(id), HttpStatus.OK);
 	}
 
+	@GetMapping(value = "/username/{id}")
+	public ResponseEntity<Player> findByUsername(@PathVariable("id") String username) {
+		return new ResponseEntity<>(playerService.findByUsername(username), HttpStatus.OK);
+	}
+
     @PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Player> create(@RequestBody @Valid Player player) throws URISyntaxException {

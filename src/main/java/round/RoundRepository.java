@@ -1,16 +1,7 @@
 package round;
-
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
-import org.springframework.samples.petclinic.clinic.PricingPlan;
-import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.pet.Pet;
 
 
 public interface RoundRepository extends CrudRepository<Round, Integer>{

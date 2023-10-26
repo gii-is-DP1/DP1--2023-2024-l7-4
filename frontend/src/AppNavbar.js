@@ -51,45 +51,21 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/ranking">Ranking</NavLink>
                     </NavItem>
-                </>
-            )
-        }
-
-        if (role === "VET") {
-            ownerLinks = (
-                <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
+                    <NavLink style={{ color: "white" }} tag={Link} to={`/board/${username}`}>Board</NavLink>
                     </NavItem>
                 </>
             )
-        }
-
-        if (role === "CLINIC_OWNER") {
-            ownerLinks = (
-                <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/clinics">Clinics</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/owners">Owners</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/vets">Vets</NavLink>
-                    </NavItem>
-                </>
-            )
-        }
-    })
+        }})
 
     if (!jwt) {
         publicLinks = (
             <>
                 <NavItem>
                     <NavLink style={{ color: "white" }} tag={Link} to="/ranking">Ranking</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink style={{ color: "white" }} tag={Link} to={`/board/${username}`}>Board</NavLink>
                 </NavItem>
             </>
         )
@@ -104,13 +80,13 @@ function AppNavbar() {
             </NavItem>
             </>
         )
-
-    } else {
+        }
+     else {
         
         userLogout = (
             <>
                 <NavItem className="d-flex">
-                    <NavLink style={{ color: "white" }} className="justify-content-end" id="login" tag={Link} to="/owners/edit">{username}</NavLink>
+                    <NavLink style={{ color: "white" }} className="justify-content-end" id="login" tag={Link} to={`/players/edit/${username}`}>{username}</NavLink>
                 </NavItem>
                 <NavItem className="d-flex">
                     <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
@@ -125,7 +101,7 @@ function AppNavbar() {
             <Navbar expand="md" dark color="dark">
                 <NavbarBrand href="/">
                     <img alt="logo" src="/logo1-recortado.png" style={{ height: 40, width: 40 }} />
-                    LOS MAPAS DEL REINO
+                    MAPS OF THE KINGDOM
                 </NavbarBrand>
                 <NavbarToggler onClick={toggleNavbar} className="ms-2" />
                 <Collapse isOpen={!collapsed} navbar>

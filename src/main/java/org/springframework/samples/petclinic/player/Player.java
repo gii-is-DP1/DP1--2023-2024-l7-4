@@ -1,5 +1,4 @@
 package org.springframework.samples.petclinic.player;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.samples.petclinic.userKingdom.UserKingdom;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
