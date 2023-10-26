@@ -1,11 +1,11 @@
-import { formValidators } from "../../../validators/formValidators";
+import { formValidators } from "../validators/formValidators";
 
 export const registerFormMatchInputs = [
 
     {
     tag: "Name",
     name: "name",
-    type: "text",
+    type: "text", 
     defaultValue: "",
     isRequired: true,
     validators: [formValidators.notEmptyValidator],

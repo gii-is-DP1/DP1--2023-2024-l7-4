@@ -35,7 +35,7 @@ import Chat from "./Chat";
 import FriendsList from "./FiendsList";
 import PlayerEdit from "./players/playerEdit"
 import SelectionParty from "./play/selectionParty"
-import CreationMatch from "./play/creationMatch"
+import ListMatches from "./play/listMatches"
 import CreationForm from "./play/creationForm"
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -89,8 +89,8 @@ function App() {
           <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
           <Route path="/mygames" exact={true} element={<PrivateRoute><MyGamesF/></PrivateRoute>} />
           <Route path="/play" exact={true} element={<PrivateRoute><SelectionParty/></PrivateRoute>} />
-          <Route path="/play/create" exact={true} element={<PrivateRoute><CreationMatch/></PrivateRoute>} />
-          <Route path="/play/matches" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
+          <Route path="/play/create" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
+          <Route path="/play/matches" exact={true} element={<PrivateRoute><ListMatches/></PrivateRoute>} />
 
         </>)
     }
