@@ -51,21 +51,15 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/ranking">Ranking</NavLink>
                     </NavItem>
-                    <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to={`/board/${username}`}>Board</NavLink>
-                    </NavItem>
                 </>
             )
         }
-
+    })
     if (!jwt) {
         publicLinks = (
             <>
                 <NavItem>
                     <NavLink style={{ color: "white" }} tag={Link} to="/ranking">Ranking</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to={`/board/${username}`}>Board</NavLink>
                 </NavItem>
             </>
         )
@@ -94,7 +88,7 @@ function AppNavbar() {
             </>
         )
 
-    }})
+    }
 
     return (
         <div>

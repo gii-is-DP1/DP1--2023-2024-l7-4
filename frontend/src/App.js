@@ -31,7 +31,6 @@ import RankingPlayers from "./players/Ranking";
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import PlayerEdit from "./players";
-import Board from "./board/Board";
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -90,7 +89,7 @@ function App() {
   })
   if (!jwt) {
     publicRoutes = (
-      <>        
+      <>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
@@ -99,7 +98,6 @@ function App() {
   } else {
     userRoutes = (
       <>
-        {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
       </>
