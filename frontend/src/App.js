@@ -92,6 +92,7 @@ function App() {
           <Route path="/play" exact={true} element={<PrivateRoute><SelectionParty/></PrivateRoute>} />
           <Route path="/play/create" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
           <Route path="/play/matches" exact={true} element={<PrivateRoute><ListMatches/></PrivateRoute>} />
+          <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
 
         </>)
     }
