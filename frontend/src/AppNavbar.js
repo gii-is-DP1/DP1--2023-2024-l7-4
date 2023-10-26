@@ -51,45 +51,21 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/ranking">Ranking</NavLink>
                     </NavItem>
-                </>
-            )
-        }
-
-        if (role === "VET") {
-            ownerLinks = (
-                <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
+                    <NavLink style={{ color: "white" }} tag={Link} to={`/board/${username}`}>Board</NavLink>
                     </NavItem>
                 </>
             )
         }
-
-        if (role === "CLINIC_OWNER") {
-            ownerLinks = (
-                <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/clinics">Clinics</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/owners">Owners</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/vets">Vets</NavLink>
-                    </NavItem>
-                </>
-            )
-        }
-    })
 
     if (!jwt) {
         publicLinks = (
             <>
                 <NavItem>
                     <NavLink style={{ color: "white" }} tag={Link} to="/ranking">Ranking</NavLink>
+                </NavItem>
+                <NavItem>
+                    <NavLink style={{ color: "white" }} tag={Link} to={`/board/${username}`}>Board</NavLink>
                 </NavItem>
             </>
         )
@@ -118,7 +94,7 @@ function AppNavbar() {
             </>
         )
 
-    }
+    }})
 
     return (
         <div>
