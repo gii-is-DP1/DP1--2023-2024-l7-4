@@ -14,8 +14,6 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.owner.OwnerService;
-import org.springframework.samples.petclinic.vet.VetService;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,11 +28,6 @@ class UserServiceTests {
 	@Autowired
 	private AuthoritiesService authService;
 
-	@Autowired
-	private VetService vetService;
-
-	@Autowired
-	private OwnerService ownerService;
 
 	@Test
 	@WithMockUser(username = "owner1", password = "0wn3r")
