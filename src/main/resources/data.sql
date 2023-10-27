@@ -26,6 +26,7 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, username, passwo
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
 (5, 'Conrado', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com','conrast','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,17,0);
 
+
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (1,'Experiencia básica','Si juegas 10 partidas o más',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (2,'Explorador','Si juegas 25 partidas o más',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas o más',20.0,'VICTORIES');
