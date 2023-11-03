@@ -47,7 +47,11 @@ export default function MyMatches() {
         <th className="text-center">Statistic</th>
         </tr>
         </thead>
+<<<<<<< HEAD
         <tbody>{myMatchesList}</tbody>
+=======
+        <tbody>{myMatches}</tbody>
+>>>>>>> eb9181bc7aa28012b5f80d922e2916cfaf7ee0f8
         </Table>
         </div>
         </div>
