@@ -2,16 +2,11 @@ package org.springframework.samples.petclinic.match;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
-import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.player.PlayerService;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 @Service
 public class MatchService {
@@ -22,48 +17,27 @@ public class MatchService {
     public MatchService(MatchRepository matchRepository){
         this.matchRepository = matchRepository;
     }
-    @Transactional(readOnly= true)
-    public Collection<Match> findAll(){
-        return (List<Match>) matchRepository.findAll();
+
+
+    @Transactional(readOnly = true)
+    public Collection<Match> findAll() {
+		return (List<Match>) this.matchRepository.findAll();
+	}
+
+    @Transactional
+    public Match saveMatch(Match match) throws DataAccessException {
+        matchRepository.save(match);
+        return match;
     }
 
     @Transactional(readOnly = true)
-    public Collection<Match> findMatchsByPlayer(String username){
+    public List<Match> findMatchsByPlayer(String username){
         return (List<Match>) matchRepository.findMatchsByPlayer(username);
     }
 
     @Transactional(readOnly = true)
-    public Collection<Match> findMatchsClosedByPlayer(String p){
+    public List<Match> findMatchsClosedByPlayer(String p){
         return (List<Match>) matchRepository.findMatchsClosedByPlayer(p);
  
-    }   
-
-    @Transactional(readOnly = true)
-    public Match findMatchById(int id){
-        return matchRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player","ID",id));
-    }
-
-    @Transactional(readOnly = true)
-    public Boolean existsMatch(int id){
-        return !matchRepository.existsMatch(id).isEmpty();
-    }
-
-    @Transactional()
-    public Match saveMatch(Match m){
-        matchRepository.save(m);
-        return m;
-    }
-
-    @Transactional()
-    public Match updateMatch(Match m, int id){
-        Match toUpdate = findMatchById(id);
-        BeanUtils.copyProperties(m, toUpdate, "id");
-        return saveMatch(toUpdate);
-    }
-
-    @Transactional()
-    public void deleteMatch(int id){
-        Match toDelete = findMatchById(id);
-        matchRepository.delete(toDelete);
-    }
+    }  
 }

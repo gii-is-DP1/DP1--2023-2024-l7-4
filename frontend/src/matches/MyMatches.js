@@ -1,6 +1,7 @@
 import { Table, Button } from "reactstrap";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
+import { useState } from "react";
 import getIdFromUrl from "../util/getIdFromUrl";
 import { Link } from "react-router-dom";
 
@@ -9,23 +10,27 @@ const jwt = tokenService.getLocalAccessToken();
 const username = getIdFromUrl(2)
 
 export default function MyMatches() {
+  const [message, setMessage] = useState(null);
+  const [visible, setVisible] = useState(false);
   const [myMatches, setMyMatches] = useFetchState(
     [],
     `/api/v1/players/${username}/myMatches`,
-    jwt
+    jwt,
+    setMessage,
+    setVisible,
+    username
     );
+
     const myMatchesList =
     myMatches.map((m) => {
     return (<tr key={m.id}>
+        <td className="text-center"> {m.name} </td>
         <td className="text-center">{m.matchTime}</td>
-        <td className="text-center"> {m.nRounds} </td>
-        <td className="text-center"> {m.scoreCrit} </td>
-        <td className="text-center"> {m.winner} </td>
-        <td className="text-center"> {m.joinedPlayers} </td>
-        <td className="text-center">    
+        <td className="text-center"> {m.nrounds} </td>
+        <td className="text-center">
         <Button outline color="success"> 
-          <Link to={`/mymatches/${m.id}/view`} className="btn sm"                
-            style={{ textDecoration: "none" }}>See</Link> 
+                <Link to={`/mymatches/${m.id}/view`} className="btn sm"                
+                style={{ textDecoration: "none" }}>See</Link> 
         </Button> 
         </td>
         </tr>
@@ -39,24 +44,17 @@ export default function MyMatches() {
         <Table aria-label="achievements" className="mt-4">
         <thead>
         <tr>
-        <th className="text-center">Duration</th>
+        <th className="text-center">name</th>
+        <th className="text-center">Time</th>
         <th className="text-center">Rounds</th>
-        <th className="text-center">ScoreCrit</th>
-        <th className="text-center">Winner</th>
-        <th className="text-center">Players</th>
         <th className="text-center">Statistic</th>
         </tr>
         </thead>
-<<<<<<< HEAD
         <tbody>{myMatchesList}</tbody>
-=======
-        <tbody>{myMatches}</tbody>
->>>>>>> eb9181bc7aa28012b5f80d922e2916cfaf7ee0f8
         </Table>
         </div>
         </div>
         </div>
-        
         );
     };
 

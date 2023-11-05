@@ -7,10 +7,13 @@ import jwt_decode from "jwt-decode";
 import tokenService from "../services/token.service";
 import useFetchState from "../util/useFetchState";
 
+const jwt = tokenService.getLocalAccessToken();
+
 
 export default function CreationForm() {
-  const jwt = tokenService.getLocalAccessToken();
+
   const username = tokenService.getUser().username;
+  const creationFormRef = useRef();
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   
@@ -21,7 +24,7 @@ export default function CreationForm() {
     password: "",
     authority: null,
   };
-  const [jugador, setPlayer] = useFetchState(
+  const [player, setPlayer] = useFetchState(
     emptyItem,
     `/api/v1/players/username/${username}`,
     jwt,
@@ -29,7 +32,6 @@ export default function CreationForm() {
     setVisible,
     username
   );
-  const creationFormRef = useRef();
   
   function handleSubmit({ values }) {
 
@@ -42,21 +44,20 @@ export default function CreationForm() {
       maxPlayers: parseInt(values.players),
       scoreCrit: ["A1", "A2", "b1", "b2"],
       winner: "Null",
-      creator: jugador,
-      joinedPlayers: ([jugador.username]),
-    };
+      creator: player,
+      joinedPlayers: ([player.username]),
+  };
 
     fetch("/api/v1/matches", {
+      method: "POST",
       headers: {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
       },
-      method: "POST",
       body: JSON.stringify(request),
-    })
-      .then(function (response) {
-        if (response.status === 200) {
+    }).then(function (response) {
+        if (response.status === 201) {
           const id = response.id;
           window.location.href = `/play/wait/${id}`;
               }
@@ -76,7 +77,7 @@ export default function CreationForm() {
         <FormGenerator
             ref={creationFormRef}
             inputs={
-                registerFormMatchInputs
+                registerFormMatchInputs 
             }
             onSubmit={handleSubmit}
             numberOfColumns={1}

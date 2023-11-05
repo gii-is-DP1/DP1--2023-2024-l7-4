@@ -30,3 +30,6 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, username, passwo
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (1,'Experiencia básica','Si juegas 10 partidas o más',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (2,'Explorador','Si juegas 25 partidas o más',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas o más',20.0,'VICTORIES');
+
+
+-- INSERT INTO matches(id, name, matchTime, nRounds, maxPlayers, scoreCrit, winner, creator_id, joinedPlayers, matchState) VALUES (1, 'Nombre del Partido', 60, 5, 4, '["Crit1", "Crit2", "Crit3"]', 'Nombre del Ganador', 1, '["Jugador1", "Jugador2", "Jugador3"]', 'OPEN');

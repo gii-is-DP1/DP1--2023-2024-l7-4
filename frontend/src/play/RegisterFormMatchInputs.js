@@ -13,9 +13,9 @@ export const registerFormMatchInputs = [
   {
     tag: "Players",
     name: "players",
-    type: "Number",
+    type: "number",
     defaultValue: 2,
     isRequired: true,
-    validators: [formValidators.notEmptyValidator],
+    validators: [formValidators.notEmptyValidator, formValidators.rangeValidator],
   },
 ];
