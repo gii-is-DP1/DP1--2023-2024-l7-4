@@ -1,8 +1,8 @@
 package org.springframework.samples.petclinic.player;
 
 
-import org.springframework.samples.petclinic.match.Match;
-import org.springframework.samples.petclinic.match.MatchService;
+// import org.springframework.samples.petclinic.match.Match;
+// import org.springframework.samples.petclinic.match.MatchService;
 
 import java.util.List;
 
@@ -19,6 +19,8 @@ import java.net.URISyntaxException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
+import org.springframework.samples.petclinic.match.Match;
+import org.springframework.samples.petclinic.match.MatchService;
 import org.springframework.samples.petclinic.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +39,7 @@ public class PlayerRestController {
 	private MatchService matchService;
 
     @Autowired
-    public PlayerRestController(PlayerService playerService, MatchService matchService){
+    public PlayerRestController(PlayerService playerService ,MatchService matchService){
         this.playerService = playerService;
 		this.matchService = matchService;
     }
@@ -83,10 +85,12 @@ public class PlayerRestController {
 		playerService.deletePlayer(id);
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}
-    
+   
 	@GetMapping(value = "/{username}/myMatches")
 	public ResponseEntity<List<Match>> findMyMatches(@RequestParam(required = false, name = "closed") boolean closed,@PathVariable String username) {
-		if(closed) return new ResponseEntity<>((List<Match>) matchService.findMatchsClosedByPlayer(username), HttpStatus.OK);
-		else return new ResponseEntity<>((List<Match>) matchService.findMatchsByPlayer(username), HttpStatus.OK);
+		if(closed) return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
+		else return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
 	}
+ 
+
 }

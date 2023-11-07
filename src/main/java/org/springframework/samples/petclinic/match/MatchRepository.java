@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-public interface MatchRepository extends CrudRepository<Match,Integer>{
-
+public interface MatchRepository extends CrudRepository<Match, Integer>{
+    
     @Query("SELECT m FROM Match m WHERE :player IN (m.joinedPlayers)")
     public Collection<Match> findMatchsByPlayer(String player);
 
@@ -16,4 +16,5 @@ public interface MatchRepository extends CrudRepository<Match,Integer>{
 
     @Query("SELECT m FROM Match m WHERE m.matchState IN (CLOSED) AND :player IN (m.joinedPlayers)")
     public Collection<Match> findMatchsClosedByPlayer(String player);
+
 }

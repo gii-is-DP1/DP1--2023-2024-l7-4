@@ -35,15 +35,12 @@ export default function Login() {
 
   
     return (
-      <div className="auth-page-container">
+      <div className="home-page-container" >
         {message ? (
           <Alert color="primary">{message}</Alert>
         ) : (
           <></>
         )}
-
-        <h1>Login</h1>
-
         <div className="auth-form-container">
           <FormGenerator
             ref={loginFormRef}
