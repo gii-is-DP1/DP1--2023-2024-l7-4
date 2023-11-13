@@ -88,7 +88,7 @@ public class PlayerRestController {
    
 	@GetMapping(value = "/{username}/myMatches")
 	public ResponseEntity<List<Match>> findMyMatches(@RequestParam(required = false, name = "closed") boolean closed,@PathVariable String username) {
-		if(closed) return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
+		if(closed) return new ResponseEntity<>((List<Match>) matchService.findMatchsClosedByPlayer(username), HttpStatus.OK);
 		else return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
 	}
  

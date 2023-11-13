@@ -17,4 +17,7 @@ public interface MatchRepository extends CrudRepository<Match, Integer>{
     @Query("SELECT m FROM Match m WHERE m.matchState IN (CLOSED) AND :player IN (m.joinedPlayers)")
     public Collection<Match> findMatchsClosedByPlayer(String player);
 
+    @Query("SELECT m FROM Match m WHERE m.matchState IN (OPEN)")
+    public Collection<Match> findAllOpen();
+
 }

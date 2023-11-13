@@ -50,8 +50,8 @@ public class Match extends BaseEntity{
 //PROPIEDAD DONDE SE GUARDAN LOS DISTINTOS USERNAMES DE LOS JUGADORES,
 //PARA PODER LUEGO EXTRAER LOS DATOS NECESARIOS DE LOS JUGADORES
 
-    
     @ManyToOne
+    @NotNull
 	@JoinColumn(name = "creator", referencedColumnName = "id")
 	private Player creator;
 

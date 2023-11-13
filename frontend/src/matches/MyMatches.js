@@ -14,7 +14,7 @@ export default function MyMatches() {
   const [visible, setVisible] = useState(false);
   const [myMatches, setMyMatches] = useFetchState(
     [],
-    `/api/v1/players/${username}/myMatches`,
+    `/api/v1/players/${username}/myMatches?closed=true`,
     jwt,
     setMessage,
     setVisible,

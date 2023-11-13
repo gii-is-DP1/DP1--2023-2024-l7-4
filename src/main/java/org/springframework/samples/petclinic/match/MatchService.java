@@ -38,6 +38,10 @@ public class MatchService {
     @Transactional(readOnly = true)
     public List<Match> findMatchsClosedByPlayer(String p){
         return (List<Match>) matchRepository.findMatchsClosedByPlayer(p);
- 
     }  
+
+    @Transactional(readOnly = true)
+    public List<Match> findAllOpenList(){
+        return (List<Match>) matchRepository.findAllOpen();
+    }
 }

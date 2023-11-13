@@ -34,9 +34,9 @@ public class MatchRestController {
     }
 
 
-     @GetMapping
-	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "sorted") boolean sorted) {
-        if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAll(), HttpStatus.OK);
+    @GetMapping
+	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
+        if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
         return new ResponseEntity<>((List<Match>) this.matchService.findAll(), HttpStatus.OK);
     }
 
