@@ -53,7 +53,7 @@ export const registerFormPlayerInputs = [
   {
     tag: "Password",
     name: "password",
-    type: "text",
+    type: "password",
     defaultValue: "",
     isRequired: true,
     validators: [formValidators.notEmptyValidator]

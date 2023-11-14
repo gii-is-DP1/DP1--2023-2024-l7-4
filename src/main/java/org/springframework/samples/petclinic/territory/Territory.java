@@ -6,6 +6,7 @@ import org.springframework.samples.petclinic.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,6 +27,7 @@ public class Territory extends BaseEntity{
     Integer posZ;
 
     @Column(name = "type")
+    @NotNull
     TerritoryType territoryType;
 
 

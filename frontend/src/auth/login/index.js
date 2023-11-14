@@ -26,7 +26,7 @@ export default function Login() {
       .then(function (data) {
         tokenService.setUser(data);
         tokenService.updateLocalAccessToken(data.token);
-        window.location.href = "/dashboard";
+        window.location.href = "/";
       })
       .catch((error) => {         
         setMessage(error);
@@ -35,15 +35,12 @@ export default function Login() {
 
   
     return (
-      <div className="auth-page-container">
+      <div className="home-page-container" >
         {message ? (
           <Alert color="primary">{message}</Alert>
         ) : (
           <></>
         )}
-
-        <h1>Login</h1>
-
         <div className="auth-form-container">
           <FormGenerator
             ref={loginFormRef}
