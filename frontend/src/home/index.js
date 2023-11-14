@@ -46,7 +46,7 @@ export default function Home(){
       </td>
       </tr>
       );
-    });
+});
 
     return (
         <div>
@@ -71,7 +71,6 @@ export default function Home(){
         </div>
         </div>
         </div>
-      );
-}
-    
+        );
+    }
 }
