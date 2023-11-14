@@ -24,6 +24,7 @@ import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import PlayerEdit from "./players";
 import MyMatches from "./matches/MyMatches";
 import CreationForm from "./play/CreationForm";
+import Join from "./matches/Join";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -77,6 +78,7 @@ function App() {
           <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
           <Route path="/players/:username/myMatches" exact={true} element={<PrivateRoute><MyMatches/></PrivateRoute>} />
           <Route path="/matches/create" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
+          <Route path="/mymatches/:id/join" exact={true} element={<PrivateRoute><Join/></PrivateRoute>} />
 
         </>)
     }
