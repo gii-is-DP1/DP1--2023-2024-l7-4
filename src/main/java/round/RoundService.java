@@ -29,6 +29,13 @@ public class RoundService {
 	public Round findRoundById(int id) throws DataAccessException {
 		return this.roundRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Round", "ID", id));
 	}
+
+
+    @Transactional(readOnly = true)
+    public Integer findNumRoundsByMatch(Integer matchId) {
+        return roundRepository.findRoundsByMatch(matchId);
+        }
+    
     @Transactional
 	public Round saveRound(Round round) throws DataAccessException {
 		roundRepository.save(round);

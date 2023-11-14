@@ -1,10 +1,13 @@
 package org.springframework.samples.petclinic.territory;
 
+import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.samples.petclinic.model.BaseEntity;
 
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -16,7 +19,6 @@ import lombok.Setter;
 @Table(name = "territories")
 public class Territory extends BaseEntity{
     
-
     @Column(name = "posX")
     Integer posX;
 
@@ -30,5 +32,9 @@ public class Territory extends BaseEntity{
     @NotNull
     TerritoryType territoryType;
 
+    @ManyToOne
+    @JoinColumn(name = "gameBoard")
+    @NotNull
+    GameBoard gameBoard;
 
 }
