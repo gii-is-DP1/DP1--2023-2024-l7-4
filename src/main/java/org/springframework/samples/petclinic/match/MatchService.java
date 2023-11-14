@@ -2,9 +2,11 @@ package org.springframework.samples.petclinic.match;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,13 @@ public class MatchService {
     public Collection<Match> findAll() {
 		return (List<Match>) this.matchRepository.findAll();
 	}
+
+    @Transactional(readOnly = true)
+    public Match findMatchById(Integer id){
+        Optional<Match> m = matchRepository.findById(id);
+        return m.get()==null?null:m.get();
+    }
+
 
     @Transactional
     public Match saveMatch(Match match) throws DataAccessException {
@@ -43,5 +52,12 @@ public class MatchService {
     @Transactional(readOnly = true)
     public List<Match> findAllOpenList(){
         return (List<Match>) matchRepository.findAllOpen();
+    }
+
+
+    @Transactional(readOnly = true)
+    public GameBoard findGameBoardByPlayerId(Integer id){
+        Optional<GameBoard> g = matchRepository.findBoardByPlayer(id);
+        return g.get()==null?null:g.get();
     }
 }
