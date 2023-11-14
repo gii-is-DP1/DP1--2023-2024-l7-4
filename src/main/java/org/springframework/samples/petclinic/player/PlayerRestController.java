@@ -91,6 +91,5 @@ public class PlayerRestController {
 		if(closed) return new ResponseEntity<>((List<Match>) matchService.findMatchsClosedByPlayer(username), HttpStatus.OK);
 		else return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
 	}
- 
 
 }

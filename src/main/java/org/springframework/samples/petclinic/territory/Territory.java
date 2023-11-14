@@ -16,7 +16,6 @@ import lombok.Setter;
 @Table(name = "territories")
 public class Territory extends BaseEntity{
     
-
     @Column(name = "posX")
     Integer posX;
 
