@@ -2,8 +2,14 @@ package org.springframework.samples.petclinic.match;
 
 import java.util.Collection;
 import java.util.List;
+<<<<<<< HEAD
+=======
+import java.util.Optional;
+
+>>>>>>> 3b29286e4b96495221132f57964e12b6b0d7b3e2
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +29,13 @@ public class MatchService {
 		return (List<Match>) this.matchRepository.findAll();
 	}
 
+    @Transactional(readOnly = true)
+    public Match findMatchById(Integer id){
+        Optional<Match> m = matchRepository.findById(id);
+        return m.get()==null?null:m.get();
+    }
+
+
     @Transactional
     public Match saveMatch(Match match) throws DataAccessException {
         matchRepository.save(match);
@@ -37,6 +50,17 @@ public class MatchService {
     @Transactional(readOnly = true)
     public List<Match> findMatchsClosedByPlayer(String p){
         return (List<Match>) matchRepository.findMatchsClosedByPlayer(p);
- 
     }  
+
+    @Transactional(readOnly = true)
+    public List<Match> findAllOpenList(){
+        return (List<Match>) matchRepository.findAllOpen();
+    }
+
+
+    @Transactional(readOnly = true)
+    public GameBoard findGameBoardByPlayerId(Integer id){
+        Optional<GameBoard> g = matchRepository.findBoardByPlayer(id);
+        return g.get()==null?null:g.get();
+    }
 }

@@ -6,15 +6,17 @@ import getIdFromUrl from "../util/getIdFromUrl";
 import { Link } from "react-router-dom";
 
 const imgnotfound = "https://cdn-icons-png.flaticon.com/512/5778/5778223.png";
-const jwt = tokenService.getLocalAccessToken();
-const username = getIdFromUrl(2)
+
+
 
 export default function MyMatches() {
+  const jwt = tokenService.getLocalAccessToken();
+  const username = getIdFromUrl(2)
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [myMatches, setMyMatches] = useFetchState(
     [],
-    `/api/v1/players/${username}/myMatches`,
+    `/api/v1/players/${username}/myMatches?closed=true`,
     jwt,
     setMessage,
     setVisible,
