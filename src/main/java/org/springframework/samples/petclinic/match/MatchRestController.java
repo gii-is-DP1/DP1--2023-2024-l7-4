@@ -8,14 +8,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-<<<<<<< HEAD
-=======
+import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
 import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.samples.petclinic.board.GameBoardRepository;
-import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.player.PlayerRepository;
 import org.springframework.samples.petclinic.player.PlayerService;
->>>>>>> 3b29286e4b96495221132f57964e12b6b0d7b3e2
+import org.springframework.samples.petclinic.util.RestPreconditions;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -84,6 +82,14 @@ public class MatchRestController {
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public ResponseEntity<MessageResponse> delete(@PathVariable("id") int id) {
+		RestPreconditions.checkNotNull(matchService.findMatchById(id), "Match", "ID", id);
+		matchService.deleteMatch(id);;
+		return new ResponseEntity<>(new MessageResponse("Match deleted!"), HttpStatus.OK);
+	}
 
 
 }

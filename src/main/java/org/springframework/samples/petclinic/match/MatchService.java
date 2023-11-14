@@ -2,14 +2,12 @@ package org.springframework.samples.petclinic.match;
 
 import java.util.Collection;
 import java.util.List;
-<<<<<<< HEAD
-=======
 import java.util.Optional;
 
->>>>>>> 3b29286e4b96495221132f57964e12b6b0d7b3e2
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.board.GameBoard;
+import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,4 +61,10 @@ public class MatchService {
         Optional<GameBoard> g = matchRepository.findBoardByPlayer(id);
         return g.get()==null?null:g.get();
     }
+
+    @Transactional
+	public void deleteMatch(int id) throws DataAccessException {
+		Match toDelete = findMatchById(id);
+		matchRepository.delete(toDelete);
+	}
 }

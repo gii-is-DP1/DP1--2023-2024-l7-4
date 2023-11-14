@@ -11,17 +11,6 @@ import useFetchState from "../util/useFetchState";
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Home(){
-<<<<<<< HEAD
-    return(
-        <div className="home-page-container">
-            <div className="hero-div">
-                <h1>The Maps Of Kingdom</h1>
-                <h3>---</h3>
-                <img src={logo}/>
-                <h3>Welcome constructor</h3>                
-            </div>
-        </div>
-=======
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [matches, setMatches] = useFetchState(
@@ -30,7 +19,7 @@ export default function Home(){
         jwt,
         setMessage,
         setVisible
->>>>>>> 3b29286e4b96495221132f57964e12b6b0d7b3e2
+
     );
 
     if(!jwt){
