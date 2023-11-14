@@ -2,6 +2,7 @@ package round;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 
 public interface RoundRepository extends CrudRepository<Round, Integer>{
@@ -16,5 +17,9 @@ public interface RoundRepository extends CrudRepository<Round, Integer>{
 
 	@Query("SELECT COUNT(r) FROM Round r")
 	public Integer countAll();
+
+
+	@Query("Select COUNT(r) FROM Round r where r.match.id = :matchId ")
+	public Integer findRoundsByMatch(@Param("matchId") Integer matchId);
 
 }
