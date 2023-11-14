@@ -6,6 +6,7 @@ import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
@@ -49,6 +50,11 @@ public class MatchRestController {
 	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
         if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
         return new ResponseEntity<>((List<Match>) this.matchService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Match> getMatchById(@PathVariable("id") Integer id){
+        return new ResponseEntity<>( matchService.findMatchById(id), HttpStatus.OK);
     }
 
     @PostMapping()
