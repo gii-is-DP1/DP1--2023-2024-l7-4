@@ -13,6 +13,7 @@ import org.springframework.samples.petclinic.board.GameBoardRepository;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerRepository;
 import org.springframework.samples.petclinic.player.PlayerService;
+import org.springframework.samples.petclinic.territory.Territory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -63,6 +64,9 @@ public class MatchRestController {
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
 
+
+    //FUNCION PARA JOIN
+
     @PutMapping("/{id}/join")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) {
@@ -84,4 +88,16 @@ public class MatchRestController {
     }
 
 
+/// FUNCION DE GUARDADO DE TABLEROS
+
+    @PutMapping("/{matchId}/{username}/saveBoard")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveBoard(@PathVariable("matchId") Integer matchId, @PathVariable("username") String username, @RequestBody @Valid Set<Territory> territories){
+        Match m = matchService.findMatchById(matchId);
+        Player p = playerService.findByUsername(username);
+        GameBoard newGb = new GameBoard();
+        newGb.setTerritories(territories);
+        newGb.setMatch(m);
+        newGb.setPlayer(p);    
+    }
 }
