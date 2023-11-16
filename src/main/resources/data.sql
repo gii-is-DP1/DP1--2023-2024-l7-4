@@ -32,4 +32,4 @@ INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES
 INSERT INTO achievement(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas o más',20.0,'VICTORIES');
 
 
-INSERT INTO matches(id, name, matchTime, nRounds, maxPlayers, scoreCrit, winner, creator_id, joinedPlayers, matchState) VALUES (1, 'Nombre del Partido', 60, 5, 4, '["Crit1", "Crit2", "Crit3"]', 'Nombre del Ganador', 1, '["Jugador1", "Jugador2", "Jugador3"]', 'OPEN');
+-- INSERT INTO matches(id, name, matchTime, nRounds, maxPlayers, scoreCrit, winner, creator_id, joinedPlayers, matchState) VALUES (1, 'Nombre del Partido', 60, 5, 4, '["Crit1", "Crit2", "Crit3"]', 'Nombre del Ganador', 1, '["Jugador1", "Jugador2", "Jugador3"]', 'OPEN');

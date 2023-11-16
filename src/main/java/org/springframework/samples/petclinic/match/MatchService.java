@@ -45,10 +45,7 @@ public class MatchService {
         return (List<Match>) matchRepository.findMatchsByPlayer(username);
     }
 
-    @Transactional(readOnly = true)
-    public Match findMatchById(Integer id){
-        return matchRepository.findById(id).orElse(null);
-    }
+
 
     @Transactional(readOnly = true)
     public List<Match> findMatchsClosedByPlayer(String p){
