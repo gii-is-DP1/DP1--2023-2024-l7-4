@@ -31,7 +31,7 @@ export default function Join(){
         //if ((random.filter(cr => cr.includes("A")).length < 2  && (random.filter(cr => cr.includes("B")).length < 2) && !random.includes(criterio)))
         //    random.push(criterio)
 //}
-
+        
 
     const matchPlayerList =  match.joinedPlayers;
 
@@ -50,11 +50,18 @@ export default function Join(){
             </Table>
             <div>
                 <h1 className='text-center'>SCORING CRITERIA</h1>
-                <th className='text-center'>{random.toString}</th> 
+                <th className='text-center'>{random}</th> 
                 
             </div>
         </div>
         </div>
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button outline color="success">
+            <Link to={`/`} className="btn sm" style={{ textDecoration: "none" }}>
+                Leave Lobby
+            </Link>
+            </Button>
+            </div>
         </div>
       );
 }
