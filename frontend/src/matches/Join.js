@@ -9,7 +9,6 @@ import { Button, ButtonGroup, Table } from "reactstrap";
 import useFetchState from "../util/useFetchState";
 import getIdFromUrl from "../util/getIdFromUrl";
 
-
 export default function Join(){
     const id = getIdFromUrl(2);
     const jwt = tokenService.getLocalAccessToken();
@@ -49,6 +48,8 @@ export default function Join(){
 
     const matchPlayerList =  match.joinedPlayers;
 
+    
+
     return (
         <div>
         <div className="admin-page-container">
@@ -57,7 +58,8 @@ export default function Join(){
             <Table aria-label="achievements" className="mt-4">
                 <thead>
                     <tr>
-                        <th className="text-center">PLAYERS</th>
+                        <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}
+</th>
                     </tr>
                 </thead>
                 <tbody>{matchPlayerList}</tbody>
@@ -69,7 +71,14 @@ export default function Join(){
             </div>
         </div>
         </div>
+        <div style={{ textAlign: 'center' }}>
+        {match.joinedPlayers ? (match.joinedPlayers.length=== match.maxPlayers ? (<Button outline color="success" >
+            <Link to={`/matches/create`} className="btn sm"style={{ textDecoration: "none" }}>Start Match</Link>
+        </Button>) : "") : "Loading.."}
+        
         </div>
+        </div>
+        
       );
 }
     
