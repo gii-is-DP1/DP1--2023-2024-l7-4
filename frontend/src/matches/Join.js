@@ -71,12 +71,6 @@ export default function Join(){
             </div>
         </div>
         </div>
-        <div style={{ textAlign: 'center' }}>
-        {match.joinedPlayers ? (match.joinedPlayers.length=== match.maxPlayers ? (<Button outline color="success" >
-            <Link to={`/matches/create`} className="btn sm"style={{ textDecoration: "none" }}>Start Match</Link>
-        </Button>) : "") : "Loading.."}
-        
-        </div>
         </div>
         
       );

@@ -19,6 +19,7 @@ export default function Home(){
         jwt,
         setMessage,
         setVisible
+
     );
 
     if(!jwt){
