@@ -37,13 +37,13 @@ export default function Home(){
     
             const matchesList =  matches.map((m) => {
             return (<tr key={m.id}>
-                <td className="text-center"> {m.name} </td>
+                <td className="text-center"> {m.name}</td>
                 <td className="text-center"> {m.joinedPlayers.length + "/" + m.maxPlayers} </td>
+                <td className='text-center'>{m.matchState}</td>
                 <td className="text-center">
-        <Button outline color="success">
-            <Link to={`/mymatches/${m.id}/join`} className="btn sm"                
-            style={{ textDecoration: "none" }}>JOIN</Link> 
-        </Button>
+                {m.matchState === "OPEN" && (<Button outline color="success" size='sm'>
+            <Link to={`/mymatches/${m.id}/join`} className="btn btn-sm" style={{ textDecoration: "none" }}>JOIN</Link> 
+        </Button>)}
       </td>
       </tr>
       );
@@ -59,16 +59,19 @@ export default function Home(){
                     <tr>
                         <th className="text-center">NAME</th>
                         <th className="text-center">PLAYERS</th>
+                        <th className='text-center'>STATE</th> 
                         <th className="text-center">PLAY</th>
                     </tr>
                 </thead>
                 <tbody>{matchesList}</tbody>
             </Table>
+        <div style={{textAlign: "center"}}>
         <Button outline color="success" >
             <Link
                 to={`/matches/create`} className="btn sm"
                 style={{ textDecoration: "none" }}>Create Match</Link>
         </Button>
+        </div>
         </div>
         </div>
         </div>

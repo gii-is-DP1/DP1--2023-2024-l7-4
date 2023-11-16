@@ -9,7 +9,6 @@ import { Button, ButtonGroup, Table } from "reactstrap";
 import useFetchState from "../util/useFetchState";
 import getIdFromUrl from "../util/getIdFromUrl";
 
-
 export default function Join(){
     const id = getIdFromUrl(2);
     const jwt = tokenService.getLocalAccessToken();
@@ -25,15 +24,31 @@ export default function Join(){
     );
 
     const random = [];
-    //while(random.length<4){
-        //const criterios = ["A1", "A2", "A3", "A4", "A5", "A6","B1", "B2", "B3", "B4", "B5", "B6"];
-        //let criterio = criterios[Math.floor(Math.random() * criterios.length)]
-        //if ((random.filter(cr => cr.includes("A")).length < 2  && (random.filter(cr => cr.includes("B")).length < 2) && !random.includes(criterio)))
-        //    random.push(criterio)
-//}
+    let intentos = 0;
+    while (random.length < 4 && intentos < 1000000) {
         
+        const criteriosA = ["A1", "A2", "A3", "A4", "A5", "A6"];
+        const criteriosB = ["B1", "B2", "B3", "B4", "B5", "B6"];
+        let criteriosAIndex = Math.floor(Math.random() * criteriosA.length);
+        let criteriosBIndex = Math.floor(Math.random() * criteriosB.length);
+        let criterioA = criteriosA[criteriosAIndex]
+        let criterioB = criteriosB[criteriosBIndex]
+        if (
+        random.filter(cr => cr.includes("A")).length < 2 &&
+        random.filter(cr => cr.includes("B")).length < 2 &&
+        !random.includes(criterioA) && !random.includes(criterioB)
+
+    ) {
+        random.push(criterioA)
+        random.push(criterioB)
+    }
+
+    intentos++;
+}
 
     const matchPlayerList =  match.joinedPlayers;
+
+    
 
     return (
         <div>
@@ -43,7 +58,8 @@ export default function Join(){
             <Table aria-label="achievements" className="mt-4">
                 <thead>
                     <tr>
-                        <th className="text-center">PLAYERS</th>
+        
+                   <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}</th>
                     </tr>
                 </thead>
                 <tbody>{matchPlayerList}</tbody>
@@ -55,14 +71,18 @@ export default function Join(){
             </div>
         </div>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button outline color="success">
-            <Link to={`/`} className="btn sm" style={{ textDecoration: "none" }}>
-                Leave Lobby
-            </Link>
-            </Button>
-            </div>
+        <div style={{ textAlign: 'center' }}>
+        {match.joinedPlayers ? (match.joinedPlayers.length=== match.maxPlayers ? (<Button outline color="success" >
+            <Link to={`/matches/create`} className="btn sm"style={{ textDecoration: "none" }}>Start Match</Link>
+        </Button>) : "") : "Loading.."}
+
         </div>
+        </div>
+        
       );
 }
     
+
+
+
+
