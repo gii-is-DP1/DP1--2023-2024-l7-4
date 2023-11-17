@@ -27,7 +27,7 @@ public class GameBoard extends BaseEntity{
     private Set<Territory> territories;
 
     @ManyToOne
-    @JoinColumn(name = "player")
+    @JoinColumn(name = "playerBoard")
     private Player player;
 
     @ManyToOne

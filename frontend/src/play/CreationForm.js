@@ -59,7 +59,7 @@ export default function CreationForm() {
     }).then(function (response) {
         if (response.status === 201) {
           const id = response.id;
-          window.location.href = `/play/wait/${id}`;
+          window.location.href = `/`;
               }
             })
             .catch((message) => {

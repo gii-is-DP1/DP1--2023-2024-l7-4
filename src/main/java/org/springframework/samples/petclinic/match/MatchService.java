@@ -44,6 +44,8 @@ public class MatchService {
         return (List<Match>) matchRepository.findMatchsByPlayer(username);
     }
 
+
+
     @Transactional(readOnly = true)
     public List<Match> findMatchsClosedByPlayer(String p){
         return (List<Match>) matchRepository.findMatchsClosedByPlayer(p);
@@ -60,4 +62,10 @@ public class MatchService {
         Optional<GameBoard> g = matchRepository.findBoardByPlayer(id);
         return g.get()==null?null:g.get();
     }
+
+    @Transactional
+	public void deleteMatch(int id) throws DataAccessException {
+		Match toDelete = findMatchById(id);
+		matchRepository.delete(toDelete);
+	}
 }
