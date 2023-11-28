@@ -44,11 +44,10 @@ public class MatchRestController {
         this.playerService = playerService;
     }
 
-
     @GetMapping
 	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
         if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
-        return new ResponseEntity<>((List<Match>) this.matchService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
