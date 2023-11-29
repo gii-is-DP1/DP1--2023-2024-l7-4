@@ -15,6 +15,5 @@ public Collection<Player> sortedPlayersByPuntuation();
 @Query("SELECT p FROM Player p WHERE p.username = :username")
 public Optional<Player> existsPlayer(String username);
 
-
 }
 

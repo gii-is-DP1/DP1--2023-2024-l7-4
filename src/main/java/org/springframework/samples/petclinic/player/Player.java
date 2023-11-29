@@ -1,5 +1,4 @@
 package org.springframework.samples.petclinic.player;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.samples.petclinic.userKingdom.UserKingdom;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,9 +13,9 @@ import lombok.Setter;
 public class Player extends UserKingdom{
 
 	@Column(name = "total_score")
-    Integer total_score;
+    private Integer total_score;
 
     @Column(name = "total_bloqs")
-	Integer total_bloqs;
+	private Integer total_bloqs;
     
 }

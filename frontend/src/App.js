@@ -8,28 +8,23 @@ import PrivateRoute from "./privateRoute";
 import Register from "./auth/register";
 import Login from "./auth/login";
 import Logout from "./auth/logout";
-import OwnerPetList from "./owner/pets/petList";
 import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
-import VetConsultationTickets from "./vet/consultations/tickets/ticketList";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import OwnerListAdmin from "./admin/owners/OwnerListAdmin";
 import OwnerEditAdmin from "./admin/owners/OwnerEditAdmin";
 import SwaggerDocs from "./public/swagger";
-import ClinicsList from "./clinicOwner/clinicsList"
-import EditClinic from "./clinicOwner/clinicEdit"
-import OwnerListClinicOwner from "./clinicOwner/ownersList"
-import ConsultationListClinicOwner from "./clinicOwner/consultations/ConsultationListClinicOwner";
-import ConsultationEditClinicOwner from "./clinicOwner/consultations/ConsultationEditClinicOwner";
-import VetListClinicOwner from "./clinicOwner/vets/VetListClinicOwner";
-import VetEditClinicOwner from "./clinicOwner/vets/VetEditClinicOwner";
 import AchievementList from "./achievements/achievementList";
 import AchievementEdit from "./achievements/achievementEdit";
 import AchievementListPlayer from "./achievements/achievementListPlayer";
 import RankingPlayers from "./players/Ranking";
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
+import PlayerEdit from "./players";
+import MyMatches from "./matches/MyMatches";
+import CreationForm from "./play/CreationForm";
+import Join from "./matches/Join";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -71,7 +66,8 @@ function App() {
           <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
           <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
           <Route path="/players/:playerId" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
-
+          <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
+        
         </>)
     }
     if (role === "PLAYER") {
@@ -79,6 +75,10 @@ function App() {
         <>
           <Route path="/achievements/" exact={true} element={<PrivateRoute><AchievementListPlayer /></PrivateRoute>} />
           <Route path="/ranking" exact={true} element={<PrivateRoute><RankingPlayers/></PrivateRoute>} />
+          <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
+          <Route path="/players/:username/myMatches" exact={true} element={<PrivateRoute><MyMatches/></PrivateRoute>} />
+          <Route path="/matches/create" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
+          <Route path="/mymatches/:id/join" exact={true} element={<PrivateRoute><Join/></PrivateRoute>} />
 
         </>)
     }

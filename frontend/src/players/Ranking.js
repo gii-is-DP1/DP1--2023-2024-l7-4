@@ -24,9 +24,6 @@ export default function PlayerListAdmin() {
   const playerlist = players.map((player) => {
     return (
       <tr key={player.id}>
-        <td style={{ whiteSpace: "nowrap" }}>
-          {player.name} {player.surname}
-        </td>
         <td className="text-center">
         <img src={player.avatar ? player.avatar : imgnotfound } alt={player.name} width="50px"/>
         </td>
@@ -47,7 +44,6 @@ export default function PlayerListAdmin() {
           <Table aria-label="players" className="mt-4">
             <thead>
               <tr>
-                <th width="10%">Name</th>
                 <th width="10%">Avatar</th>
                 <th width="10%">Nickname</th>
                 <th width="10%">Total Score</th>

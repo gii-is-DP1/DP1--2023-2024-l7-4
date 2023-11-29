@@ -1,5 +1,9 @@
 package org.springframework.samples.petclinic.player;
 
+
+// import org.springframework.samples.petclinic.match.Match;
+// import org.springframework.samples.petclinic.match.MatchService;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,8 @@ import java.net.URISyntaxException;
 import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
+import org.springframework.samples.petclinic.match.Match;
+import org.springframework.samples.petclinic.match.MatchService;
 import org.springframework.samples.petclinic.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,10 +36,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 public class PlayerRestController {
     
     private PlayerService playerService;
+	private MatchService matchService;
 
     @Autowired
-    public PlayerRestController(PlayerService playerService){
+    public PlayerRestController(PlayerService playerService ,MatchService matchService){
         this.playerService = playerService;
+		this.matchService = matchService;
     }
 
 
@@ -46,6 +54,11 @@ public class PlayerRestController {
 	@GetMapping(value = "{id}")
 	public ResponseEntity<Player> findById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<>(playerService.findPlayer(id), HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/username/{id}")
+	public ResponseEntity<Player> findByUsername(@PathVariable("id") String username) {
+		return new ResponseEntity<>(playerService.findByUsername(username), HttpStatus.OK);
 	}
 
     @PostMapping()
@@ -72,5 +85,11 @@ public class PlayerRestController {
 		playerService.deletePlayer(id);
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}
-    
+   
+	@GetMapping(value = "/{username}/myMatches")
+	public ResponseEntity<List<Match>> findMyMatches(@RequestParam(required = false, name = "closed") boolean closed,@PathVariable String username) {
+		if(closed) return new ResponseEntity<>((List<Match>) matchService.findMatchsClosedByPlayer(username), HttpStatus.OK);
+		else return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
+	}
+
 }
