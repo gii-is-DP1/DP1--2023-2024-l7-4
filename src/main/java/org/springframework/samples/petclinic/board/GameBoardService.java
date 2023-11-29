@@ -48,7 +48,38 @@ public class GameBoardService {
         return res;
     }
 
+    @Transactional
+    public Integer getScoreCriteryB4(GameBoard gb) {
+        Set<Territory> terrs = gb.getTerritories();
+        Integer res = 0;
+        for (Territory t: terrs){
+            Set<Integer> idAdjacencies = t.getCell().getAdjacencies();
+            if(t.getTerritoryType()==TerritoryType.CASTLE && idAdjacencies.size()>=5){
+                if(terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.FIELD).count()==1 
+                && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.FOREST).count()==1
+                && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.MOUNTAIN).count()==1
+                && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.RIVER).count()==1
+                && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.VILLAGE).count()==1){
+                    res+=12;
+                }
+            }
+        }
+        return res;
+    }
 
+    @Transactional
+    public Integer getScoreCriteryB5(GameBoard gb) {
+        Set<Territory> terrs = gb.getTerritories();
+        Integer res = 0;
+        for (Territory t: terrs){
+            Set<Integer> idAdjacencies = t.getCell().getAdjacencies();
+            if(t.getTerritoryType()==TerritoryType.RIVER && idAdjacencies.size()>=2){
+                if(terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.FOREST).count()>=2)
+                res+=2;
+            }
+        }
+        return res;
+    }
 
 
 
