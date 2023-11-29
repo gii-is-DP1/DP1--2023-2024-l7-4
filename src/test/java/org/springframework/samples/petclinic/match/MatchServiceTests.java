@@ -14,11 +14,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
-import org.springframework.samples.petclinic.owner.Owner;
-import org.springframework.samples.petclinic.pet.Pet;
-import org.springframework.samples.petclinic.pet.exceptions.DuplicatedPetNameException;
 import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +28,9 @@ public class MatchServiceTests {
 
     private MatchService matchService;
 
-	private PlayerService playerService;
-
 	@Autowired
-	public MatchServiceTests(MatchService matchService, PlayerService playerService) {
+	public MatchServiceTests(MatchService matchService) {
 		this.matchService = matchService;
-		this.playerService = playerService;
 	}
 
 	@Test
