@@ -7,6 +7,7 @@ import org.springframework.samples.petclinic.model.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
@@ -19,14 +20,10 @@ import lombok.Setter;
 @Table(name = "territories")
 public class Territory extends BaseEntity{
     
-    @Column(name = "posX")
-    Integer posX;
-
-    @Column(name = "posY")
-    Integer posY;
-
-    @Column(name = "posZ")
-    Integer posZ;
+    @ManyToOne
+    @JoinColumn
+    @NotNull
+    Cell cell;
 
     @Column(name = "type")
     @NotNull
