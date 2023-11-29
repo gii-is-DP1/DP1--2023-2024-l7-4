@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../App.css';
 import '../static/css/home/home.css'; 
 import logo from '../static/images/desembarco_del_rey.jpg';
@@ -21,6 +21,7 @@ export default function Home(){
         setVisible
 
     );
+
 
     if(!jwt){
         return(

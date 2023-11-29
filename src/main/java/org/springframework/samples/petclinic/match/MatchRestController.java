@@ -8,12 +8,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
 import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.samples.petclinic.board.GameBoardRepository;
+import org.springframework.samples.petclinic.player.Player;
+import org.springframework.samples.petclinic.player.PlayerRepository;
 import org.springframework.samples.petclinic.player.PlayerService;
-import org.springframework.samples.petclinic.util.RestPreconditions;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.samples.petclinic.territory.Territory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -50,11 +51,6 @@ public class MatchRestController {
         return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Match> getMatchById(@PathVariable("id") Integer id){
-        return new ResponseEntity<>( matchService.findMatchById(id), HttpStatus.OK);
-    }
-
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> create(@RequestBody @Valid Match match) throws URISyntaxException {
@@ -66,6 +62,9 @@ public class MatchRestController {
 
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
+
+    //FUNCION PARA JOIN
 
     @PutMapping("/{id}/join")
     @ResponseStatus(HttpStatus.OK)
@@ -87,13 +86,17 @@ public class MatchRestController {
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{id}")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable("id") int id) {
-		RestPreconditions.checkNotNull(matchService.findMatchById(id), "Match", "ID", id);
-		matchService.deleteMatch(id);;
-		return new ResponseEntity<>(new MessageResponse("Match deleted!"), HttpStatus.OK);
-	}
 
+/// FUNCION DE GUARDADO DE TABLEROS
 
+    @PutMapping("/{matchId}/{username}/saveBoard")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void saveBoard(@PathVariable("matchId") Integer matchId, @PathVariable("username") String username, @RequestBody @Valid Set<Territory> territories){
+        Match m = matchService.findMatchById(matchId);
+        Player p = playerService.findByUsername(username);
+        GameBoard newGb = new GameBoard();
+        newGb.setTerritories(territories);
+        newGb.setMatch(m);
+        newGb.setPlayer(p);    
+    }
 }

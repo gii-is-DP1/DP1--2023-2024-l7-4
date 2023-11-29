@@ -23,6 +23,7 @@ public interface MatchRepository extends CrudRepository<Match, Integer>{
     @Query("SELECT m FROM Match m WHERE m.matchState IN (OPEN)")
     public Collection<Match> findAllOpen();
 
+    //FALTA ID DE PARTIDA
     @Query("SELECT b FROM GameBoard b WHERE b.player.id = :playerId")
     public Optional<GameBoard> findBoardByPlayer(Integer playerId);
 
