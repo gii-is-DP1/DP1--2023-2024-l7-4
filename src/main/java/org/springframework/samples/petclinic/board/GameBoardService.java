@@ -37,10 +37,9 @@ public class GameBoardService {
         Set<Territory> terrs = gb.getTerritories();
         Integer res = 0;
         for (Territory t: terrs){
-            Set<Cell> adjacencies = t.getCell().getAdjacencies();
+            Set<Integer> adjacencies = t.getCell().getAdjacencies();
             if(t.getTerritoryType()==TerritoryType.CASTLE && adjacencies.size()==6){
-                List<Integer> idAdjacencies = adjacencies.stream().map(c -> c.getId()).toList();
-                if(terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() != null).toList().size() == 6){
+                if(terrs.stream().filter(territory -> adjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() != null).toList().size() == 6){
                     res+=2;
                 }
             }
@@ -52,5 +51,5 @@ public class GameBoardService {
 
 
 
-    
+
 }
