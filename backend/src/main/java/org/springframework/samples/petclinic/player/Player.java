@@ -1,0 +1,21 @@
+package org.springframework.samples.petclinic.player;
+import org.springframework.samples.petclinic.userKingdom.UserKingdom;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter; 
+
+@Entity
+@Getter
+@Setter
+@Table(name = "players")
+public class Player extends UserKingdom{
+
+	@Column(name = "total_score")
+    private Integer total_score;
+
+    @Column(name = "total_bloqs")
+	private Integer total_bloqs;
+    
+}
