@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import '../App.css';
 import '../static/css/home/home.css'; 
-import logo from '../static/images/desembarco_del_rey.jpg';
 import tokenService from '../services/token.service';
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Table } from "reactstrap";
+import { Button, Table } from "reactstrap";
 import useFetchState from "../util/useFetchState";
 import getIdFromUrl from "../util/getIdFromUrl";
 
