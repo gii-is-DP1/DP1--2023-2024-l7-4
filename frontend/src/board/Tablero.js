@@ -90,6 +90,7 @@ class App extends Component {
 }
 };
 
+
   render() {
     const rotationStyle = {
       transform: 'rotate(30deg)',

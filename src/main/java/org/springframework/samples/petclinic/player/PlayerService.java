@@ -60,7 +60,7 @@ public class PlayerService {
         playerRepository.delete(toDelete);
     }
 
-    public Boolean existsPlayer(String username) {
+    public Boolean existsPlayer(String username) throws DataAccessException {
         return !playerRepository.existsPlayer(username).isEmpty();
     }
 

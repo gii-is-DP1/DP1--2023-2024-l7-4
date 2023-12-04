@@ -6,8 +6,7 @@ class GameLayout extends Component {
   constructor(props) {
     super(props);
     const hexagons = GridGenerator.hexagon(4);
-    this.state = { hexagons,
-      selectedHexagons: [],};
+    this.state = { hexagons};
   }
   //Son vecinos?
   areNeighbors(hex1, hex2) {
@@ -15,30 +14,30 @@ class GameLayout extends Component {
   }
   // onDrop you can read information of the hexagon that initiated the drag
   onDrop(event, source, targetProps) {
-    const { hexagons, selectedHexagons } = this.state;
+    const { hexagons } = this.state;
     // Verificar si el hexágono ya está en la lista de seleccionados
  
     // Actualizar el hexágono soltado
     const hexas = hexagons.map(hex => {
-      if (HexUtils.equals(source.state.hex, hex) ) {
+      if (HexUtils.equals(source.state.hex, hex)) {
         hex.image = targetProps.data.image;
         hex.text = targetProps.data.text;
         hex.blocked = true;
-      
-  
-        // Agregar el hexágono seleccionado a la lista
-        this.setState(prevState => ({
-          selectedHexagons: [...prevState.selectedHexagons, hex],
-        }));
-      }else{hex.blocked= true}
+        hex.build = true;
+      } else if (hex.neighbor) {
+        hex.blocked = false;
+      } else {
+        hex.blocked = true;
+      }
       return hex;
     });
     
     const vecinos = hexas.map(hex => {
-      if (this.areNeighbors(source.state.hex, hex)) {
+      if (this.areNeighbors(source.state.hex, hex) && !hex.build) {
         hex.image='/Desbloqueado.png'
         hex.text = '';
         hex.blocked= false
+        hex.neighbor= true
       }
       return hex;
     });

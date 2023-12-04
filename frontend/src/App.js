@@ -27,6 +27,7 @@ import CreationForm from "./play/CreationForm";
 import Join from "./matches/Join";
 import Tablero from "./board/Tablero"
 
+
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
     <div role="alert">
@@ -81,6 +82,7 @@ function App() {
           <Route path="/matches/create" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
           <Route path="/mymatches/:id/join" exact={true} element={<PrivateRoute><Join/></PrivateRoute>} />
           <Route path="/board" exact={true} element={<PrivateRoute><Tablero/></PrivateRoute>} />
+          
 
 
         </>)
