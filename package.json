@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "hex-grid": "^2.0.2",
+    "react-hexgrid": "^2.0.1"
+  }
+}
