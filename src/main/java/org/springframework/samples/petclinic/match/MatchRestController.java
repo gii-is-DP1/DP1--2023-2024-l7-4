@@ -50,6 +50,11 @@ public class MatchRestController {
         return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+	public ResponseEntity<Match> findById(@PathVariable(name = "id") int id) {
+        return new ResponseEntity<>(matchService.findMatchById(id), HttpStatus.OK);
+    }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> create(@RequestBody @Valid Match match) throws URISyntaxException {
@@ -70,16 +75,12 @@ public class MatchRestController {
     public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) {
         Match m = matchService.findMatchById(id);
         Set<String> joinedPlayers = m.getJoinedPlayers();
+        username = username.replace("\"", "");
         joinedPlayers.add(username);
-        if(joinedPlayers.size()==m.getMaxPlayers() && m.getMatchState() == MatchState.OPEN){
+        if(m.getMatchState() == MatchState.OPEN){
             m.setJoinedPlayers(joinedPlayers);
-            m.setMatchState(MatchState.IN_PROGRESS);
-            for(String user: joinedPlayers){
-                GameBoard gb = new GameBoard();
-                gb.setMatch(m);
-                gb.setPlayer(playerService.findByUsername(user));
-                gameBoardRepository.save(gb);
-            }
+            if(joinedPlayers.size()==m.getMaxPlayers())
+                m.setMatchState(MatchState.IN_PROGRESS); 
         }
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);

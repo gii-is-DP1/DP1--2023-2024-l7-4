@@ -57,15 +57,20 @@ export default function CreationForm() {
       },
       body: JSON.stringify(request),
     }).then(function (response) {
-        if (response.status === 201) {
-          const id = response.id;
-          window.location.href = `/`;
-              }
-            })
-            .catch((message) => {
-              alert(message);
-            });
-        }
+      if (response.status === 201) {
+        return response.json();
+      } else {
+        throw new Error(`Error en la solicitud: ${response.status}`);
+      }
+    })
+    .then(function (data) {
+      const id = data.id;
+      window.location.href = `/mymatches/${id}/join`;
+    })
+    .catch((message) => {
+      alert(message);
+    });
+  }
 
   useEffect(() => {
       });
