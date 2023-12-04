@@ -9,17 +9,17 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.samples.petclinic.auth.payload.request.LoginRequest;
-import org.springframework.samples.petclinic.auth.payload.request.SignupRequest;
+//import org.springframework.samples.petclinic.auth.payload.request.LoginRequest;
+//import org.springframework.samples.petclinic.auth.payload.request.SignupRequest;
 import org.springframework.samples.petclinic.configuration.jwt.JwtUtils;
-import org.springframework.samples.petclinic.configuration.services.UserDetailsImpl;
+//import org.springframework.samples.petclinic.configuration.services.UserDetailsImpl;
 import org.springframework.samples.petclinic.owner.OwnerRestController;
-import org.springframework.samples.petclinic.user.UserService;
+//import org.springframework.samples.petclinic.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
-import org.springframework.test.web.servlet.MockMvc;
+//import org.springframework.test.web.servlet.MockMvc;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+////import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Test class for {@link OwnerRestController}
@@ -30,7 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 		SecurityAutoConfiguration.class })
 class AuthControllerTests {
 
-	private static final String BASE_URL = "/api/v1/auth";
+	//private static final String BASE_URL = "/api/v1/auth";
 
 	@SuppressWarnings("unused")
 	@Autowired
@@ -42,22 +42,22 @@ class AuthControllerTests {
 	@MockBean
 	private JwtUtils jwtUtils;
 
-	@MockBean
-	private UserService userService;
+	//@MockBean
+	//private UserService userService;
 
-	@MockBean
-	private AuthService authService;
+	//@MockBean
+	//private AuthService authService;
 
-	@Autowired
-	private ObjectMapper objectMapper;
+	//@Autowired
+	//private ObjectMapper objectMapper;
 
-	@Autowired
-	private MockMvc mockMvc;
+	//@Autowired
+	//private MockMvc mockMvc;
 
-	private LoginRequest loginRequest;
-	private SignupRequest signupRequest;
-	private UserDetailsImpl userDetails;
-	private String token;
+	//private LoginRequest loginRequest;
+	//private SignupRequest signupRequest;
+	//private UserDetailsImpl userDetails;
+	//private String token;
 
 	/* 
 	@BeforeEach
