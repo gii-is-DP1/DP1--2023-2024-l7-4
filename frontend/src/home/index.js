@@ -7,10 +7,12 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Table } from "reactstrap";
 import useFetchState from "../util/useFetchState";
+import jwtDecode from 'jwt-decode';
 
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Home(){
+    const username = jwtDecode(jwt).sub;
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [matches, setMatches] = useFetchState(
@@ -34,14 +36,22 @@ export default function Home(){
             </div>
         );
         }else {
-    
             const matchesList =  matches.map((m) => {
             return (<tr key={m.id}>
                 <td className="text-center"> {m.name}</td>
                 <td className="text-center"> {m.joinedPlayers.length + "/" + m.maxPlayers} </td>
                 <td className='text-center'>{m.matchState}</td>
                 <td className="text-center">
-                {m.matchState === "OPEN" && (<Button outline color="success" size='sm'>
+                {m.matchState === "OPEN" && (<Button outline color="success" size='sm' onClick = { () => {
+                    fetch('/api/v1/matches/' + m.id + "/join", {
+                    method: 'PUT',
+                        headers: {
+                        "Authorization": `Bearer ${jwt}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(username),
+                    })}}>
             <Link to={`/mymatches/${m.id}/join`} className="btn btn-sm" style={{ textDecoration: "none" }}>JOIN</Link> 
         </Button>)}
       </td>
@@ -66,7 +76,7 @@ export default function Home(){
                 <tbody>{matchesList}</tbody>
             </Table>
         <div style={{textAlign: "center"}}>
-        <Button outline color="success" >
+        <Button outline color="success">
             <Link
                 to={`/matches/create`} className="btn sm"
                 style={{ textDecoration: "none" }}>Create Match</Link>
