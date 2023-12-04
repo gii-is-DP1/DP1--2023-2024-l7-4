@@ -1,0 +1,128 @@
+.App {
+  text-align: center;
+}
+.number-list {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    background-color: white; /* Agrega un fondo blanco a la lista */
+    padding: 20px; /* Ajusta el espacio interno según sea necesario */
+    border-radius: 8px; /* Agrega bordes redondeados para mejorar el aspecto */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Agrega una sombra suave */
+}
+.ull {
+  list-style: none;
+  padding: 0;
+}
+
+.lii {
+  background-color: rgb(249, 5, 5);
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.show-list-button {
+  position: absolute;
+  top: 100px;
+  right: 10px;
+  padding: 10px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.location-list {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.ullocation {
+  list-style: none;
+  padding: 0;
+}
+
+.lilocation {
+  margin: 10px;
+  padding: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+svg g {
+  fill: #4499a9;
+  fill-opacity: 0.6;
+}
+svg g:hover {
+  fill: #7be3f6;
+  fill-opacity: 0.7;
+}
+svg g:hover text {
+  fill-opacity: 1;
+}
+svg g.q .hexagon {
+  fill: Red;
+  fill-opacity: 0.4;
+}
+svg g.r .hexagon {
+  fill: Green;
+  fill-opacity: 0.4;
+}
+svg g.s .hexagon {
+  fill: Blue;
+  fill-opacity: 0.4;
+}
+svg g.active  .hexagon {
+  fill: Coral;
+  fill-opacity: 0.9;
+}
+svg g polygon {
+  stroke: #7be3f6;
+  stroke-width: 0.2;
+  transition: fill-opacity .5s;
+}
+svg g text {
+  font-size: 0.17em;
+  fill: rgb(209, 15, 15);
+  fill-opacity: 0.7;
+  transition: fill-opacity .5s;
+}
+svg path {
+  fill: none;
+  stroke: #03090a;
+  stroke-width: 0.2em;
+  stroke-opacity: 0.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
