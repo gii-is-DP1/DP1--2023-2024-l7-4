@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.samples.petclinic.board.GameBoardRepository;
 import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.player.PlayerRepository;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.samples.petclinic.territory.Territory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,11 +44,10 @@ public class MatchRestController {
         this.playerService = playerService;
     }
 
-
     @GetMapping
 	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
         if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
-        return new ResponseEntity<>((List<Match>) this.matchService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
     @PostMapping()
