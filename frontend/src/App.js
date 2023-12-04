@@ -25,7 +25,8 @@ import PlayerEdit from "./players";
 import MyMatches from "./matches/MyMatches";
 import CreationForm from "./play/CreationForm";
 import Join from "./matches/Join";
-import Tablero from "./board/Tablero"
+import Tablero from "./board/Tablero";
+import MyProfile from "./players/myProfile";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -81,6 +82,7 @@ function App() {
           <Route path="/matches/create" exact={true} element={<PrivateRoute><CreationForm/></PrivateRoute>} />
           <Route path="/mymatches/:id/join" exact={true} element={<PrivateRoute><Join/></PrivateRoute>} />
           <Route path="/board" exact={true} element={<PrivateRoute><Tablero/></PrivateRoute>} />
+          <Route path="/myProfile/:username" exact={true} element={<PrivateRoute><MyProfile/></PrivateRoute>} />
 
 
         </>)

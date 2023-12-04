@@ -37,11 +37,11 @@ public class GameBoardService {
 
     @Transactional
     public Integer getScoreCriteryA1(GameBoard gb) {
-        Set<Territory> terrs = gb.getTerritories();
-        Integer res = 0;
-        for (Territory t: terrs){
-            Set<Integer> adjacencies = t.getCell().getAdjacencies();
-            if(t.getTerritoryType()==TerritoryType.CASTLE && adjacencies.size()==6){
+        Set<Territory> terrs = gb.getTerritories(); // cogemos territorios
+        Integer res = 0; // inicializamos resultado
+        for (Territory t: terrs){ // para cada territorio del tablero... 
+            Set<Integer> adjacencies = t.getCell().getAdjacencies(); // cogemos las adyacencias
+            if(t.getTerritoryType()==TerritoryType.CASTLE && adjacencies.size()==6){  // Chequeamos que el territorio sea un castillo y tenga 6 celdas adyacentes
                 if(terrs.stream().filter(territory -> adjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() != null).toList().size() == 6){
                     res+=2;
                 }
@@ -50,6 +50,27 @@ public class GameBoardService {
         return res;
     }
 
+
+    @Transactional
+    public Integer getScoreCriteryA2(GameBoard gb) {
+       Set<Territory> terrs = gb.getTerritories();
+       Integer res = 0;
+       for (Territory t: terrs){
+           Set<Integer> idAdjacencies = t.getCell().getAdjacencies();
+           if (t.getTerritoryType()==TerritoryType.FIELD && idAdjacencies.size()>=2) {
+               if (terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() == TerritoryType.MOUNTAIN).count() >= 1
+               && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() == TerritoryType.RIVER).count() >= 1){
+                    if(terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() == TerritoryType.FOREST).count() >= 1) {
+                        res +=4;
+                    }else {
+                        res +=3;
+                    }
+                }
+            }
+       
+        }
+        return res;
+    }
 
     @Transactional
     public Integer getScoreCriteryB4(GameBoard gb) {
@@ -63,7 +84,7 @@ public class GameBoardService {
                 && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.MOUNTAIN).count()==1
                 && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.RIVER).count()==1
                 && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType()==TerritoryType.VILLAGE).count()==1){
-                    res+=2;
+                    res+=12;
                 }
             }
         }
@@ -140,26 +161,7 @@ public class GameBoardService {
 
 
  */
-    @Transactional
-    public Integer getScoreCriteryA2(GameBoard gb) {
-       Set<Territory> terrs = gb.getTerritories();
-       Integer res = 0;
-       for (Territory t: terrs){
-           Set<Integer> idAdjacencies = t.getCell().getAdjacencies();
-           if (t.getTerritoryType()==TerritoryType.FIELD && idAdjacencies.size()>=2) {
-               if (terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() == TerritoryType.MOUNTAIN).count() >= 1
-               && terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() == TerritoryType.RIVER).count() >= 1){
-                    if(terrs.stream().filter(territory -> idAdjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() == TerritoryType.FOREST).count() >= 1) {
-                        res +=4;
-                    }else {
-                        res +=3;
-                    }
-                }
-            }
-       
-        }
-        return res;
-    }
+
 
     
 }

@@ -90,7 +90,7 @@ public class MatchRestController {
 
 /// FUNCION DE GUARDADO DE TABLEROS
 
-    @PutMapping("/{matchId}/{username}/saveBoard")
+    @PostMapping("/{matchId}/{username}/saveBoard")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveBoard(@PathVariable("matchId") Integer matchId, @PathVariable("username") String username, @RequestBody @Valid Set<Territory> territories){
         Match m = matchService.findMatchById(matchId);
