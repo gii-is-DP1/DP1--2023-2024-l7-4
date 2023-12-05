@@ -16,7 +16,6 @@ class GameLayout extends Component {
   onDrop(event, source, targetProps) {
     const { hexagons } = this.state;
     // Verificar si el hexágono ya está en la lista de seleccionados
- 
     // Actualizar el hexágono soltado
     const hexas = hexagons.map(hex => {
       if (HexUtils.equals(source.state.hex, hex)) {
@@ -41,13 +40,13 @@ class GameLayout extends Component {
       }
       return hex;
     });
-  
+    
     this.setState({ hexagons: vecinos});
   }
 
   onDragStart(event, source) {
     // If this tile is empty, let's disallow drag
-    if (!source.props.data.text) {
+    if (!source.props.data.text || source.props.data.blocked) {
       event.preventDefault();
     }
   }
@@ -88,6 +87,20 @@ class GameLayout extends Component {
       this.setState({ hexagons: hexas });
     }
 
+    resetBuiltHexagons() {
+      const { hexagons } = this.state;
+      const hexas = hexagons.map(hex => {
+          if (!hex.build) {
+            hex.text = null;
+            hex.image = null;
+            hex.neighbor= false;
+            hex.blocked = false;
+          }
+          return hex;
+        });
+        this.setState({ hexagons: hexas });
+      }
+
   render() {
     let { hexagons } = this.state;
  
@@ -116,6 +129,6 @@ class GameLayout extends Component {
       </Layout>
     );
   }
-}
 
-export default GameLayout;
+}
+  export default GameLayout;

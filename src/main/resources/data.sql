@@ -32,77 +32,89 @@ INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (2,'Explorador','Si juegas 25 partidas o más',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas o más',20.0,'VICTORIES');
 
-INSERT INTO cells(id, x, y, z) VALUES (1, 0, 0, 0);
-INSERT INTO cells(id, x, y, z) VALUES (2, 1, 0, -1);
-INSERT INTO cells(id, x, y, z) VALUES (3, 2, 0, -2);
-INSERT INTO cells(id, x, y, z) VALUES (4, 3, 0, -3);
-INSERT INTO cells(id, x, y, z) VALUES (5, 4, 0, -4);
+INSERT INTO cells(id, x, y, z) VALUES (1, 0, 0, 0); -- Celda central
 
+-- Anillo 1
+INSERT INTO cells(id, x, y, z) VALUES (2, 1, 0, -1);
+INSERT INTO cells(id, x, y, z) VALUES (3, 1, -1, 0);
+INSERT INTO cells(id, x, y, z) VALUES (4, 0, -1, 1);
+INSERT INTO cells(id, x, y, z) VALUES (5, -1, 0, 1);
 INSERT INTO cells(id, x, y, z) VALUES (6, -1, 1, 0);
 INSERT INTO cells(id, x, y, z) VALUES (7, 0, 1, -1);
-INSERT INTO cells(id, x, y, z) VALUES (8, 1, 1, -2);
-INSERT INTO cells(id, x, y, z) VALUES (9, 2, 1, -3);
-INSERT INTO cells(id, x, y, z) VALUES (10, 3, 1, -4);
 
-INSERT INTO cells(id, x, y, z) VALUES (11, -2, 2, 0);
-INSERT INTO cells(id, x, y, z) VALUES (12, -1, 2, -1);
-INSERT INTO cells(id, x, y, z) VALUES (13, 0, 2, -2);
-INSERT INTO cells(id, x, y, z) VALUES (14, 1, 2, -3);
-INSERT INTO cells(id, x, y, z) VALUES (15, 2, 2, -4);
+-- Anillo 2
+INSERT INTO cells(id, x, y, z) VALUES (8, 2, 0, -2);
+INSERT INTO cells(id, x, y, z) VALUES (9, 2, -1, -1);
+INSERT INTO cells(id, x, y, z) VALUES (10, 2, -2, 0);
+INSERT INTO cells(id, x, y, z) VALUES (11, 1, -2, 1);
+INSERT INTO cells(id, x, y, z) VALUES (12, 0, -2, 2);
+INSERT INTO cells(id, x, y, z) VALUES (13, -1, -1, 2);
+INSERT INTO cells(id, x, y, z) VALUES (14, -2, 0, 2);
+INSERT INTO cells(id, x, y, z) VALUES (15, -2, 1, 1);
+INSERT INTO cells(id, x, y, z) VALUES (16, -2, 2, 0);
+INSERT INTO cells(id, x, y, z) VALUES (17, -1, 2, -1);
+INSERT INTO cells(id, x, y, z) VALUES (18, 0, 2, -2);
+INSERT INTO cells(id, x, y, z) VALUES (19, 1, 1, -2);
 
-INSERT INTO cells(id, x, y, z) VALUES (16, -3, 3, 0);
-INSERT INTO cells(id, x, y, z) VALUES (17, -2, 3, -1);
-INSERT INTO cells(id, x, y, z) VALUES (18, -1, 3, -2);
-INSERT INTO cells(id, x, y, z) VALUES (19, 0, 3, -3);
-INSERT INTO cells(id, x, y, z) VALUES (20, 1, 3, -4);
+-- Anillo 3
+INSERT INTO cells(id, x, y, z) VALUES (20, 3, 0, -3);
+INSERT INTO cells(id, x, y, z) VALUES (21, 3, -1, -2);
+INSERT INTO cells(id, x, y, z) VALUES (22, 3, -2, -1);
+INSERT INTO cells(id, x, y, z) VALUES (23, 3, -3, 0);
+INSERT INTO cells(id, x, y, z) VALUES (24, 2, -3, 1);
+INSERT INTO cells(id, x, y, z) VALUES (25, 1, -3, 2);
+INSERT INTO cells(id, x, y, z) VALUES (26, 0, -3, 3);
+INSERT INTO cells(id, x, y, z) VALUES (27, -1, -2, 3);
+INSERT INTO cells(id, x, y, z) VALUES (28, -2, -1, 3);
+INSERT INTO cells(id, x, y, z) VALUES (29, -3, 0, 3);
+INSERT INTO cells(id, x, y, z) VALUES (30, -3, 1, 2);
+INSERT INTO cells(id, x, y, z) VALUES (31, -3, 2, 1);
+INSERT INTO cells(id, x, y, z) VALUES (32, -3, 3, 0);
+INSERT INTO cells(id, x, y, z) VALUES (33, -2, 3, -1);
+INSERT INTO cells(id, x, y, z) VALUES (34, -1, 3, -2);
+INSERT INTO cells(id, x, y, z) VALUES (35, 0, 3, -3);
+INSERT INTO cells(id, x, y, z) VALUES (36, 1, 2, -3);
+INSERT INTO cells(id, x, y, z) VALUES (37, 2, 1, -3);
 
-INSERT INTO cells(id, x, y, z) VALUES (21, -4, 4, 0);
-INSERT INTO cells(id, x, y, z) VALUES (22, -3, 4, -1);
-INSERT INTO cells(id, x, y, z) VALUES (23, -2, 4, -2);
-INSERT INTO cells(id, x, y, z) VALUES (24, -1, 4, -3);
-INSERT INTO cells(id, x, y, z) VALUES (25, 0, 4, -4);
+-- Anillo 4
+INSERT INTO cells(id, x, y, z) VALUES (38, 4, 0, -4);
+INSERT INTO cells(id, x, y, z) VALUES (39, 4, -1, -3);
+INSERT INTO cells(id, x, y, z) VALUES (40, 4, -2, -2);
+INSERT INTO cells(id, x, y, z) VALUES (41, 4, -3, -1);
+INSERT INTO cells(id, x, y, z) VALUES (42, 4, -4, 0);
+INSERT INTO cells(id, x, y, z) VALUES (43, 3, -4, 1);
+INSERT INTO cells(id, x, y, z) VALUES (44, 2, -4, 2);
+INSERT INTO cells(id, x, y, z) VALUES (45, 1, -4, 3);
+INSERT INTO cells(id, x, y, z) VALUES (46, 0, -4, 4);
+INSERT INTO cells(id, x, y, z) VALUES (47, -1, -3, 4);
+INSERT INTO cells(id, x, y, z) VALUES (48, -2, -2, 4);
+INSERT INTO cells(id, x, y, z) VALUES (49, -3, -1, 4);
+INSERT INTO cells(id, x, y, z) VALUES (50, -4, 0, 4);
+INSERT INTO cells(id, x, y, z) VALUES (51, -4, 1, 3);
+INSERT INTO cells(id, x, y, z) VALUES (52, -4, 2, 2);
+INSERT INTO cells(id, x, y, z) VALUES (53, -4, 3, 1);
+INSERT INTO cells(id, x, y, z) VALUES (54, -4, 4, 0);
+INSERT INTO cells(id, x, y, z) VALUES (55, -3, 4, -1);
+INSERT INTO cells(id, x, y, z) VALUES (56, -2, 4, -2);
+INSERT INTO cells(id, x, y, z) VALUES (57, -1, 4, -3);
+INSERT INTO cells(id, x, y, z) VALUES (58, 0, 4, -4);
+INSERT INTO cells(id, x, y, z) VALUES (59, 1, 3, -4);
+INSERT INTO cells(id, x, y, z) VALUES (60, 2, 2, -4);
+INSERT INTO cells(id, x, y, z) VALUES (61, 3, 1, -4);
 
-INSERT INTO cells(id, x, y, z) VALUES (26, 1, 0, -1);
-INSERT INTO cells(id, x, y, z) VALUES (27, 2, 0, -2);
-INSERT INTO cells(id, x, y, z) VALUES (28, 3, 0, -3);
-INSERT INTO cells(id, x, y, z) VALUES (29, 4, 0, -4);
-INSERT INTO cells(id, x, y, z) VALUES (30, -1, 1, 0);
+UPDATE cells c1
+SET adjacencies = (
+    SELECT ARRAY_AGG(c2.id)
+    FROM cells c2
+    WHERE (
+        (c2.x = c1.x AND c2.y = c1.y + 1) OR
+        (c2.x = c1.x AND c2.y = c1.y - 1) OR
+        (c2.x = c1.x - 1 AND c2.y = c1.y + 1) OR
+        (c2.x = c1.x + 1 AND c2.y = c1.y - 1) OR
+        (c2.x = c1.x - 1 AND c2.y = c1.y) OR
+        (c2.x = c1.x + 1 AND c2.y = c1.y)
+    )
+    AND c1.id != c2.id
+);
 
-INSERT INTO cells(id, x, y, z) VALUES (31, 0, 1, -1);
-INSERT INTO cells(id, x, y, z) VALUES (32, 1, 1, -2);
-INSERT INTO cells(id, x, y, z) VALUES (33, 2, 1, -3);
-INSERT INTO cells(id, x, y, z) VALUES (34, 3, 1, -4);
-INSERT INTO cells(id, x, y, z) VALUES (35, -2, 2, 0);
-
-INSERT INTO cells(id, x, y, z) VALUES (36, -1, 2, -1);
-INSERT INTO cells(id, x, y, z) VALUES (37, 0, 2, -2);
-INSERT INTO cells(id, x, y, z) VALUES (38, 1, 2, -3);
-INSERT INTO cells(id, x, y, z) VALUES (39, 2, 2, -4);
-INSERT INTO cells(id, x, y, z) VALUES (40, -3, 3, 0);
-
-INSERT INTO cells(id, x, y, z) VALUES (41, -2, 3, -1);
-INSERT INTO cells(id, x, y, z) VALUES (42, -1, 3, -2);
-INSERT INTO cells(id, x, y, z) VALUES (43, 0, 3, -3);
-INSERT INTO cells(id, x, y, z) VALUES (44, 1, 3, -4);
-INSERT INTO cells(id, x, y, z) VALUES (45, -4, 4, 0);
-
-INSERT INTO cells(id, x, y, z) VALUES (46, -3, 4, -1);
-INSERT INTO cells(id, x, y, z) VALUES (47, -2, 4, -2);
-INSERT INTO cells(id, x, y, z) VALUES (48, -1, 4, -3);
-INSERT INTO cells(id, x, y, z) VALUES (49, 0, 4, -4);
-INSERT INTO cells(id, x, y, z) VALUES (50, 1, 0, -1);
-
-INSERT INTO cells(id, x, y, z) VALUES (51, 2, 0, -2);
-INSERT INTO cells(id, x, y, z) VALUES (52, 3, 0, -3);
-INSERT INTO cells(id, x, y, z) VALUES (53, 4, 0, -4);
-INSERT INTO cells(id, x, y, z) VALUES (54, -1, 1, 0);
-INSERT INTO cells(id, x, y, z) VALUES (55, 0, 1, -1);
-
-INSERT INTO cells(id, x, y, z) VALUES (56, 1, 1, -2);
-INSERT INTO cells(id, x, y, z) VALUES (57, 2, 1, -3);
-INSERT INTO cells(id, x, y, z) VALUES (58, 3, 1, -4);
-INSERT INTO cells(id, x, y, z) VALUES (59, -2, 2, 0);
-INSERT INTO cells(id, x, y, z) VALUES (60, -1, 2, -1);
-
-INSERT INTO cells(id, x, y, z) VALUES (61, 0, 2, -2);
 -- INSERT INTO matches(id, name, matchTime, nRounds, maxPlayers, scoreCrit, winner, creator_id, joinedPlayers, matchState) VALUES (1, 'Nombre del Partido', 60, 5, 4, '["Crit1", "Crit2", "Crit3"]', 'Nombre del Ganador', 1, '["Jugador1", "Jugador2", "Jugador3"]', 'OPEN');

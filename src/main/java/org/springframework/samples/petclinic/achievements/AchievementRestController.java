@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.ipc.http.HttpSender.Response;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -46,6 +48,14 @@ public class AchievementRestController {
 		if(achievementToGet==null)
 			throw new ResourceNotFoundException("Achievement with id "+id+" not found!");
 		return new ResponseEntity<Achievement>(achievementToGet, HttpStatus.OK);
+	}
+
+	@GetMapping("/player/{username}")
+	public ResponseEntity<List<Achievement>> findAllReachedByPlayer(@PathVariable("username") String username, @RequestParam("reached") boolean reached){
+		if (reached)
+			return new ResponseEntity<>(achievementService.getTotalAchievementsReached(username), HttpStatus.OK);
+		else
+			return new ResponseEntity<>(achievementService.getAchievementsNotReached(username), HttpStatus.OK);
 	}
 
 	@PostMapping
