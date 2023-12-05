@@ -29,7 +29,7 @@ public class Cell extends BaseEntity{
 
     @ManyToMany
     @JoinColumn(name = "Adjacencies")
-    Set<Cell> adjacencies;
+    Set<Integer> adjacencies;
   
   
   
