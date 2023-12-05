@@ -15,7 +15,7 @@ export default function Join() {
     const jwt = tokenService.getLocalAccessToken();
     const username = jwtDecode(jwt).sub;
     const [message, setMessage] = useState(null);
-    const [visible, setVisible] = useState(false)
+    const [visible, setVisible] = useState(false);
     const [match, setMatch] = useFetchStatePlayers(
         [],
         `/api/v1/matches/${id}`,
@@ -31,7 +31,7 @@ export default function Join() {
             if (match.matchState !=="IN_PROGRESS"){
                 setWaitingMessage('Waiting the other players...');
             }else {
-                window.location.href = '/board';
+                window.location.href = `/board/${match.id}`;
                 clearInterval(intervalId); // Detiene el intervalo cuando el juego está en progreso
                 setWaitingMessage(''); // Limpia el mensaje de espera
             }
@@ -92,7 +92,7 @@ export default function Join() {
       <div style={{ textAlign: 'center' }}>
         {match.joinedPlayers ? (match.joinedPlayers.length === match.maxPlayers && match.creator.username === username ? (
           <Button outline color="success">
-            <Link to={`/board`} className="btn sm" style={{ textDecoration: "none" }}>
+            <Link to={`/board/${match.id}`} className="btn sm" style={{ textDecoration: "none" }}>
               Start Match
             </Link>
           </Button>

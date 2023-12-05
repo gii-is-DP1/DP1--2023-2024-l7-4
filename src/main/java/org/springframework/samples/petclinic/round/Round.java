@@ -1,4 +1,4 @@
-package round;
+package org.springframework.samples.petclinic.round;
 
 import java.util.List;
 
@@ -24,6 +24,10 @@ public class Round extends BaseEntity{
     @NotNull
     @JoinColumn(name = "match", referencedColumnName = "id")
     private Match match;
+
+    @Column(name = "subRound")
+    @NotNull
+    private Integer subRound;
 
     @Column(name = "mainPlayer")
     @NotNull
