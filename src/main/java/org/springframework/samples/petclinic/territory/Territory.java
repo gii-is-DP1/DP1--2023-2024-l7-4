@@ -6,6 +6,8 @@ import org.springframework.samples.petclinic.model.BaseEntity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -24,7 +26,8 @@ public class Territory extends BaseEntity{
     @NotNull
     Cell cell;
 
-    @Column(name = "type")
+    @Column(name = "territoryType")
+    @Enumerated(EnumType.STRING)
     @NotNull
     TerritoryType territoryType;
 

@@ -40,6 +40,7 @@ class App extends Component {
     const newRandomNumbers = Array.from({ length: newListSize }, () => Math.floor(Math.random() * 6) + 1);
 
     this.setState({
+      next: false,
       numbers: newRandomNumbers,
       isListVisible: false, // Oculta la lista cuando no hay más números
       isListLocationVisible: true,
@@ -50,7 +51,7 @@ class App extends Component {
   handleShowListClick = () => {
     // Genera una nueva lista de números aleatorios de tamaño inicial
     const randomNumbers = Array.from({ length: this.state.numbers.length }, () => Math.floor(Math.random() * 6) + 1);
-
+    this.refs.gameLayout.resetBuiltHexagons();
     this.setState({
       numbers: randomNumbers,
       isListVisible: true,
@@ -99,7 +100,7 @@ class App extends Component {
     return (
       <div className="app">
         <HexGrid width={1000} height={900} viewBox="-80 -50 100 100" style={rotationStyle}>
-          <GameLayout />
+          <GameLayout ref="gameLayout"/>
         </HexGrid>
         <HexGrid width={500} height={1000} viewBox="-30 -0 100 100" >
           <TilesLayout locationCounters={this.state.locationCounters} updateNumberDice={this.updateNumberDice} numberDice ={this.state.numberDice} locationSelect={this.state.locationSelect} />
