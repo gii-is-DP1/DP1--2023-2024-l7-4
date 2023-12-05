@@ -71,6 +71,18 @@ public class GameBoardService {
         }
         return res;
     }
+    @Transactional
+    public Integer getScoreCriteryA6(GameBoard gb) {
+        Set<Territory> terrs = gb.getTerritories(); // cogemos territorios
+        Integer res = 0; // inicializamos resultado
+        for (Territory t: terrs){ // para cada territorio del tablero... 
+            Set<Integer> adjacencies = t.getCell().getAdjacencies(); // cogemos las adyacencias
+            if(t.getTerritoryType()==TerritoryType.MOUNTAIN && adjacencies.size()<=4){  // Chequeamos que el territorio sea un castillo y tenga 6 celdas adyacentes 
+                res+=1;
+            }
+        }
+        return res;
+    }
 
     @Transactional
     public Integer getScoreCriteryB4(GameBoard gb) {
@@ -165,3 +177,4 @@ public class GameBoardService {
 
     
 }
+
