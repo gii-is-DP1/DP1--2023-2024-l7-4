@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.samples.petclinic.board.GameBoard;
 
+
+
 public interface MatchRepository extends CrudRepository<Match, Integer>{
     
     @Query("SELECT m FROM Match m WHERE :player IN (m.joinedPlayers)")

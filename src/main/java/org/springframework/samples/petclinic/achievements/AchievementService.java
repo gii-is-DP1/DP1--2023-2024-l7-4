@@ -1,9 +1,12 @@
 package org.springframework.samples.petclinic.achievements;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.samples.petclinic.score.ScoreMatchRepository;
+import org.springframework.samples.petclinic.score.ScoreMatchService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +16,12 @@ import jakarta.validation.Valid;
 public class AchievementService {
         
     AchievementRepository repo;
+    ScoreMatchService smService;
 
     @Autowired
-    public AchievementService(AchievementRepository repo){
+    public AchievementService(AchievementRepository repo, ScoreMatchService smService){
         this.repo=repo;
+        this.smService = smService;
     }
 
     @Transactional(readOnly = true)    
@@ -45,6 +50,33 @@ public class AchievementService {
     public Achievement getAchievementByName(String name){
         return repo.findByName(name);
     }
-    
+
+    @Transactional(readOnly = true)    
+    public List<Achievement> getTotalAchievementsReached(String username){
+        List<Achievement> achievements = this.getAchievements();
+        List<Achievement> res = new ArrayList<>();
+        for(Achievement a: achievements){
+            if(a.getMetric()==Metric.TOTAL_SCORE){
+                if(smService.getTotalScoreByPlayerUsername(username)>=a.getThreshold())
+                    res.add(a);
+            }
+        }
+        return res;
+    }
+
+    @Transactional(readOnly = true)    
+    public List<Achievement> getAchievementsNotReached(String username){
+        List<Achievement> achievements = this.getAchievements();
+        List<Achievement> res = new ArrayList<>();
+        for(Achievement a: achievements){
+            if(a.getMetric()==Metric.TOTAL_SCORE){
+                if(!(smService.getTotalScoreByPlayerUsername(username)>=a.getThreshold()))
+                    res.add(a);
+            }else{
+                res.add(a);
+            }
+        }
+        return res;
+    }
 
 }

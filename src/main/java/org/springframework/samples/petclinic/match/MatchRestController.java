@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.samples.petclinic.board.GameBoardRepository;
 import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.player.PlayerRepository;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.samples.petclinic.territory.Territory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,11 +44,15 @@ public class MatchRestController {
         this.playerService = playerService;
     }
 
-
     @GetMapping
 	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
         if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
-        return new ResponseEntity<>((List<Match>) this.matchService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+	public ResponseEntity<Match> findById(@PathVariable(name = "id") int id) {
+        return new ResponseEntity<>(matchService.findMatchById(id), HttpStatus.OK);
     }
 
     @PostMapping()
@@ -72,16 +75,12 @@ public class MatchRestController {
     public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) {
         Match m = matchService.findMatchById(id);
         Set<String> joinedPlayers = m.getJoinedPlayers();
+        username = username.replace("\"", "");
         joinedPlayers.add(username);
-        if(joinedPlayers.size()==m.getMaxPlayers() && m.getMatchState() == MatchState.OPEN){
+        if(m.getMatchState() == MatchState.OPEN){
             m.setJoinedPlayers(joinedPlayers);
-            m.setMatchState(MatchState.IN_PROGRESS);
-            for(String user: joinedPlayers){
-                GameBoard gb = new GameBoard();
-                gb.setMatch(m);
-                gb.setPlayer(playerService.findByUsername(user));
-                gameBoardRepository.save(gb);
-            }
+            if(joinedPlayers.size()==m.getMaxPlayers())
+                m.setMatchState(MatchState.IN_PROGRESS); 
         }
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
@@ -90,7 +89,7 @@ public class MatchRestController {
 
 /// FUNCION DE GUARDADO DE TABLEROS
 
-    @PutMapping("/{matchId}/{username}/saveBoard")
+    @PostMapping("/{matchId}/{username}/saveBoard")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveBoard(@PathVariable("matchId") Integer matchId, @PathVariable("username") String username, @RequestBody @Valid Set<Territory> territories){
         Match m = matchService.findMatchById(matchId);
