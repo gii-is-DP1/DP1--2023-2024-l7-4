@@ -76,10 +76,8 @@ public class GameBoardService {
         Integer res = 0; // inicializamos resultado
         for (Territory t: terrs){ // para cada territorio del tablero... 
             Set<Integer> adjacencies = t.getCell().getAdjacencies(); // cogemos las adyacencias
-            if(t.getTerritoryType()==TerritoryType.CASTLE && adjacencies.size()==6){  // Chequeamos que el territorio sea un castillo y tenga 6 celdas adyacentes
-                if(terrs.stream().filter(territory -> adjacencies.contains(territory.getCell().getId()) && territory.getTerritoryType() != null).toList().size() == 6){
-                    res+=2;
-                }
+            if(t.getTerritoryType()==TerritoryType.MOUNTAIN && adjacencies.size()<=4){  // Chequeamos que el territorio sea un castillo y tenga 6 celdas adyacentes 
+                res+=1;
             }
         }
         return res;

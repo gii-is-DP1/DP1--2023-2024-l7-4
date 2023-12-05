@@ -1,4 +1,4 @@
-package round;
+package org.springframework.samples.petclinic.round;
 
 import java.util.Collection;
 import java.util.List;

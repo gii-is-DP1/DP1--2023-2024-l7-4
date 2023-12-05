@@ -1,4 +1,4 @@
-package round;
+package org.springframework.samples.petclinic.round;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
