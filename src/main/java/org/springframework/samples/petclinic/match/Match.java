@@ -54,7 +54,7 @@ public class Match extends BaseEntity{
 
     @Column(name = "joinedPlayers")
     @NotEmpty
-    private Set<String> joinedPlayers;
+    private List<String> joinedPlayers;
 
     @Column(name = "matchState")
     private MatchState matchState;

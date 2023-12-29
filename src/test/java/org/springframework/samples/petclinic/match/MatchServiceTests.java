@@ -79,7 +79,7 @@ public class MatchServiceTests {
 		match.setId(5);
 		match.setScoreCrit(List.of("1","2"));
 		match.setWinner("Seco");
-		match.setJoinedPlayers(Set.of("manuel", "cabra"));
+		match.setJoinedPlayers(List.of("manuel", "cabra"));
 		match.setMaxPlayers(5);
 		match.setMatchTime(15);
 		match.setCreator(new Player());

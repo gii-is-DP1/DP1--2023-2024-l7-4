@@ -66,25 +66,26 @@ public class MatchRestController {
 
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
-
-
     //FUNCION PARA JOIN
 
     @PutMapping("/{id}/join")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) {
         Match m = matchService.findMatchById(id);
-        Set<String> joinedPlayers = m.getJoinedPlayers();
+        List<String> joinedPlayers = m.getJoinedPlayers();
         username = username.replace("\"", "");
-        joinedPlayers.add(username);
+        if(!joinedPlayers.contains(username))
+            joinedPlayers.add(username);
         if(m.getMatchState() == MatchState.OPEN){
             m.setJoinedPlayers(joinedPlayers);
             if(joinedPlayers.size()==m.getMaxPlayers())
-                m.setMatchState(MatchState.IN_PROGRESS); 
+                m.setMatchState(MatchState.IN_PROGRESS);
         }
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
+
 
 
 /// FUNCION DE GUARDADO DE TABLEROS

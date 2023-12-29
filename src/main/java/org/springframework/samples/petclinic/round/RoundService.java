@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.round;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.tree.ExpandVetoException;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -37,9 +39,16 @@ public class RoundService {
     
     @Transactional
 	public Round saveRound(Round round) throws DataAccessException {
+        try {
+        if(findRoundByMatchRound(round.getMatch().getId(),round.getSubRound())!=null){
+            throw new ResourceNotFoundException("Already exists this subround in this match");
+        }
 		roundRepository.save(round);
 		return round;
-	}
+	} catch(Error e){
+        throw new Error(e);
+    }
+    }
 
     @Transactional
     public Round updateRound(Round round, int id) throws DataAccessException {
