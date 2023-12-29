@@ -49,13 +49,30 @@ class App extends Component {
   };
   // Maneja el clic en el botón para mostrar la lista nuevamente
   handleShowListClick = () => {
-    // Genera una nueva lista de números aleatorios de tamaño inicial
-    const randomNumbers = Array.from({ length: this.state.numbers.length }, () => Math.floor(Math.random() * 6) + 1);
-    this.refs.gameLayout.resetBuiltHexagons();
-    this.setState({
-      numbers: randomNumbers,
-      isListVisible: true,
-    });
+    if (this.state.numbers.length === 0) {
+      const initialListSize = 6; // Puedes cambiar esto al tamaño deseado
+      const randomNumbers = Array.from({ length: initialListSize }, () => Math.floor(Math.random() * 6) + 1);
+  
+      // Reinicia la lista de ubicaciones y genera una nueva lista de números aleatorios
+      const locations = ["Montaña", "Castillo", "Campo", "Bosque", "Río", "Pueblo"];
+      this.refs.gameLayout.resetBuiltHexagons();
+      this.setState({
+        numbers: randomNumbers,
+        isListVisible: true,
+        isListLocationVisible: false,
+        locationSelect: null,
+        numberDice: null,
+        locationCounters: {},
+        availableLocations: locations.slice(),
+      });
+    } else {
+      // Reinicia solo la lista de números
+      this.refs.gameLayout.resetBuiltHexagons();
+      this.setState({
+        isListVisible: true,
+        isListLocationVisible: false,
+      });
+    }
   };
   // Definir la función para actualizar el estado de numberDice
   updateNumberDice = () => {

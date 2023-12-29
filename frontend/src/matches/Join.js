@@ -67,37 +67,7 @@ export default function Join() {
 
   
 
-  return (
-      <div>
-      <div className="admin-page-container">
-      <h1 className="text-center"> JOINED PLAYERS</h1>
-      <div>
-          <Table aria-label="achievements" className="mt-4">
-              <thead>
-                  <tr>
-      
-                 <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}</th>
-                  </tr>
-              </thead>
-              <tbody>{matchPlayerList}</tbody>
-          </Table>
-          <div>
-              <h1 className='text-center'>SCORING CRITERIA</h1>
-              <th className='text-center'>{random}</th> 
-              
-          </div>
-      </div>
-      </div>
-     
-      <div style={{ textAlign: 'center' }}>
-        {match.joinedPlayers ? (match.joinedPlayers.length === match.maxPlayers && match.creator.username === username ? (
-          <Button outline color="success">
-            <Link to={`/board`} className="btn sm" style={{ textDecoration: "none" }}>
-              Start Match
-            </Link>
-          </Button>
-        ) : waitingMessage) : "Loading.."}
-      </div>
+  
     
 
     return (
@@ -139,14 +109,5 @@ export default function Join() {
       );
 
     
-
-
-      <div style={{ textAlign: 'center' }}>
-      <Button outline color="success" >
-          <Link to={`/`} className="btn sm"style={{ textDecoration: "none" }}>Go to Lobby</Link>
-      </Button>
-      </div>
-      </div>
       
-    );
 }
