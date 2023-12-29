@@ -1,7 +1,9 @@
-package round;
+package org.springframework.samples.petclinic.round;
 
 import java.util.List;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.samples.petclinic.match.Match;
 import org.springframework.samples.petclinic.model.BaseEntity;
 
@@ -13,6 +15,7 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Builder.Default;
 
 @Entity
 @Getter
@@ -25,13 +28,23 @@ public class Round extends BaseEntity{
     @JoinColumn(name = "match", referencedColumnName = "id")
     private Match match;
 
+    @Column(name = "subRound")
+    @NotNull
+    private Integer subRound;
+
     @Column(name = "mainPlayer")
     @NotNull
     private String mainPlayer;
+
+    @Column(name = "territory")
+    @NotNull
+    private String territory;
 
     @Column(name = "dices")
     @NotNull
     private List<Integer> dices;
 
+    @Column(name = "hasEnd")
+    private Boolean hasEnd;
 
 }

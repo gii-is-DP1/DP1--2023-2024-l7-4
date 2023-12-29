@@ -10,5 +10,5 @@ public class PetclinicApplication {
 		SpringApplication.run(PetclinicApplication.class, args);
 	}
 
-	
+
 }
