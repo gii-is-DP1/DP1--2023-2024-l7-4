@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,  } from 'react';
+import React, { useState, useRef, useEffect, useCallback,  } from 'react';
 import { HexGrid } from 'react-hexgrid';
 import GameLayout from './GameLayout';
 import TilesLayout from './TilesLayout';
@@ -42,7 +42,7 @@ const App = () => {
     id);
 
   const matchPlayerList =  Array.apply(",", match.joinedPlayers);    
-  let mainPlayer = matchPlayerList[(round+match.maxPlayers+1)%match.maxPlayers] === username;
+  let mainPlayer = matchPlayerList[(round+match.maxPlayers)%match.maxPlayers] === username;
 
   const [state, setState] = useState({
     numbers: Array.from({ length: initialListSize }, () => Math.floor(Math.random() * 6) + 1),
@@ -53,29 +53,75 @@ const App = () => {
     locationCounters: {},
     availableLocations: ["Montaña", "Castillo", "Campo", "Bosque", "Río", "Pueblo"],
   });
-  const [totalRound, setTotalRound] = useFetchStateRounds(
-    [],
-    `/api/v1/rounds/${id}/${round}`,
-    jwt,
-    setMessage,
-    setVisible,
-    obtained
-    )
-
-    useEffect(()=> {
-      if(round === 0 && mainPlayer){
-          setObtained(true);
-      }
-      else if(round === totalRound.subRound){
-        setObtained(true);
-      }else {
+  const [totalRound, setTotalRound] = useState(null);
+    
+  // HANDLE MOSTRAR LISTA DE DADOS
+  const handleShowListClick = useCallback(() => {
+    setRound(round + 1);
+    gameLayoutRef.current.resetBuiltHexagons();
+    //Si el jugador principal es al que le toca elegir los dados se muestran los randoms
+    if(matchPlayerList[(round+1+match.maxPlayers)%match.maxPlayers] === username){
+      const listSize = state.numbers.length;
+      const randomNumbers = Array.from({ length: listSize }, () => Math.floor(Math.random() * 6) + 1);
+      setState({
+        ...state,
+        numbers: randomNumbers,
+        isListVisible: true,
+      });
+      }//Si no es el jugador principal al que le toca elegir los dados recibe tanto los dados como el territorio del totalRound
+      else{
         setObtained(false);
       }
+  }, [gameLayoutRef, mainPlayer, round, state]);
+
+
+    useEffect(() => {
+      const obtainTotalRound = async () => {
+        try {
+          const response = await fetch(`/api/v1/rounds/${match.id}/${round}`, {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          return data;
+        } catch (error) {
+        }
+      };
+      if(!obtained && !mainPlayer){
+      const intervalId = setInterval(() => {
+        obtainTotalRound()
+          .then((result) => {
+            if (result && result.subRound === round) {
+              setTotalRound(result);
+              setState({
+                ...state,
+                isListVisible: true,
+                numbers: result.dices,
+                locationSelect: result.territory
+              })
+              setObtained(true);
+            }
+          })
+          .catch((error) => {
+            console.error('Error obteniendo totalRound:', error);
+          });
+      }, 3000);
+      if(obtained){
+        clearInterval(intervalId);
+      }
+      if (round === 0 && mainPlayer) {
+        setObtained(true);
+      }
+      return () => clearInterval(intervalId)
     }
-    , [round, mainPlayer, obtained, totalRound]);
+      
+    }, [round, mainPlayer, match, obtained, totalRound,setTotalRound, state]);
 
 
-  // HANDLE ELEGIR DADO
+   // HANDLE ELEGIR DADO
   const handleNumberClick = (clickedNumber) => {
     const newListSize = state.numbers.length - 1;
     const newRandomNumbers = Array.from({ length: newListSize }, () => Math.floor(Math.random() * 6) + 1);
@@ -92,38 +138,13 @@ const App = () => {
         //Si no es el jugador principal entonces directamente se asignará el LocationSelect(Territorio elegido) al recibido de la base de datos
     setState({
       ...state,
-      numbers: newRandomNumbers,
       isListVisible: false,
       isListLocationVisible: false,
-      locationSelect: totalRound.territory,
       numberDice: clickedNumber
     });
   }
 };
 
-  // HANDLE MOSTRAR LISTA DE DADOS
-  const handleShowListClick = () => {
-    gameLayoutRef.current.resetBuiltHexagons();
-    setRound(parseInt(round)+1)
-    //Si el jugador principal es al que le toca elegir los dados se muestran los randoms
-    if(mainPlayer){
-      const listSize = state.numbers.length;
-      const randomNumbers = Array.from({ length: listSize }, () => Math.floor(Math.random() * 6) + 1);
-      setState({
-        ...state,
-        numbers: randomNumbers,
-        isListVisible: true,
-      });
-      }//Si no es el jugador principal al que le toca elegir los dados recibe tanto los dados como el territorio del totalRound
-      else {
-        const listDices = Array.from(totalRound.dices);
-        setState({
-          ...state,
-          numbers: listDices,
-          isListVisible: true
-        });
-    }
-}
 
 // FUNCIÓN PARA UPDATEAR EL TAMAÑO DE LA LISTA DE LOS DADOS
   const updateNumberDice = () => {
@@ -148,9 +169,6 @@ const App = () => {
         [selectedLocation]: (prevState.locationCounters[selectedLocation] || 0) + 1
       }
     }));
-
-    // SI EL JUGADOR ACTUAL ES EL ACTIVO
-    if(mainPlayer){
       emptyRound.match = match;
       emptyRound.subRound = round;
       emptyRound.mainPlayer = username;
@@ -173,7 +191,6 @@ const App = () => {
       availableLocations: updatedLocations,
     });
     }
-  }
   };
 
 
@@ -197,6 +214,8 @@ const App = () => {
         </button>
       )}
       <h>Round: {round}</h>
+      <h>SubROund: {totalRound==null?-1:totalRound.subRound}</h>
+      {obtained.valueOf() && <h>mainPlayer</h>}
       <div>
         <h1>{matchPlayerList}</h1>
       </div>
@@ -205,7 +224,7 @@ const App = () => {
         <NumberList numbers={state.numbers} onNumberClick={handleNumberClick} />
       )}
 
-      {mainPlayer && state.isListVisible && (
+      {!mainPlayer && totalRound!= null && round===totalRound.subRound && state.isListVisible &&(
         <NumberList numbers={state.numbers} onNumberClick={handleNumberClick} />
       )}
 

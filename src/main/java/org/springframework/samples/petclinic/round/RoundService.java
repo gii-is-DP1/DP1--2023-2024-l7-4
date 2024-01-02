@@ -40,7 +40,7 @@ public class RoundService {
     @Transactional
 	public Round saveRound(Round round) throws DataAccessException {
         try {
-        if(findRoundByMatchRound(round.getMatch().getId(),round.getSubRound())!=null){
+        if(this.roundRepository.findRoundByMatch(round.getMatch().getId(), round.getSubRound()).isPresent()){
             throw new ResourceNotFoundException("Already exists this subround in this match");
         }
 		roundRepository.save(round);
