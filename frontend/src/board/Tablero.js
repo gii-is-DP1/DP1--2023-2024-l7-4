@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect,  } from 'react';
+import React, { useState, useRef, useEffect, useCallback,  } from 'react';
 import { HexGrid } from 'react-hexgrid';
 import GameLayout from './GameLayout';
 import TilesLayout from './TilesLayout';
@@ -6,11 +6,10 @@ import './App.css';
 import NumberList from './NumberList';
 import LocationList from './LocationList';
 import useFetchState from '../util/useFetchState';
-import useFetchStatePlayers from '../util/useFetchStatePlayers';
 import getIdFromUrl from '../util/getIdFromUrl';
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
-import useFetchStateRounds from '../util/useFetchStateRounds';
+import postMyBoard from '../util/postMyBoard'
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -33,6 +32,7 @@ const App = () => {
   const [visible, setVisible] = useState(false);
   const [obtained, setObtained] = useState(false);
   const [round, setRound] = useState(0);
+  const [totalRound, setTotalRound] = useState(null);
   const [match, setMatch] = useFetchState(
     [],
     `/api/v1/matches/${id}`,
@@ -42,8 +42,8 @@ const App = () => {
     id);
 
   const matchPlayerList =  Array.apply(",", match.joinedPlayers);    
-  let mainPlayer = matchPlayerList[(round+match.maxPlayers+1)%match.maxPlayers] === username;
-
+  let mainPlayer = matchPlayerList[(round+match.maxPlayers)%match.maxPlayers] === username;
+  
   const [state, setState] = useState({
     numbers: Array.from({ length: initialListSize }, () => Math.floor(Math.random() * 6) + 1),
     isListVisible: true,
@@ -53,29 +53,79 @@ const App = () => {
     locationCounters: {},
     availableLocations: ["Montaña", "Castillo", "Campo", "Bosque", "Río", "Pueblo"],
   });
-  const [totalRound, setTotalRound] = useFetchStateRounds(
-    [],
-    `/api/v1/rounds/${id}/${round}`,
-    jwt,
-    setMessage,
-    setVisible,
-    obtained
-    )
-
-    useEffect(()=> {
-      if(round === 0 && mainPlayer){
-          setObtained(true);
-      }
-      else if(round === totalRound.subRound){
-        setObtained(true);
-      }else {
+    
+  // HANDLE MOSTRAR LISTA DE DADOS
+  const handleShowListClick = useCallback(() => {
+    setRound(round + 1);
+    gameLayoutRef.current.resetBuiltHexagons();
+    //Si el jugador principal es al que le toca elegir los dados se muestran los randoms
+    if(matchPlayerList[(round+1+match.maxPlayers)%match.maxPlayers] === username){
+      const listSize = state.numbers.length;
+      const randomNumbers = Array.from({ length: listSize }, () => Math.floor(Math.random() * 6) + 1);
+      setState({
+        ...state,
+        numbers: randomNumbers,
+        isListVisible: true,
+      });
+      }//Si no es el jugador principal entonces seteará obtained a false para volver a obtener la siguiente ronda
+      else{
         setObtained(false);
       }
+  }, [gameLayoutRef, match, matchPlayerList, username, round, state]);
+
+
+    useEffect(() => {
+      const obtainTotalRound = async () => {
+        try {
+          const response = await fetch(`/api/v1/rounds/${match.id}/${round}`, {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          });
+          const data = await response.json();
+          return data;
+        } catch (error) {
+        }
+      };
+      if (round === 0 && mainPlayer) {
+        setObtained(true);
+      }
+      if(!obtained && !mainPlayer){
+      const intervalId = setInterval(() => {
+        obtainTotalRound()
+          .then((result) => {
+            if (result && result.subRound === round) {
+              setTotalRound(result);
+              setState({
+                ...state,
+                isListVisible: true,
+                numbers: result.dices,
+                locationSelect: result.territory
+              })
+              setObtained(true);
+            } else if(result.hasEnd){
+              postMyBoard(
+                jwt,
+                match.id,
+                username
+              );
+            }
+          })
+          .catch((error) => {
+            console.error('Error obteniendo totalRound:', error);
+          });
+      }, 3000);
+      if(obtained){
+        clearInterval(intervalId);
+      }
+      return () => clearInterval(intervalId)
     }
-    , [round, mainPlayer, obtained, totalRound]);
+    }, [round, mainPlayer, match, obtained, username, totalRound, setTotalRound, state]);
 
 
-  // HANDLE ELEGIR DADO
+   // HANDLE ELEGIR DADO
   const handleNumberClick = (clickedNumber) => {
     const newListSize = state.numbers.length - 1;
     const newRandomNumbers = Array.from({ length: newListSize }, () => Math.floor(Math.random() * 6) + 1);
@@ -92,10 +142,8 @@ const App = () => {
         //Si no es el jugador principal entonces directamente se asignará el LocationSelect(Territorio elegido) al recibido de la base de datos
     setState({
       ...state,
-      numbers: newRandomNumbers,
       isListVisible: false,
       isListLocationVisible: false,
-      locationSelect: totalRound.territory,
       numberDice: clickedNumber
     });
   }
@@ -138,6 +186,7 @@ const App = () => {
   };
 
 
+  // HANDLE PARA SELECCIONAR UN TERRITORIO DE LA LISTA
   const handleLocationSelect = (selectedLocation) => {
     const { locationCounters, availableLocations } = state;
     setState(prevState => ({
@@ -149,9 +198,6 @@ const App = () => {
         [selectedLocation]: (prevState.locationCounters[selectedLocation] || 0) + 1
       }
     }));
-
-    // SI EL JUGADOR ACTUAL ES EL ACTIVO
-    if(mainPlayer){
       emptyRound.match = match;
       emptyRound.subRound = round;
       emptyRound.mainPlayer = username;
@@ -174,7 +220,6 @@ const App = () => {
       availableLocations: updatedLocations,
     });
     }
-  }
   };
 
 
@@ -192,21 +237,15 @@ const App = () => {
         <TilesLayout locationCounters={state.locationCounters} updateNumberDice={updateNumberDice} numberDice={state.numberDice} locationSelect={state.locationSelect} />
       </HexGrid>
     
-      {!state.isListVisible && !state.isListLocationVisible && (
+      {!state.isListVisible && !state.isListLocationVisible && obtained && state.numberDice === 0 &&(
         <button className="show-list-button" onClick={handleShowListClick}>
           Next round
         </button>
       )}
-      <h>Round: {round}</h>
-      <div>
-        <h1>{matchPlayerList}</h1>
-      </div>
+      {!state.isListVisible && !state.isListLocationVisible && !obtained &&
+      <div>Esperando al siguiente turno</div>}
 
-      {mainPlayer && state.isListVisible && (
-        <NumberList numbers={state.numbers} onNumberClick={handleNumberClick} />
-      )}
-
-      {mainPlayer && state.isListVisible && (
+      {((mainPlayer && state.isListVisible) || (!mainPlayer && totalRound!= null && round===totalRound.subRound && state.isListVisible)) && (
         <NumberList numbers={state.numbers} onNumberClick={handleNumberClick} />
       )}
 
