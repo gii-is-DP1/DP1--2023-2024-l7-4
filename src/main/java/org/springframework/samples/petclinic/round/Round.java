@@ -1,9 +1,6 @@
 package org.springframework.samples.petclinic.round;
 
 import java.util.List;
-
-import org.hibernate.annotations.ColumnDefault;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.samples.petclinic.match.Match;
 import org.springframework.samples.petclinic.model.BaseEntity;
 
@@ -15,7 +12,6 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Builder.Default;
 
 @Entity
 @Getter

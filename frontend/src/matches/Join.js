@@ -65,49 +65,6 @@ export default function Join() {
 
   const matchPlayerList =  match.joinedPlayers;
 
-  
-
-<<<<<<< HEAD
-  
-=======
-  return (
-      <div>
-      <div className="admin-page-container">
-      <h1 className="text-center"> JOINED PLAYERS</h1>
-      <div>
-          <Table aria-label="achievements" className="mt-4">
-              <thead>
-                  <tr>
-      
-                 <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}</th>
-                  </tr>
-              </thead>
-              <tbody>{matchPlayerList}</tbody>
-          </Table>
-          <div>
-              <h1 className='text-center'>SCORING CRITERIA</h1>
-              <th className='text-center'>{random}</th> 
-              
-          </div>
-      </div>
-      </div>
-     
-      <div style={{ textAlign: 'center' }}>
-        {match.joinedPlayers ? (match.joinedPlayers.length === match.maxPlayers && match.creator.username === username ? (
-          <Button outline color="success">
-            <Link to={`/board/${match.id}`} className="btn sm" style={{ textDecoration: "none" }}>
-              Start Match
-            </Link>
-          </Button>
-        ) : waitingMessage) : "Loading.."}
-      </div>
-    
-      <div style={{ textAlign: 'center' }}>
-        {match.state==="IN_PROGRESS" ?
-            window.location.href = '/board'
-        : ""}
-      </div>
->>>>>>> a23d40ddc312656196e39e888a1e56ca183e306e
     
 
     return (
