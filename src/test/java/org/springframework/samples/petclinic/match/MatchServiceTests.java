@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +38,7 @@ public class MatchServiceTests {
 	}
 
 	@Test
-	void shouldNotFindSingleOwnerWithBadID() {
+	void shouldNotFindSingleMatchWithBadID() {
 		assertThrows(ResourceNotFoundException.class, () -> this.matchService.findMatchById(100));
 	}
 
@@ -65,7 +63,7 @@ public class MatchServiceTests {
 
 	
 	@Test
-	void shouldFindGameBoardByPlayerId() {
+	void shouldNotFindGameBoardByPlayerId() {
 		assertThrows(ResourceNotFoundException.class, () -> this.matchService.findGameBoardByPlayerId(100));
 	}
 	
@@ -79,7 +77,7 @@ public class MatchServiceTests {
 		match.setId(5);
 		match.setScoreCrit(List.of("1","2"));
 		match.setWinner("Seco");
-		match.setJoinedPlayers(Set.of("manuel", "cabra"));
+		match.setJoinedPlayers(List.of("manuel", "cabra"));
 		match.setMaxPlayers(5);
 		match.setMatchTime(15);
 		match.setCreator(new Player());

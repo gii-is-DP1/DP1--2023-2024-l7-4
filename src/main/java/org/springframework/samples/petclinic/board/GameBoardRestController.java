@@ -50,6 +50,7 @@ public class GameBoardRestController {
             if(critery.contains("A1")){
                 score += gbService.getScoreCriteryA1(newGb);
             }
+
             if(critery.contains("A2")){
                 score += gbService.getScoreCriteryA2(newGb);
             }
@@ -141,4 +142,4 @@ public class GameBoardRestController {
 
     
 
-}
+

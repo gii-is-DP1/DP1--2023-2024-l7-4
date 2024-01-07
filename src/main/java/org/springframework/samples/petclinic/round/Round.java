@@ -25,13 +25,14 @@ public class Round extends BaseEntity{
     @JoinColumn(name = "match", referencedColumnName = "id")
     private Match match;
 
+
     @Column(name = "mainPlayer")
     @NotNull
     private String mainPlayer;
 
+
     @Column(name = "dices")
     @NotNull
     private List<Integer> dices;
-
 
 }

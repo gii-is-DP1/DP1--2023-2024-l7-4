@@ -82,7 +82,7 @@ function AppNavbar() {
         
         userLogout = (
             <>
-                <NavItem className="d-flex">
+                 <NavItem className="d-flex">
                     <NavLink style={{ color: "white" }} className="justify-content-end" id="login" tag={Link} to={`/myProfile/${username}`}>{username}</NavLink>
                 </NavItem>
                 <NavItem className="d-flex">

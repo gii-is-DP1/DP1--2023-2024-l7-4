@@ -5,6 +5,11 @@ import org.springframework.data.repository.CrudRepository;
 
 
 public interface RoundRepository extends CrudRepository<Round, Integer>{
+
+
+	@Query("SELECT round FROM Round round WHERE round.subRound = :roundId AND round.match.id = :matchId")
+	public Optional<Round> findRoundByMatch(Integer matchId, Integer roundId);
+
     
 	@Query("SELECT DISTINCT round FROM Round round WHERE round.user.id = :userId")
 	public Optional<Round> findByUser(int userId);
@@ -18,5 +23,6 @@ public interface RoundRepository extends CrudRepository<Round, Integer>{
 
 	@Query("SELECT COUNT(r) FROM Round r")
 	public Integer countAll();
+
 
 }

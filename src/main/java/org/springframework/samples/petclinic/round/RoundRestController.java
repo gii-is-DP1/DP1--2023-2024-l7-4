@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.round;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
 import org.springframework.samples.petclinic.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +24,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/rounds")
-@Tag(name = "Rounds", description = "The player management API")
+
 @SecurityRequirement(name = "bearerAuth")
 public class RoundRestController {
     
@@ -33,7 +35,13 @@ public class RoundRestController {
         this.roundService = roundService;
     }
 
-    @PostMapping()
+
+
+	@GetMapping("/{matchId}/{round}")
+	public ResponseEntity<Round> getRound(@PathVariable("matchId") Integer matchId, @PathVariable("round") Integer subRound){
+		return new ResponseEntity<>(roundService.findRoundByMatchRound(matchId, subRound), HttpStatus.OK);
+	}
+
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Round> create(@RequestBody @Valid Round round) throws URISyntaxException {
 		Round newRound = new Round();
