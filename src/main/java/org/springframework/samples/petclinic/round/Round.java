@@ -14,6 +14,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Entity
 @Getter
 @Setter
@@ -25,14 +26,23 @@ public class Round extends BaseEntity{
     @JoinColumn(name = "match", referencedColumnName = "id")
     private Match match;
 
+    @Column(name = "subRound")
+    @NotNull
+    private Integer subRound;
 
     @Column(name = "mainPlayer")
     @NotNull
     private String mainPlayer;
 
+    @Column(name = "territory")
+    @NotNull
+    private String territory;
 
     @Column(name = "dices")
     @NotNull
     private List<Integer> dices;
+
+    @Column(name = "hasEnd")
+    private Boolean hasEnd;
 
 }

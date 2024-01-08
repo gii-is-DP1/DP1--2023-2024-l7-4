@@ -3,20 +3,14 @@ package org.springframework.samples.petclinic.round;
 import java.util.Collection;
 import java.util.List;
 
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-
-import org.springframework.transaction.annotation.Transactional;
-
-
 public class RoundService {
     
     private RoundRepository roundRepository;
@@ -31,13 +25,10 @@ public class RoundService {
 		return (List<Round>) roundRepository.findAll();
 	}
 
-
-
     @Transactional(readOnly = true)
 	public Round findRoundById(int id) throws DataAccessException {
 		return this.roundRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Round", "ID", id));
 	}
-
     
     @Transactional(readOnly = true)
 	public Round findRoundByMatchRound(Integer matchId, Integer subRound) throws DataAccessException {
@@ -47,7 +38,7 @@ public class RoundService {
     @Transactional
 	public Round saveRound(Round round) throws DataAccessException {
         try {
-        if(findRoundByMatchRound(round.getMatch().getId(),round.getSubRound())!=null){
+        if(this.roundRepository.findRoundByMatch(round.getMatch().getId(), round.getSubRound()).isPresent()){
             throw new ResourceNotFoundException("Already exists this subround in this match");
         }
 		roundRepository.save(round);
@@ -56,13 +47,6 @@ public class RoundService {
         throw new Error(e);
     }
     }
-
-    @Transactional
-	public Round saveRound(Round round) throws DataAccessException {
-		roundRepository.save(round);
-		return round;
-	}
-
 
     @Transactional
     public Round updateRound(Round round, int id) throws DataAccessException {
