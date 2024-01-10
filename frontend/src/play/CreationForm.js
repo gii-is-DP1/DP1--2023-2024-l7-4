@@ -33,6 +33,35 @@ export default function CreationForm() {
     username
   );
   
+  function generarCriterios() {
+    const nuevaLista = [];
+    const criteriosA = ["A1", "A2", "A3", "A4", "A5", "A6"];
+    const criteriosB = ["B1", "B2", "B3", "B4", "B5", "B6"];
+
+    // Función para obtener un elemento aleatorio sin repetición
+    const obtenerElementoAleatorio = (array) => {
+      const index = Math.floor(Math.random() * array.length);
+      return { index, elemento: array[index] };
+    };
+
+    // Obtener dos elementos aleatorios de criteriosA sin repetición
+    for (let i = 0; i < 2; i++) {
+      const { index, elemento } = obtenerElementoAleatorio(criteriosA);
+      nuevaLista.push(elemento);
+      criteriosA.splice(index, 1);
+    }
+  
+    // Obtener dos elementos aleatorios de criteriosB sin repetición
+    for (let i = 0; i < 2; i++) {
+      const { index, elemento } = obtenerElementoAleatorio(criteriosB);
+      nuevaLista.push(elemento);
+      criteriosB.splice(index, 1);
+    }
+  
+    return nuevaLista;
+  }
+  
+
   function handleSubmit({ values }) {
 
     if(!creationFormRef.current.validate()) return;
@@ -42,7 +71,7 @@ export default function CreationForm() {
       matchTime: 0,
       nRounds: 0,
       maxPlayers: parseInt(values.players),
-      scoreCrit: ["A1", "A2", "b1", "b2"],
+      scoreCrit: generarCriterios(),
       winner: "Null",
       creator: player,
       joinedPlayers: ([player.username]),

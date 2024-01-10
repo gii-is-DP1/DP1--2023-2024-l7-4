@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import { GridGenerator, Layout, Hexagon, Text, Pattern, HexUtils } from 'react-hexgrid';
 import './GameLayout.css';
+import postMyBoard from '../util/postMyBoard';
+
+
 
 class GameLayout extends Component {
+  
   constructor(props) {
     super(props);
-    const hexagons = GridGenerator.hexagon(4);
+    const hexagons = GridGenerator.hexagon(1);
     this.state = { hexagons};
   }
   //Son vecinos?
@@ -86,6 +90,21 @@ class GameLayout extends Component {
       });
       this.setState({ hexagons: hexas });
     }
+
+    //FUNCION PARA VER SI ESTÁ COMPLETO EL TABLERO
+    isCompleted() {
+      const {hexagons} = this.state;
+      const built = hexagons.filter(hexagon => hexagon.build).length === 7;
+      return built;
+    }
+
+
+    postHexagons(jwt, matchId, username) {
+      const hexagons = this.state;
+      const data = hexagons;
+      return postMyBoard(jwt, matchId, username, data);
+    }
+
 
     resetBuiltHexagons() {
       const { hexagons } = this.state;

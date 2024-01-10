@@ -31,9 +31,4 @@ public class Territory extends BaseEntity{
     @NotNull
     TerritoryType territoryType;
 
-    @ManyToOne
-    @JoinColumn(name = "gameBoard")
-    @NotNull
-    GameBoard gameBoard;
-
 }

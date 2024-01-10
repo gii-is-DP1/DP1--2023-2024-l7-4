@@ -25,6 +25,9 @@ export default function Join() {
         id
     );
     const [waitingMessage, setWaitingMessage] = useState('Waiting for Jugador Activo...');
+    const matchPlayerList =  match.joinedPlayers;
+    const scoreCrits = match.scoreCrit;
+
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -41,29 +44,6 @@ export default function Join() {
     return () => clearInterval(intervalId);
   }, [match.matchState]);
 
-  const random = [];
-  let intentos = 0;
-  while (random.length < 4 && intentos < 1000000) {
-      const criteriosA = ["A1", "A2", "A3", "A4", "A5", "A6"];
-      const criteriosB = ["B1", "B2", "B3", "B4", "B5", "B6"];
-      let criteriosAIndex = Math.floor(Math.random() * criteriosA.length);
-      let criteriosBIndex = Math.floor(Math.random() * criteriosB.length);
-      let criterioA = criteriosA[criteriosAIndex]
-      let criterioB = criteriosB[criteriosBIndex]
-      if (
-      random.filter(cr => cr.includes("A")).length < 2 &&
-      random.filter(cr => cr.includes("B")).length < 2 &&
-      !random.includes(criterioA) && !random.includes(criterioB)
-
-  ) {
-      random.push(criterioA)
-      random.push(criterioB)
-  }
-
-  intentos++;
-}
-
-  const matchPlayerList =  match.joinedPlayers;
 
   
 
@@ -83,7 +63,7 @@ export default function Join() {
           </Table>
           <div>
               <h1 className='text-center'>SCORING CRITERIA</h1>
-              <th className='text-center'>{random}</th> 
+              <th className='text-center'>{scoreCrits}</th> 
               
           </div>
       </div>
