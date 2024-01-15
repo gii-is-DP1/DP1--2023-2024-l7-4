@@ -25,11 +25,17 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, username, passwo
 (4, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com','pepforbin','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,1,0);
 INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
 (5, 'Conrado', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com','conrast','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,17,0);
-
+INSERT INTO players(id, name, surname, avatar, nickname, email, username, password, authority, total_score, total_bloqs) VALUES 
+(6, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com','alepingar','$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e',3,17,0);
 
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (1,'Experiencia básica','Si juegas 10 partidas o más',10.0,'https://cdn-icons-png.flaticon.com/512/5243/5243423.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,badge_image,metric) VALUES (2,'Explorador','Si juegas 25 partidas o más',25.0,'https://cdn-icons-png.flaticon.com/512/603/603855.png','GAMES_PLAYED');
 INSERT INTO achievement(id,name,description,threshold,metric) VALUES (3,'Experto','Si ganas 20 partidas o más',20.0,'VICTORIES');
+
+INSERT INTO matches (id,name, match_Time, n_rounds, max_players, score_crit, winner, creator, joined_Players, match_state)
+VALUES (1,'Partida 1', 60, 10, 4, '["Score1", "Score2", "Score3"]', '', 1, '["Danfercab", "Fracapgar", "Alvmarmun"]', 1);
+INSERT INTO matches (id,name, match_Time, n_rounds, max_players, score_crit, winner, creator, joined_Players, match_state)
+VALUES (2,'Partida 2', 45, 15, 3, '["ScoreA", "ScoreB"]', 'Winner2', 2, '["Alepingar", "Oscmenmar"]', 2);
 
 INSERT INTO cells(id, x, y, z) VALUES (1, 0, 0, 0); -- Celda central
 

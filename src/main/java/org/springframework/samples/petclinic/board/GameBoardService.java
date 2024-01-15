@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.territory.Cell;
 import org.springframework.samples.petclinic.territory.CellRepository;
+
 import org.springframework.samples.petclinic.territory.Territory;
 import org.springframework.samples.petclinic.territory.TerritoryDTO;
 import org.springframework.samples.petclinic.territory.TerritoryType;
