@@ -31,7 +31,7 @@ public class GameBoard extends BaseEntity{
     @JoinColumn(name = "playerBoard")
     private Player player;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "match")
     private Match match;
 

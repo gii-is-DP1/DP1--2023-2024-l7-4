@@ -7,6 +7,7 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.territory.Cell;
 import org.springframework.samples.petclinic.territory.CellRepository;
 import org.springframework.samples.petclinic.territory.Territory;
@@ -35,7 +36,10 @@ public class GameBoardService {
     }
 
     @Transactional
-    public GameBoard save(GameBoard gb){
+    public GameBoard save(GameBoard gb) throws DataAccessException{
+        if (findBoardByPlayerAndMatch(gb.getPlayer().getId(), gb.getMatch().getId())!= null){
+            throw new Error("This gameboard already exists");
+        }
         gameBoardRepository.save(gb);
         return gb;
     }

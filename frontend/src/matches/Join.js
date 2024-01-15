@@ -50,12 +50,12 @@ export default function Join() {
   return (
       <div>
       <div className="admin-page-container">
+      <div className="hero-div">
       <h1 className="text-center"> JOINED PLAYERS</h1>
       <div>
           <Table aria-label="achievements" className="mt-4">
               <thead>
-                  <tr>
-      
+                  <tr>  
                  <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}</th>
                   </tr>
               </thead>
@@ -63,9 +63,11 @@ export default function Join() {
           </Table>
           <div>
               <h1 className='text-center'>SCORING CRITERIA</h1>
+              {match!==null &&
               <th className='text-center'>{scoreCrits}</th> 
-              
+            }
           </div>
+      </div>
       </div>
       </div>
      

@@ -30,7 +30,7 @@ public class TerritoryDTO {
 
     public Territory transform(Cell cell){
         Territory terr = new Territory();
-        terr.setTerritoryType(TerritoryType.valueOf(text));
+        terr.setTerritoryType(TerritoryType.valueOf(text==null?"EMPTY":text));
         terr.setCell(cell);
         return terr;
     }
