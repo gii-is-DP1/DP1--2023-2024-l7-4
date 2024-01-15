@@ -31,14 +31,14 @@ public class PlayerServiceTests {
     @Test
     void shouldFindAll(){
         List<Player> todos = (List<Player>) this.playerService.findAll();
-        assertEquals(0, todos.size());
+        assertEquals(6, todos.size());
     }
 
     @Test
     void shouldSortedPlayersByPuntuation(){
         List<Player> todos = (List<Player>) this.playerService.sortedPlayersByPuntuation();
         List<Player> copia = new ArrayList<>(todos);
-        Collections.sort(copia, Comparator.comparing(Player :: getTotal_score));
+        Collections.sort(copia, Comparator.comparing(Player :: getTotal_score).reversed());
         assertEquals(todos, copia);
     }
 
@@ -49,6 +49,6 @@ public class PlayerServiceTests {
 
     @Test
     void shouldFindByUsername() {
-        assertThrows(ResourceNotFoundException.class, () -> this.playerService.findByUsername("danfercab"));
+        assertThrows(ResourceNotFoundException.class, () -> this.playerService.findByUsername("sudani"));
     }
 }

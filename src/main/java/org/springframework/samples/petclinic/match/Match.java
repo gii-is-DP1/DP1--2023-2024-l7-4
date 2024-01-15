@@ -1,8 +1,6 @@
 package org.springframework.samples.petclinic.match;
 
 import java.util.List;
-import java.util.Set;
-
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
 import jakarta.persistence.Column;

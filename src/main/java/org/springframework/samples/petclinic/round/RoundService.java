@@ -3,8 +3,6 @@ package org.springframework.samples.petclinic.round;
 import java.util.Collection;
 import java.util.List;
 
-import javax.swing.tree.ExpandVetoException;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
