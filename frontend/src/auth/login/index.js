@@ -51,6 +51,13 @@ export default function Login() {
             buttonText="Login"
             buttonClassName="auth-button"
           />
+          <style>
+          {`
+            .auth-form-container input {
+              color: #ffffff; /* Cambiar a tu color de texto deseado */
+            }
+          `}
+        </style>
         </div>
       </div>
     );  

@@ -6,7 +6,7 @@ class TilesLayout extends Component {
   constructor(props) {
     super(props);
     // Initialize hexagons with some text and image
-    const locations = ["Montaña", "Castillo", "Campo", "Bosque", "Río", "Pueblo"];
+    const locations = ["MOUNTAIN", "CASTLE", "FIELD", "FOREST", "RIVER", "VILLAGE"];
 
     const hexagons = locations.map((location, index) => {
       return {

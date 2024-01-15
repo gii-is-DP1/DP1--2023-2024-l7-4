@@ -8,20 +8,20 @@ import { Link } from "react-router-dom";
 import { Button, Table } from "reactstrap";
 import useFetchState from "../util/useFetchState";
 import jwtDecode from 'jwt-decode';
+import useFetchStateMatches from '../util/useFetchStateMatches';
 
 const jwt = tokenService.getLocalAccessToken();
 
 export default function Home(){
-    const username = jwtDecode(jwt).sub;
+    const username = jwt?jwtDecode(jwt).sub:"null";
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
-    const [matches, setMatches] = useFetchState(
+    const [matches, setMatches] = useFetchStateMatches(
         [],
         `/api/v1/matches?open=true`,
         jwt,
         setMessage,
         setVisible
-
     );
 
     if(!jwt){
@@ -30,12 +30,12 @@ export default function Home(){
                 <div className="hero-div">
                     <h1>LosMapasDelReino</h1>
                     <h3>---</h3>
-                    <img src={logo}/>
                     <h3>BIENVENIDO CONSTRUCTOR</h3>                
                 </div>
             </div>
         );
         }else {
+
             const matchesList =  matches.map((m) => {
             return (<tr key={m.id}>
                 <td className="text-center"> {m.name}</td>
@@ -62,15 +62,16 @@ export default function Home(){
     return (
         <div>
         <div className="admin-page-container">
+        <div className="hero-div">
         <h1 className="text-center"> ONLINE GAMES</h1>
         <div>
             <Table aria-label="achievements" className="mt-4">
                 <thead>
                     <tr>
-                        <th className="text-center">NAME</th>
-                        <th className="text-center">PLAYERS</th>
-                        <th className='text-center'>STATE</th> 
-                        <th className="text-center">PLAY</th>
+                        <th>NAME</th>
+                        <th>PLAYERS</th>
+                        <th>STATE</th> 
+                        <th>PLAY</th>
                     </tr>
                 </thead>
                 <tbody>{matchesList}</tbody>
@@ -81,6 +82,7 @@ export default function Home(){
                 to={`/matches/create`} className="btn sm"
                 style={{ textDecoration: "none" }}>Create Match</Link>
         </Button>
+        </div>
         </div>
         </div>
         </div>

@@ -25,6 +25,9 @@ export default function Join() {
         id
     );
     const [waitingMessage, setWaitingMessage] = useState('Waiting for Jugador Activo...');
+    const matchPlayerList =  match.joinedPlayers;
+    const scoreCrits = match.scoreCrit;
+
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -41,70 +44,57 @@ export default function Join() {
     return () => clearInterval(intervalId);
   }, [match.matchState]);
 
-  const random = [];
-  let intentos = 0;
-  while (random.length < 4 && intentos < 1000000) {
-      const criteriosA = ["A1", "A2", "A3", "A4", "A5", "A6"];
-      const criteriosB = ["B1", "B2", "B3", "B4", "B5", "B6"];
-      let criteriosAIndex = Math.floor(Math.random() * criteriosA.length);
-      let criteriosBIndex = Math.floor(Math.random() * criteriosB.length);
-      let criterioA = criteriosA[criteriosAIndex]
-      let criterioB = criteriosB[criteriosBIndex]
-      if (
-      random.filter(cr => cr.includes("A")).length < 2 &&
-      random.filter(cr => cr.includes("B")).length < 2 &&
-      !random.includes(criterioA) && !random.includes(criterioB)
 
-  ) {
-      random.push(criterioA)
-      random.push(criterioB)
-  }
+  
 
-  intentos++;
-}
-
-  const matchPlayerList =  match.joinedPlayers;
-
+  return (
+      <div>
+      <div className="admin-page-container">
+      <div className="hero-div">
+      <h1 className="text-center"> JOINED PLAYERS</h1>
+      <div>
+          <Table aria-label="achievements" className="mt-4">
+              <thead>
+                  <tr>  
+                 <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}</th>
+                  </tr>
+              </thead>
+              <tbody>{matchPlayerList}</tbody>
+          </Table>
+          <div>
+              <h1 className='text-center'>SCORING CRITERIA</h1>
+              {match!==null &&
+              <th className='text-center'>{scoreCrits}</th> 
+            }
+          </div>
+      </div>
+      </div>
+      </div>
+     
+      <div style={{ textAlign: 'center' }}>
+        {match.joinedPlayers ? (match.joinedPlayers.length === match.maxPlayers && match.creator.username === username ? (
+          <Button outline color="success">
+            <Link to={`/board/${match.id}`} className="btn sm" style={{ textDecoration: "none" }}>
+              Start Match
+            </Link>
+          </Button>
+        ) : waitingMessage) : "Loading.."}
+      </div>
+    
+      <div style={{ textAlign: 'center' }}>
+        {match.state==="IN_PROGRESS" ?
+            window.location.href = '/board'
+        : ""}
+      </div>
     
 
-    return (
-        <div>
-        <div className="admin-page-container">
-        <h1 className="text-center"> JOINED PLAYERS</h1>
-        <div>
-            <Table aria-label="achievements" className="mt-4">
-                <thead>
-                    <tr>
-        
-                   <th className="text-center">  PLAYERS {match.joinedPlayers ? `${match.joinedPlayers.length}/${match.maxPlayers}` : 'Loading...'}</th>
-                    </tr>
-                </thead>
-                <tbody>{matchPlayerList}</tbody>
-            </Table>
-            <div>
-                <h1 className='text-center'>SCORING CRITERIA</h1>
-                <th className='text-center'>{random}</th> 
-                
-            </div>
-        </div>
-        </div>
-       
-        <div style={{ textAlign: 'center' }}>
-        {match.joinedPlayers ? (match.joinedPlayers.length=== match.maxPlayers ? (<Button outline color="success" >
-            <Link to={`/board`} className="btn sm"style={{ textDecoration: "none" }}>Start Match</Link>
-        </Button>) : "") : "Loading.."}
 
-        </div>
-
-        <div style={{ textAlign: 'center' }}>
-        <Button outline color="success" >
-            <Link to={`/`} className="btn sm"style={{ textDecoration: "none" }}>Go to Lobby</Link>
-        </Button>
-        </div>
-        </div>
-        
-      );
-
-    
+      <div style={{ textAlign: 'center' }}>
+      <Button outline color="success" >
+          <Link to={`/`} className="btn sm"style={{ textDecoration: "none" }}>Go to Lobby</Link>
+      </Button>
+      </div>
+      </div>
       
+    );
 }

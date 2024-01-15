@@ -1,8 +1,18 @@
 package org.springframework.samples.petclinic.board;
 
-
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.territory.Cell;
+import org.springframework.samples.petclinic.territory.CellRepository;
+
 import org.springframework.samples.petclinic.territory.Territory;
+import org.springframework.samples.petclinic.territory.TerritoryDTO;
 import org.springframework.samples.petclinic.territory.TerritoryType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,9 +22,12 @@ public class GameBoardService {
     
 
     private GameBoardRepository gameBoardRepository;
+    private CellRepository cellRepository;
 
-    public GameBoardService(GameBoardRepository gameBoardRepository){
+
+    public GameBoardService(GameBoardRepository gameBoardRepository, CellRepository cellRepository){
         this.gameBoardRepository = gameBoardRepository;
+        this.cellRepository = cellRepository;
     }
 
 
@@ -24,10 +37,22 @@ public class GameBoardService {
     }
 
     @Transactional
-    public GameBoard save(GameBoard gb){
+    public GameBoard save(GameBoard gb) throws DataAccessException{
+        if (findBoardByPlayerAndMatch(gb.getPlayer().getId(), gb.getMatch().getId())!= null){
+            throw new Error("This gameboard already exists");
+        }
         gameBoardRepository.save(gb);
         return gb;
     }
+
+
+        @Transactional
+    public Set<Territory> parseTerritories(Set<TerritoryDTO> inTerritories){
+        List<Cell> cells = cellRepository.findAll();
+        Set<Territory> parsedTerritories = inTerritories.stream().map(terr -> terr.transform(cells.stream().filter(c -> c.getX().equals(terr.getQ()) && c.getY().equals(terr.getR()) && c.getZ().equals(terr.getS())).findFirst().get())).collect(Collectors.toSet());
+        return parsedTerritories;
+    }
+
 
 
     @Transactional

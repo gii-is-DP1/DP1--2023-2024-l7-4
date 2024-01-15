@@ -23,7 +23,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/v1/rounds")
-@Tag(name = "Rounds", description = "The match management API")
+@Tag(name = "Rounds", description = "The round management API")
 @SecurityRequirement(name = "bearerAuth")
 public class RoundRestController {
     

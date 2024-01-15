@@ -18,7 +18,6 @@ const App = () => {
 
   const id = getIdFromUrl(2);
   const username = jwtDecode(jwt).sub;
-  const initialListSize = 6;
   const gameLayoutRef = useRef();
   const emptyRound = {
     match: null,
@@ -26,34 +25,36 @@ const App = () => {
     mainPlayer: '',
     dices: [],
     territory:'',
+    hasEnd: false,
   }
 
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [obtained, setObtained] = useState(false);
   const [round, setRound] = useState(0);
+  const [built, setBuilt] = useState(false);
   const [totalRound, setTotalRound] = useState(null);
   const [match, setMatch] = useFetchState(
     [],
     `/api/v1/matches/${id}`,
-    jwt,
+    jwt, 
     setMessage,
     setVisible,
     id);
-
-  const matchPlayerList =  Array.apply(",", match.joinedPlayers);    
+  const matchPlayerList = Array.apply(",", match.joinedPlayers);    
   let mainPlayer = matchPlayerList[(round+match.maxPlayers)%match.maxPlayers] === username;
   
+
   const [state, setState] = useState({
-    numbers: Array.from({ length: initialListSize }, () => Math.floor(Math.random() * 6) + 1),
+    numbers: Array.from({ length: matchPlayerList.length + 1 }, () => Math.floor(Math.random() * 6) + 1),
     isListVisible: true,
     isListLocationVisible: false,
     locationSelect: null,
     numberDice: null,
     locationCounters: {},
-    availableLocations: ["Montaña", "Castillo", "Campo", "Bosque", "Río", "Pueblo"],
+    availableLocations: ["MOUNTAIN", "CASTLE", "FIELD", "FOREST", "RIVER", "VILLAGE"],
   });
-    
+
   // HANDLE MOSTRAR LISTA DE DADOS
   const handleShowListClick = useCallback(() => {
     setRound(round + 1);
@@ -61,7 +62,8 @@ const App = () => {
     //Si el jugador principal es al que le toca elegir los dados se muestran los randoms
     if(matchPlayerList[(round+1+match.maxPlayers)%match.maxPlayers] === username){
       const listSize = state.numbers.length;
-      const randomNumbers = Array.from({ length: listSize }, () => Math.floor(Math.random() * 6) + 1);
+
+      const randomNumbers = Array.from({ length: listSize<=1?matchPlayerList.length + 1:listSize }, () => Math.floor(Math.random() * 6) + 1);
       setState({
         ...state,
         numbers: randomNumbers,
@@ -73,8 +75,19 @@ const App = () => {
       }
   }, [gameLayoutRef, match, matchPlayerList, username, round, state]);
 
+    useEffect(() => {
+    // Solo inicializar el array numbers cuando match esté disponible
+      if (match.maxPlayers) {
+        setState((prevState) => ({
+          ...prevState,
+          numbers: Array.from({ length: match.maxPlayers + 1 }, () => Math.floor(Math.random() * 6) + 1),
+        }));
+      }
+    }, [match]);
+
 
     useEffect(() => {
+      setBuilt(gameLayoutRef.current.isCompleted());
       const obtainTotalRound = async () => {
         try {
           const response = await fetch(`/api/v1/rounds/${match.id}/${round}`, {
@@ -92,7 +105,6 @@ const App = () => {
       if (round === 0 && mainPlayer) {
         setObtained(true);
       }
-      if(!obtained && !mainPlayer){
       const intervalId = setInterval(() => {
         obtainTotalRound()
           .then((result) => {
@@ -105,12 +117,8 @@ const App = () => {
                 locationSelect: result.territory
               })
               setObtained(true);
-            } else if(result.hasEnd){
-              postMyBoard(
-                jwt,
-                match.id,
-                username
-              );
+            } if(result.hasEnd){
+              handleEndGame();
             }
           })
           .catch((error) => {
@@ -121,30 +129,37 @@ const App = () => {
         clearInterval(intervalId);
       }
       return () => clearInterval(intervalId)
-    }
-    }, [round, mainPlayer, match, obtained, username, totalRound, setTotalRound, state]);
 
+    }, [round, mainPlayer, match, obtained, username,totalRound, setTotalRound, state, gameLayoutRef]);
+    
+  
 
    // HANDLE ELEGIR DADO
   const handleNumberClick = (clickedNumber) => {
-    const newListSize = state.numbers.length - 1;
-    const newRandomNumbers = Array.from({ length: newListSize }, () => Math.floor(Math.random() * 6) + 1);
+
     //Si es el jugador principal entonces se mostrará la lista para elegir territorios
     if(mainPlayer){
+      const newListSize = state.numbers.length - 1;
+      const indexToRemove = state.numbers.indexOf(clickedNumber);
+      state.numbers.splice(indexToRemove,1);
+      let newNumbers = state.numbers;
+      if(newListSize===0){
+        newNumbers = Array.from({ length: matchPlayerList.length + 1 }, () => Math.floor(Math.random() * 6) + 1);
+      }
     setState({
       ...state,
-      numbers: newRandomNumbers,
+      numbers: newNumbers,
       isListVisible: false,
       isListLocationVisible: true,
       numberDice: clickedNumber
     });
-  }else {
+  } else {
         //Si no es el jugador principal entonces directamente se asignará el LocationSelect(Territorio elegido) al recibido de la base de datos
     setState({
       ...state,
       isListVisible: false,
       isListLocationVisible: false,
-      numberDice: clickedNumber
+      numberDice: clickedNumber,
     });
   }
 };
@@ -174,7 +189,7 @@ const App = () => {
     }
 }
 
-// FUNCIÓN PARA UPDATEAR EL TAMAÑO DE LA LISTA DE LOS DADOS
+// FUNCIÓN PARA UPDATEAR LOS TERRITORIOS QUE QUEDAN POR CONSTRUIR
   const updateNumberDice = () => {
     const currentNumberDice = state.numberDice;
     if (currentNumberDice > 0) {
@@ -185,6 +200,46 @@ const App = () => {
     }
   };
 
+  //FUNCION PARA POSTEAR EL TABLERO
+  const handleEndGame = () => {
+    gameLayoutRef.current.postHexagons(jwt, id, username);
+  }
+
+
+  const checkIfFinalRoundExists = () => {
+    try {
+      const response = fetch(`/api/v1/rounds/${match.id}/${round + 1}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+      const status = response.status;
+      return status === 200;
+    } catch (error){
+      return false;
+    }
+  };
+
+  //FUNCION PARA HACER POST DE LA RONDA PARA INDICAR QUE SE HA ACABADO EL JUEGO
+  const postRound = () => {
+      emptyRound.match = match;
+      emptyRound.subRound = round + 1;
+      emptyRound.mainPlayer = username;
+      emptyRound.dices = state.numbers;
+      emptyRound.territory = "CASTLE";
+      emptyRound.hasEnd = true;
+      return fetch('/api/v1/rounds', {
+        method: 'POST',
+        headers: {
+          "Authorization": `Bearer ${jwt}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+      body: JSON.stringify(emptyRound),
+    })
+  };
 
   // HANDLE PARA SELECCIONAR UN TERRITORIO DE LA LISTA
   const handleLocationSelect = (selectedLocation) => {
@@ -211,6 +266,8 @@ const App = () => {
           'Content-Type': 'application/json'
         },
       body: JSON.stringify(emptyRound),
+    }).catch((error) => {
+      return handleEndGame();
     });
 
   if (locationCounters[selectedLocation] >= 3) {
@@ -223,6 +280,12 @@ const App = () => {
   };
 
 
+  const handleFinalizarClick = () => {
+    if(!checkIfFinalRoundExists()){
+      postRound();
+    }
+    handleEndGame();  
+  }
 
   const rotationStyle = {
     transform: 'rotate(30deg)',
@@ -231,17 +294,24 @@ const App = () => {
   return (
     <div className="app">
       <HexGrid width={1000} height={900} viewBox="-80 -50 100 100" style={rotationStyle}>
-        <GameLayout ref={gameLayoutRef} />
+        <GameLayout ref={gameLayoutRef}/>
       </HexGrid>
       <HexGrid width={500} height={1000} viewBox="-30 -0 100 100" >
         <TilesLayout locationCounters={state.locationCounters} updateNumberDice={updateNumberDice} numberDice={state.numberDice} locationSelect={state.locationSelect} />
       </HexGrid>
     
-      {!state.isListVisible && !state.isListLocationVisible && obtained && state.numberDice === 0 &&(
+      {!state.isListVisible && !state.isListLocationVisible && obtained && state.numberDice === 0 && !built &&(
         <button className="show-list-button" onClick={handleShowListClick}>
           Next round
         </button>
       )}
+
+      {built && 
+      (<button className="show-button" onClick={handleFinalizarClick}>
+        FINALIZAR
+      </button>)
+      }
+
       {!state.isListVisible && !state.isListLocationVisible && !obtained &&
       <div>Esperando al siguiente turno</div>}
 

@@ -10,9 +10,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.board.GameBoard;
 import org.springframework.samples.petclinic.board.GameBoardRepository;
+import org.springframework.samples.petclinic.board.GameBoardRestController;
+import org.springframework.samples.petclinic.board.GameBoardService;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
+import org.springframework.samples.petclinic.territory.DataJsonDTO;
 import org.springframework.samples.petclinic.territory.Territory;
+import org.springframework.samples.petclinic.territory.TerritoryDTO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,13 +38,13 @@ import jakarta.validation.Valid;
 public class MatchRestController {
 
     private MatchService matchService;
-    private GameBoardRepository gameBoardRepository;
+    private GameBoardService gameBoardService;
     private PlayerService playerService;
 
     @Autowired
-    public MatchRestController(MatchService matchService, GameBoardRepository gameBoardRepository, PlayerService playerService){
+    public MatchRestController(MatchService matchService, GameBoardService gameBoardService, PlayerService playerService){
         this.matchService = matchService;
-        this.gameBoardRepository = gameBoardRepository;
+        this.gameBoardService = gameBoardService;
         this.playerService = playerService;
     }
 
@@ -92,12 +96,14 @@ public class MatchRestController {
 
     @PostMapping("/{matchId}/{username}/saveBoard")
     @ResponseStatus(HttpStatus.CREATED)
-    public void saveBoard(@PathVariable("matchId") Integer matchId, @PathVariable("username") String username, @RequestBody @Valid Set<Territory> territories){
+    public void saveBoard(@PathVariable("matchId") Integer matchId, @PathVariable("username") String username, @RequestBody DataJsonDTO data){
         Match m = matchService.findMatchById(matchId);
         Player p = playerService.findByUsername(username);
+        Set<Territory> parsedTerritories = gameBoardService.parseTerritories(data.getHexagons());
         GameBoard newGb = new GameBoard();
-        newGb.setTerritories(territories);
+        newGb.setTerritories(parsedTerritories);
         newGb.setMatch(m);
-        newGb.setPlayer(p);    
+        newGb.setPlayer(p);
+        gameBoardService.save(newGb);
     }
 }
