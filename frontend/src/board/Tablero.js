@@ -166,29 +166,6 @@ const App = () => {
 
   // HANDLE MOSTRAR LISTA DE DADOS
   
-  const handleShowListClick = () => {
-    gameLayoutRef.current.resetBuiltHexagons();
-    setRound(parseInt(round)+1)
-    //Si el jugador principal es al que le toca elegir los dados se muestran los randoms
-    if(mainPlayer){
-      const listSize = state.numbers.length;
-      const randomNumbers = Array.from({ length: listSize }, () => Math.floor(Math.random() * 6) + 1);
-      setState({
-        ...state,
-        numbers: randomNumbers,
-        isListVisible: true,
-      });
-      }//Si no es el jugador principal al que le toca elegir los dados recibe tanto los dados como el territorio del totalRound
-      else {
-        const listDices = Array.from(totalRound.dices);
-        setState({
-          ...state,
-          numbers: listDices,
-          isListVisible: true
-        });
-    }
-}
-
 // FUNCIÓN PARA UPDATEAR LOS TERRITORIOS QUE QUEDAN POR CONSTRUIR
   const updateNumberDice = () => {
     const currentNumberDice = state.numberDice;
