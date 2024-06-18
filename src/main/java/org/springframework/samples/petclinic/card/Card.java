@@ -44,7 +44,7 @@ public class Card extends BaseEntity {
 	@Column(name = "accuracy")
 	private Integer accuracy;
 
-	@Column(name = "Discart")
-	private Boolean Discart;
+	@Column(name = "discart")
+	private Boolean discart;
 
 }
