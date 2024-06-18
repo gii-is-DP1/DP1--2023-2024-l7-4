@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.match;
 
-
 import java.net.URISyntaxException;
 import java.util.List;
 
@@ -8,6 +7,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,19 +32,20 @@ public class MatchRestController {
     private MatchService matchService;
 
     @Autowired
-    public MatchRestController(MatchService matchService){
+    public MatchRestController(MatchService matchService) {
         this.matchService = matchService;
 
     }
 
     @GetMapping
-	public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
-        if(sorted) return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
+    public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
+        if (sorted)
+            return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
         return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-	public ResponseEntity<Match> findById(@PathVariable(name = "id") int id) {
+    public ResponseEntity<Match> findById(@PathVariable(name = "id") int id) {
         return new ResponseEntity<>(matchService.findMatchById(id), HttpStatus.OK);
     }
 
@@ -57,7 +59,7 @@ public class MatchRestController {
 
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
-    //FUNCION PARA JOIN
+    // FUNCION PARA JOIN
 
     @PutMapping("/{id}/join")
     @ResponseStatus(HttpStatus.OK)
@@ -65,12 +67,19 @@ public class MatchRestController {
         Match m = matchService.findMatchById(id);
         List<String> joinedPlayers = m.getJoinedPlayers();
         username = username.replace("\"", "");
-        if(!joinedPlayers.contains(username))
+        if (!joinedPlayers.contains(username))
             joinedPlayers.add(username);
-        if(m.getMatchState() == MatchState.OPEN)
+        if (m.getMatchState() == MatchState.OPEN)
             m.setJoinedPlayers(joinedPlayers);
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
 
     }
+
+    @MessageMapping("/match/messages")
+    @SendTo("/topic/match/messages")
+    public MatchMessage matchMessage(String message) {
+        return new MatchMessage(message);
+    }
+
 }

@@ -4,24 +4,57 @@ import FormGenerator from "../components/formGenerator/formGenerator";
 import { useEffect, useRef, useState } from "react";
 import { registerFormMatchInputs } from "./RegisterFormMatchInputs";
 import tokenService from "../services/token.service";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+
 
 const jwt = tokenService.getLocalAccessToken();
 
 
 export default function CreationForm() {
 
+  const [message, setMessage] = useState(null);
+  const [stompClient, setStompClient] = useState(null);
+
   const username = tokenService.getUser().username;
   const creationFormRef = useRef();
 
 
+
+
+  useEffect(() => {
+    const socket = new SockJS('http://localhost:8080/ws');
+    const client = Stomp.over(socket);
+
+    client.connect({}, () => {
+      client.subscribe('/topic/messages', (message) => {
+        const body = JSON.parse(message.body);
+        setMessage(body.message);
+      });
+
+      setStompClient(client);
+    });
+
+    return () => {
+      if (client && client.connected) {
+        client.disconnect();
+      }
+    };
+
+  }, []);
+
+
+
+
+
   function handleSubmit({ values }) {
 
-    if(!creationFormRef.current.validate()) return;
+    if (!creationFormRef.current.validate()) return;
 
     const request = {
       name: values.name,
       joinedPlayers: ([username]),
-  };
+    };
 
     fetch("/api/v1/matches", {
       method: "POST",
@@ -38,35 +71,38 @@ export default function CreationForm() {
         throw new Error(`Error en la solicitud: ${response.status}`);
       }
     })
-    .then(function (data) {
-      const id = data.id;
-      window.location.href = `/match/${id}/waitingRoom`;
-    })
-    .catch((message) => {
-      alert(message);
-    });
+      .then(function (data) {
+        const id = data.id;
+        if (stompClient && stompClient.connected) {
+          stompClient.send('/app/match/messages', {}, JSON.stringify('created'));
+        }
+        window.location.href = (`/match/${id}/waitingRoom`);
+      })
+      .catch((message) => {
+        alert(message);
+      });
   }
 
   useEffect(() => {
-      });
+  });
 
-    return (
+  return (
     <div className="auth-page-container">
       <h1>Create Match</h1>
       <div className="auth-form-container">
         <FormGenerator
-            ref={creationFormRef}
-            inputs={
-                registerFormMatchInputs 
-            }
-            onSubmit={handleSubmit}
-            numberOfColumns={1}
-            listenEnterKey
-            buttonText="Create Match"
-            buttonClassName="auth-button"
-          />
-        </div>
+          ref={creationFormRef}
+          inputs={
+            registerFormMatchInputs
+          }
+          onSubmit={handleSubmit}
+          numberOfColumns={1}
+          listenEnterKey
+          buttonText="Create Match"
+          buttonClassName="auth-button"
+        />
       </div>
-    );
-  
+    </div>
+  );
+
 }
