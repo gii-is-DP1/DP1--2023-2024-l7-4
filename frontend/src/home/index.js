@@ -5,7 +5,7 @@ import tokenService from '../services/token.service';
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
 import jwtDecode from 'jwt-decode';
-import { Form,Table , FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, Table, FormGroup, Label, Input, Button } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
@@ -45,33 +45,34 @@ export default function Home() {
 
     useEffect(() => {
 
-        if(jwt){
-        const socket = new SockJS('http://localhost:8080/ws');
-        const client = Stomp.over(socket);
+        if (jwt) {
+            const socket = new SockJS('http://localhost:8080/ws');
+            const client = Stomp.over(socket);
 
-        client.connect({}, () => {
-            client.subscribe('/topic/match/messages', (message) => {
-                const body = JSON.parse(message.body);
-                setMessage(body.message);
+            client.connect({}, () => {
+                client.subscribe('/topic/match/messages', (message) => {
+                    const body = JSON.parse(message.body);
+                    if (body.type === 'CREATED' || 'DELETED')
+                        setMessage(body.message);
+                });
+
+                setStompClient(client);
             });
 
-            setStompClient(client);
-        });
-
-        return () => {
-            if (client && client.connected) {
-                client.disconnect();
-            }
-        };
+            return () => {
+                if (client && client.connected) {
+                    client.disconnect();
+                }
+            };
         }
     }, []);
 
 
-    useEffect(()=> {
-        if(jwt){
-        setMessage('waiting');
-        handleUpdateMatches();
-    }
+    useEffect(() => {
+        if (jwt) {
+            setMessage('waiting');
+            handleUpdateMatches();
+        }
     }, [setMatches, message]);
 
     if (!jwt) {

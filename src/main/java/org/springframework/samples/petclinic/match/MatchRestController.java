@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,13 +74,38 @@ public class MatchRestController {
             m.setJoinedPlayers(joinedPlayers);
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
+    }
 
+   @PutMapping("/{id}/unjoin")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Match> updateMatchUnjoining(@PathVariable("id") Integer id, @RequestBody String username) {
+        Match m = matchService.findMatchById(id);
+        List<String> joinedPlayers = m.getJoinedPlayers();
+        username = username.replace("\"", "");
+        if (joinedPlayers.contains(username))
+            joinedPlayers.remove(username);
+        if (m.getMatchState() == MatchState.OPEN)
+            m.setJoinedPlayers(joinedPlayers);
+        Match savedMatch = matchService.saveMatch(m);
+        return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteMatch(@PathVariable(name = "id") int id) {
+        matchService.deleteMatch(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @MessageMapping("/match/messages")
     @SendTo("/topic/match/messages")
-    public MatchMessage matchMessage(String message) {
-        return new MatchMessage(message);
+    public MatchMessage matchMessage(MatchMessage message) {
+        return new MatchMessage(message.getType(), message.getMessage());
+    }
+
+    @MessageMapping("/match/{id}/messages")
+    @SendTo("/topic/match/{id}/messages")
+    public MatchMessage particularMatchMessage(@PathVariable(name = "id") int id,  MatchMessage message) {
+        return new MatchMessage(message.getType(), message.getMessage());
     }
 
 }

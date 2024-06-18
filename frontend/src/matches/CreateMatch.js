@@ -11,7 +11,7 @@ import Stomp from 'stompjs';
 const jwt = tokenService.getLocalAccessToken();
 
 
-export default function CreationForm() {
+export default function CreateMatch() {
 
   const [message, setMessage] = useState(null);
   const [stompClient, setStompClient] = useState(null);
@@ -74,7 +74,10 @@ export default function CreationForm() {
       .then(function (data) {
         const id = data.id;
         if (stompClient && stompClient.connected) {
-          stompClient.send('/app/match/messages', {}, JSON.stringify('created'));
+          stompClient.send('/app/match/messages', {}, JSON.stringify({
+            type: 'CREATED',
+            message: 'Match created'
+          }));
         }
         window.location.href = (`/match/${id}/waitingRoom`);
       })
@@ -88,7 +91,7 @@ export default function CreationForm() {
 
   return (
     <div className="auth-page-container">
-      <h1>Create Match</h1>
+      <h1>START DUEL</h1>
       <div className="auth-form-container">
         <FormGenerator
           ref={creationFormRef}
@@ -98,7 +101,7 @@ export default function CreationForm() {
           onSubmit={handleSubmit}
           numberOfColumns={1}
           listenEnterKey
-          buttonText="Create Match"
+          buttonText="FIRE!!"
           buttonClassName="auth-button"
         />
       </div>

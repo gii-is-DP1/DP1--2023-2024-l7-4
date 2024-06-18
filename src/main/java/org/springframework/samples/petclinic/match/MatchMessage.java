@@ -6,5 +6,8 @@ import lombok.Data;
 @AllArgsConstructor
 public class MatchMessage {
     
+    TypeMessage type;
+
     String message;
+    
 }
