@@ -111,3 +111,15 @@ INSERT INTO consultation_tickets(id,description,creation_date, user_id, consulta
 INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (6, 'Try to give him some tuna to check if he eats that.', '2023-04-11 15:20', 15, 3);
 INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (7, 'My lovebird doesn''t sing as my neighbour''s one.', '2023-02-24 12:30', 5, 4);
 INSERT INTO consultation_tickets(id,description,creation_date, user_id, consultation_id) VALUES (8, 'Lovebirds do not sing.', '2023-02-24 18:30', 16, 4);
+
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (1, 'POSE DEFENSIVA', 'Ganas un punto de precision, Puedes gastar 2 balas para prevenenir daño que se te fuera hacer este turno', 5, AIM, 2, 1, false);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (2, 'MAL DE OJO', 'Elige una al final del turno: • Ganas 2 puntos de precisión. • Descarta esta carta y roba otra. Iguala tus puntos de precisión a los de tu rival.', 6, AIM, 0, 2, true);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (3, 'MAXIMA CONCENTRACION', 'Ganas 2 puntos de precisión. Descarta esta carta y mira las 3 primeras cartas del mazo. Pon 1 en tu mano y descarta el resto.', 4, AIM, 0, 2, true);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (4, 'BALA TRAZADORA', 'Gasta 1 bala. Ganas 3 puntos de precisión. Tu precisión no puede reducirse este turno.', 1, AIM, 1, 3, false);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (5, 'LISTO PARA LA ACCION', 'Ganas 2 puntos de precisión. Si fuiste objetivo de una acción de "Disparo" en tu anterior turno, recarga 1 bala.', 3, AIM, 1, 2, false);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (6, 'NITIDEZ', 'Si ganaste precisión en tu anterior turno, ganas 3 puntos de precisión.', 6, AIM, 0, 3, false);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (7, 'PRECISION', 'Si tu objetivo tiene 4 o más puntos de precisión, ganas 4 puntos de precisión.', 2, AIM, 0, 4, false);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (8, 'PULSO FIRME', 'Si tienes menos puntos de salud que tu objetivo, ganas 4 puntos de precisión.', 1, AIM, 0, 4, false);
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (9, 'MIRADA VENGATIVA', 'Si fuiste objetivo de una acción de "Disparo" en tu anterior turno, ganas 3 puntos de precisión.', 1, AIM, 0, 3, false);
+
+INSERT INTO cards(id,name, action,value,category,bullet,accuracy,discart) VALUES (1, '', '', 5, DOGE, 2, 1, false);
