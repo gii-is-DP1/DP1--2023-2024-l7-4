@@ -1,19 +1,14 @@
 package org.springframework.samples.petclinic.card;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.samples.petclinic.clinic.Clinic;
 import org.springframework.samples.petclinic.model.BaseEntity;
-import org.springframework.samples.petclinic.user.User;
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,10 +27,12 @@ public class Card extends BaseEntity {
 	@NotEmpty
 	private String action;
 
-	@Column(name = "value")
+	@Column(name = "card_value")
 	private String value;
 	
+	@Enumerated(EnumType.STRING)
 	@Column(name = "category")
+	@NotNull
 	private Category category;
 
 	@Column(name = "bullet")
@@ -47,4 +44,5 @@ public class Card extends BaseEntity {
 	@Column(name = "discart")
 	private Boolean discart;
 
+	
 }
