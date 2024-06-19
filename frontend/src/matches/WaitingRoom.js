@@ -148,7 +148,6 @@ export default function WaitingRoom() {
                 <Button className="button-container btn" onClick={handleGoToLobby}>
                     Go to Lobby
                 </Button>
-
                 {match.joinedPlayers ? (match.joinedPlayers.length === 2 ? (
                     <Button outline color="primary">
                         <Link to={`/game/${id}`} className="btn sm" style={{ textDecoration: "none" }}>

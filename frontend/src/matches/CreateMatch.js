@@ -91,19 +91,21 @@ export default function CreateMatch() {
 
   return (
     <div className="auth-page-container">
-      <h1>START DUEL</h1>
-      <div className="auth-form-container">
-        <FormGenerator
-          ref={creationFormRef}
-          inputs={
-            registerFormMatchInputs
-          }
-          onSubmit={handleSubmit}
-          numberOfColumns={1}
-          listenEnterKey
-          buttonText="FIRE!!"
-          buttonClassName="auth-button"
-        />
+      <div className="hero-div">
+        <h1>START DUEL</h1>
+        <div className="auth-form-container">
+          <FormGenerator
+            ref={creationFormRef}
+            inputs={
+              registerFormMatchInputs
+            }
+            onSubmit={handleSubmit}
+            numberOfColumns={1}
+            listenEnterKey
+            buttonText="FIRE!!"
+            buttonClassName="auth-button"
+          />
+        </div>
       </div>
     </div>
   );
