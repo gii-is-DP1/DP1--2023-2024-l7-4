@@ -1,6 +1,6 @@
 import React from 'react';
 import '../App.css';
-import '../static/css/home/home.css';
+import '../static/css/westernTheme.css';
 import tokenService from '../services/token.service';
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
@@ -70,7 +70,7 @@ export default function WaitingRoom() {
                         'Accept': 'application/json',
                         'Content-Type': 'application/json'
                     }
-                }).then(handleSendMessage('DELETE'));
+                }).then(handleSendMessage('DELETE')).then(window.location.href = ('/'));
 
             } catch (error) {
                 console.error('Error Deleting:', error);
@@ -121,8 +121,8 @@ export default function WaitingRoom() {
     }, []);
 
     return (
-        <div>
-            <div className="admin-page-container">
+        <div className="admin-page-container">
+            <div>
                 <div className="hero-div">
                     <h1 className="text-center">JOINED PLAYERS</h1>
                     <div>
@@ -145,10 +145,8 @@ export default function WaitingRoom() {
             </div>
 
             <div style={{ textAlign: 'center' }}>
-                <Button outline color="danger" onClick={handleGoToLobby}>
-                    <Link to={`/`} className="btn sm" style={{ textDecoration: "none" }}>
-                        Go to Lobby
-                    </Link>
+                <Button className="button-container btn" onClick={handleGoToLobby}>
+                    Go to Lobby
                 </Button>
 
                 {match.joinedPlayers ? (match.joinedPlayers.length === 2 ? (

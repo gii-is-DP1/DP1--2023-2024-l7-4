@@ -3,6 +3,8 @@ import { Navbar, NavbarBrand, NavLink, NavItem, Nav, NavbarText, NavbarToggler, 
 import { Link } from 'react-router-dom';
 import tokenService from './services/token.service';
 import jwt_decode from "jwt-decode";
+import './static/css/westernTheme.css';
+
 
 function AppNavbar() {
     const [roles, setRoles] = useState([]);

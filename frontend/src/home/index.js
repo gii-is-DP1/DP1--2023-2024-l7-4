@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../App.css';
-import '../static/css/home/home.css';
+import '../static/css/westernTheme.css';
 import tokenService from '../services/token.service';
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
@@ -80,7 +80,7 @@ export default function Home() {
 
     if (!jwt) {
         return (
-            <div className="home-page-container">
+            <div className="admin-page-container">
                 <div className="hero-div">
                     <h1>Gunfighter</h1>
                     <h3>---</h3>
@@ -91,10 +91,10 @@ export default function Home() {
     } else {
 
         const matchesList = matches.map((m) => {
-            return (<tr key={m.id}>
-                <td className="text-center"> {m.name}</td>
-                <td className='text-center'>{m.matchState}</td>
-                <td className="text-center">
+            return (<tr key={m.id} className='western-cell'>
+                <td> {m.name}</td>
+                <td>{m.matchState}</td>
+                <td>
                     {m.matchState === "OPEN" && (<Button outline color="success" size='sm' onClick={() => {
                         fetch('/api/v1/matches/' + m.id + "/join", {
                             method: 'PUT',
@@ -119,7 +119,7 @@ export default function Home() {
                     <div className="hero-div">
                         <h1 className="text-center"> ONLINE GAMES</h1>
                         <div>
-                            <Table aria-label="achievements" className="mt-4">
+                            <Table aria-label="achievements" className="table-western">
                                 <thead>
                                     <tr>
                                         <th>NAME</th>
@@ -131,9 +131,8 @@ export default function Home() {
                             </Table>
                             <div style={{ textAlign: 'center' }}>
                                 <ImageButton
-                                    to="/match/create"
+                                    to= '/match/create'
                                     imgSrc={`${process.env.PUBLIC_URL}/scope.png`} // Cambia esto a la ruta de tu imagen
-                                    altText="Create Match"
                                     style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según tus necesidades
                                 />
                             </div>

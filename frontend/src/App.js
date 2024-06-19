@@ -50,6 +50,8 @@ import VetEditClinicOwner from "./clinicOwner/vets/VetEditClinicOwner";
 import WaitingRoom from "./matches/WaitingRoom";
 import CreateMatch from "./matches/CreateMatch";
 import Game from "./game/Game";
+import './static/css/westernTheme.css';
+
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
