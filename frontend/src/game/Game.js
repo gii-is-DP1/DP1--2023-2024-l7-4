@@ -5,13 +5,20 @@ import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
 
 const WebSocketComponent = () => {
+    //Jugador 1
     const [health, setHealth] = useState(2);
     const [bullets, setBullets] = useState(2);
     const [precision, setPrecision] = useState(2);
+    const [cards, setCards] = useState(7)
+    // Jugador 2
     const [healthMine, setHealthMine] = useState(2);
     const [bulletsMine, setBulletsMine] = useState(2);
     const [precisionMine, setPrecisionMine] = useState(2);
+    const [cardsMine, setCardsMine] = useState(7)
+    //Cosas en comun
+    const [cardsSteal, setCardsSteal] = useState(50)
     const [stompClient, setStompClient] = useState(null);
+    const [cardsPlayed, setCardsPlayed] = useState(0)
 
     const matchId = getIdFromUrl(2);
 

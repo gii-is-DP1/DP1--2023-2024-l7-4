@@ -8,6 +8,7 @@ import jwtDecode from 'jwt-decode';
 import { Form, Table, FormGroup, Label, Input, Button } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import ImageButton from '../components/buttons/imageButton';
 
 
 const jwt = tokenService.getLocalAccessToken();
@@ -105,7 +106,7 @@ export default function Home() {
                             body: JSON.stringify(username),
                         }).then(handleJoinGame(m.id));
                     }}>
-                        <Link to={`/match/${m.id}/waitingRoom`} className="btn btn-sm" style={{ textDecoration: "none" }}>JOIN</Link>
+                        <Link to={`/match/${m.id}/waitingRoom`} className="btn btn-sm" style={{ textDecoration: "none" }}>ACCEPT</Link>
                     </Button>)}
                 </td>
             </tr>
@@ -128,12 +129,13 @@ export default function Home() {
                                 </thead>
                                 <tbody>{matchesList}</tbody>
                             </Table>
-                            <div style={{ textAlign: "center" }}>
-                                <Button outline color="success">
-                                    <Link
-                                        to={`/match/create`} className="btn sm"
-                                        style={{ textDecoration: "none" }}>Create Match</Link>
-                                </Button>
+                            <div style={{ textAlign: 'center' }}>
+                                <ImageButton
+                                    to="/match/create"
+                                    imgSrc={`${process.env.PUBLIC_URL}/scope.png`} // Cambia esto a la ruta de tu imagen
+                                    altText="Create Match"
+                                    style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según tus necesidades
+                                />
                             </div>
                         </div>
                     </div>
