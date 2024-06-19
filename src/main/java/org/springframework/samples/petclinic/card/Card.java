@@ -1,27 +1,16 @@
 package org.springframework.samples.petclinic.card;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotEmpty;
-
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.samples.petclinic.clinic.Clinic;
 import org.springframework.samples.petclinic.model.BaseEntity;
-import org.springframework.samples.petclinic.user.User;
-
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@Table(name = "card")
+@Table(name = "cards")
 public class Card extends BaseEntity {
 
 	@Column(name = "name")
@@ -36,7 +25,7 @@ public class Card extends BaseEntity {
 	private String value;
 	
 	@Column(name = "category")
-	private Category category;
+	private String category;
 
 	@Column(name = "bullet")
 	private Integer bullet;
@@ -45,6 +34,6 @@ public class Card extends BaseEntity {
 	private Integer accuracy;
 
 	@Column(name = "discart")
-	private Boolean discart;
+	private String discart;
 
 }

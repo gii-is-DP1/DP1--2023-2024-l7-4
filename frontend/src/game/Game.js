@@ -3,18 +3,25 @@ import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
+import tokenService from '../services/token.service';
+import jwtDecode from 'jwt-decode';
 
 const WebSocketComponent = () => {
+
+    const jwt = tokenService.getLocalAccessToken();
+    const username = jwtDecode(jwt).sub;
+
+
     //Jugador 1
     const [health, setHealth] = useState(2);
     const [bullets, setBullets] = useState(2);
     const [precision, setPrecision] = useState(2);
-    const [cards, setCards] = useState(7)
+    const [cards, setCards] = useState([0])
     // Jugador 2
     const [healthMine, setHealthMine] = useState(2);
     const [bulletsMine, setBulletsMine] = useState(2);
     const [precisionMine, setPrecisionMine] = useState(2);
-    const [cardsMine, setCardsMine] = useState(7)
+    const [cardsMine, setCardsMine] = useState([1])
     //Cosas en comun
     const [cardsSteal, setCardsSteal] = useState(50)
     const [stompClient, setStompClient] = useState(null);
@@ -27,6 +34,13 @@ const WebSocketComponent = () => {
     // 3) De tal forma un jugador tendrá el índice 0 y el otro el 1 y se podrá distinguir a los dos pistoleros
     // a la hora de usar los canales.
 
+    //barajar cartas
+    for (let i = cardsSteal.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+       [cardsSteal[i], cardsSteal[j]] = [cardsSteal[j], cardsSteal[i]];
+       }
+
+    //Jugador 1
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
@@ -49,7 +63,7 @@ const WebSocketComponent = () => {
         };
     }, []);
 
-
+    // Jugador 2
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
@@ -71,6 +85,40 @@ const WebSocketComponent = () => {
             }
         };
     }, [matchId])
+
+    async function handleSendMessage(type) {
+    //Mensaje por cada accion
+
+        if (type === 'Player1') {
+            stompClient.send(`/app/match/game/${matchId}/messages`, {}, JSON.stringify({
+                type: type,
+                message: 'Player1'
+            }));
+        }
+        else if (type === 'Player2') {
+            stompClient.send(`/app/match/game/${matchId}/messages`, {}, JSON.stringify({
+                type: 'type',
+                message: 'Player2'
+            }));
+        }
+    }
+
+    //funciones que por cada accion envie mensaje y que por cada mensaje recibido envie una funcion
+    async function updatePlayer() {
+            try {
+                await fetch(`/api/v1/matches/game/${matchId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        "Authorization": `Bearer ${jwt}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(handleSendMessage('DELETE'));
+            
+            } catch (error) {
+                console.error('Error Deleting:', error);
+            }
+        }
 
     const handleUpdatePlayerMine = (event) => {
         event.preventDefault();
@@ -168,7 +216,6 @@ const WebSocketComponent = () => {
                 </FormGroup>
                 <Button type="submit">Actualizar jugador</Button>
             </Form>
-            <h> {}</h>
         </div>
     );
 };
