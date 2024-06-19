@@ -52,8 +52,9 @@ export default function Home() {
             client.connect({}, () => {
                 client.subscribe('/topic/match/messages', (message) => {
                     const body = JSON.parse(message.body);
-                    if (body.type === 'CREATED' || 'DELETED')
-                        setMessage(body.message);
+                    if (body.type === 'CREATED' || 'DELETE')
+                        handleUpdateMatches();
+
                 });
 
                 setStompClient(client);
@@ -68,12 +69,13 @@ export default function Home() {
     }, []);
 
 
-    useEffect(() => {
-        if (jwt) {
-            setMessage('waiting');
-            handleUpdateMatches();
-        }
-    }, [setMatches, message]);
+
+    async function handleJoinGame(id) {
+        stompClient.send(`/app/match/${id}/messages`, {}, JSON.stringify({
+            type: 'JOIN',
+            message: 'Player joined'
+        }));
+    }
 
     if (!jwt) {
         return (
@@ -101,7 +103,7 @@ export default function Home() {
                                 'Content-Type': 'application/json'
                             },
                             body: JSON.stringify(username),
-                        })
+                        }).then(handleJoinGame(m.id));
                     }}>
                         <Link to={`/match/${m.id}/waitingRoom`} className="btn btn-sm" style={{ textDecoration: "none" }}>JOIN</Link>
                     </Button>)}

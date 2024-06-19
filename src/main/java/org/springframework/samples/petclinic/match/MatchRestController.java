@@ -7,6 +7,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -104,7 +105,7 @@ public class MatchRestController {
 
     @MessageMapping("/match/{id}/messages")
     @SendTo("/topic/match/{id}/messages")
-    public MatchMessage particularMatchMessage(@PathVariable(name = "id") int id,  MatchMessage message) {
+    public MatchMessage particularMatchMessage(@DestinationVariable int id,  MatchMessage message) {
         return new MatchMessage(message.getType(), message.getMessage());
     }
 
