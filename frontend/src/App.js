@@ -47,6 +47,9 @@ import ConsultationListClinicOwner from "./clinicOwner/consultations/Consultatio
 import ConsultationEditClinicOwner from "./clinicOwner/consultations/ConsultationEditClinicOwner";
 import VetListClinicOwner from "./clinicOwner/vets/VetListClinicOwner";
 import VetEditClinicOwner from "./clinicOwner/vets/VetEditClinicOwner";
+import WaitingRoom from "./matches/WaitingRoom";
+import CreateMatch from "./matches/CreateMatch";
+import Game from "./game/Game";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -104,6 +107,8 @@ function App() {
       ownerRoutes = (
         <>
           <Route path="/dashboard" element={<PrivateRoute><OwnerDashboard /></PrivateRoute>} />
+          <Route path="/game" element={<PrivateRoute><Game/></PrivateRoute>} />
+          <Route path="/match/:id/waitingRoom" element={<PrivateRoute><WaitingRoom/></PrivateRoute>} />
           <Route path="/plan" exact={true} element={<PrivateRoute><PricingPlan /></PrivateRoute>} />
           <Route path="/myPets" exact={true} element={<PrivateRoute><OwnerPetList /></PrivateRoute>} />
           <Route path="/myPets/:id" exact={true} element={<PrivateRoute><OwnerPetEdit /></PrivateRoute>} />
@@ -111,6 +116,9 @@ function App() {
           <Route path="/consultations" exact={true} element={<PrivateRoute><OwnerConsultationList /></PrivateRoute>} />
           <Route path="/consultations/:consultationId" exact={true} element={<PrivateRoute><OwnerConsultationEdit /></PrivateRoute>} />
           <Route path="/consultations/:consultationId/tickets" exact={true} element={<PrivateRoute><OwnerConsultationTickets /></PrivateRoute>} />
+          <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
+          <Route path="/game/:matchId" exact={true} element={<PrivateRoute><Game /></PrivateRoute>} />
+
         </>)
     }
     if (role === "VET") {
