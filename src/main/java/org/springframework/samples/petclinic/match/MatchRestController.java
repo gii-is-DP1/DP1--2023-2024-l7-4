@@ -118,4 +118,16 @@ public class MatchRestController {
         return new MatchMessage(message.getType(), message.getMessage());
     }
 
+    @MessageMapping("/match/{id}/game")
+    @SendTo("/topic/match/{id}/game")
+    public MatchMessage particularGameMessage(@DestinationVariable int id,  MatchMessage message) {
+        return new MatchMessage(message.getType(), message.getMessage());
+    }
+
+
+    @MessageMapping("/match/{id}/cards")
+    @SendTo("/topic/match/{id}/cards")
+    public MatchDeckMessage particularGameMessage(@DestinationVariable int id,  MatchDeckMessage deckMessage) {
+        return new MatchDeckMessage(deckMessage.getType(), deckMessage.getCards());
+    }
 }

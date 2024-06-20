@@ -65,12 +65,23 @@ body, html, #root {
     max-width: 80vw; /* Ajusta el ancho máximo según tus necesidades */
     margin-bottom: 20px; /* Espacio entre las filas */
 }
+.middle-row {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-height: 900px;
+    max-width: 80vw; /* Ajusta el ancho máximo según tus necesidades */
+    margin-bottom: 20px; /* Espacio entre las filas */
+}
 
 .small-button {
     width: 40px;
     height: 60px;
     font-size: 14px;
     padding: 10px;
+    background-size: 'cover';
+    background-position: 'center';
+    border-radius:0;
 }
 
 .large-button {
@@ -78,4 +89,35 @@ body, html, #root {
     height: 250px;
     font-size: 16px;
     padding: 10px;
+}
+.middleleft-button{
+    width: 150px;
+    height: 250px;
+    font-size: 16px;
+    padding: 10px;
+    margin-top: 130px;
+    margin-left: 150px;
+}
+.middlerigth-button{
+    width: 150px;
+    height: 250px;
+    font-size: 16px;
+    padding: 10px;
+    margin-top: 70px;
+    margin-right: 150px;
+}
+.left-button{
+    width: 150px;
+    height: 200px;
+    font-size: 16px;
+    padding: 10px;
+    margin-top: 130px;
+}
+.rigth-button{
+    width: 200px;
+    height: 300px;
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 100px
+    
 }
