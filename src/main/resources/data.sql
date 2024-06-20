@@ -121,5 +121,4 @@ INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES
 INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (7, 'PRECISION', 'Si tu objetivo tiene 4 o más puntos de precisión, ganas 4 puntos de precisión.', 2, 'AIM', 0, 4, 'false');
 INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (8, 'PULSO FIRME', 'Si tienes menos puntos de salud que tu objetivo, ganas 4 puntos de precisión.', 1, 'AIM', 0, 4, 'false');
 INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (9, 'MIRADA VENGATIVA', 'Si fuiste objetivo de una acción de "Disparo" en tu anterior turno, ganas 3 puntos de precisión.', 1, 'AIM', 0, 3, 'false');
-
-INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (10, 'a', 'a', 5, 'DOGE', 2, 1, 'false');
+INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (10, 'a', 'a', 5, 'DODGE', 2, 1, 'false');

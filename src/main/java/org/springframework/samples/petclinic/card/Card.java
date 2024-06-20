@@ -1,4 +1,5 @@
 package org.springframework.samples.petclinic.card;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,9 +29,10 @@ public class Card extends BaseEntity{
 	@NotBlank
 	private String action;
 
-	@Column(name = "card_value")
-	private String value;
-	
+	@Column(name = "power")
+	@NotNull
+	private Integer power;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category")
 	@NotNull
@@ -48,5 +50,4 @@ public class Card extends BaseEntity{
 	@NotEmpty
 	private String discart;
 
-	
 }
