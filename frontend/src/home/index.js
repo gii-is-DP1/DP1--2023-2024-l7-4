@@ -53,7 +53,7 @@ export default function Home() {
             client.connect({}, () => {
                 client.subscribe('/topic/match/messages', (message) => {
                     const body = JSON.parse(message.body);
-                    if (body.type === 'CREATED' || 'DELETE')
+                    if (body.type === 'CREATED' || 'DELETE' || 'START')
                         handleUpdateMatches();
 
                 });

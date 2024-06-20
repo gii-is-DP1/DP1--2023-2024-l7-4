@@ -39,6 +39,9 @@ export default function WaitingRoom() {
                 } else if (body.type === "JOIN" || body.type === "UNJOIN") {
                     handleUpdateMatch();
                 }
+                else if (body.type === "START") {
+                    window.location.href = (`/game/${id}`);
+                }
             });
             setStompClient(client);
 
@@ -63,14 +66,22 @@ export default function WaitingRoom() {
                 type: type,
                 message: 'Match delete'
             }));
-        }
-        else if (type === 'UNJOIN') {
+        } else if (type === 'UNJOIN') {
             stompClient.send(`/app/match/${id}/messages`, {}, JSON.stringify({
-                type: 'UNJOIN',
+                type: type,
                 message: 'Player unjoined'
             }));
-        }
+        } else if (type === 'START') {
+            stompClient.send(`/app/match/${id}/messages`, {}, JSON.stringify({
+                type: type,
+                message: 'Match Started'
+            }));
+            stompClient.send(`/app/match/messages`, {}, JSON.stringify({
+                type: type,
+                message: 'Match Started'
+            }));
     }
+}
 
     async function handleUpdateMatch() {
         try {
@@ -90,6 +101,22 @@ export default function WaitingRoom() {
         }
     }
 
+    const handleStartMatch = async () => {
+            try {
+                await fetch(`/api/v1/matches/${id}/start`, {
+                    method: 'PATCH',
+                    headers: {
+                        "Authorization": `Bearer ${jwt}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                }).then(
+               handleSendMessage('START').then(window.location.href = (`/game/${id}`)));
+            } catch (error) {
+                console.error('Error Starting:', error);
+        }
+    }
+        
     const handleGoToLobby = async () => {
         if (match.joinedPlayers[0] === username) {
             try {
@@ -178,11 +205,9 @@ export default function WaitingRoom() {
                 <Button className="button-container btn" onClick={handleConfirmLeave}>
                     Go to Lobby
                 </Button>
-                {match.joinedPlayers ? (match.joinedPlayers.length === 2 ? (
-                    <Button outline color="primary">
-                        <Link to={`/game/${id}`} className="btn sm" style={{ textDecoration: "none" }}>
+                {match.joinedPlayers ? (match.joinedPlayers.length === 2 && match.joinedPlayers[0] === username ? (
+                    <Button outline color="primary" onClick={handleStartMatch}>
                             Start Match
-                        </Link>
                     </Button>
                 ) : waitingMessage) : "Loading.."}
             </div>

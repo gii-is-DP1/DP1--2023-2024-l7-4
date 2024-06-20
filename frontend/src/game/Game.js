@@ -5,6 +5,7 @@ import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
+import '../static/css/GameBoard.css';
 
 const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
@@ -19,7 +20,7 @@ const WebSocketComponent = () => {
     const [healthMine, setHealthMine] = useState(2);
     const [bulletsMine, setBulletsMine] = useState(2);
     const [precisionMine, setPrecisionMine] = useState(2);
-    const [cardsMine, setCardsMine] = useState(7)
+    const [cardsMine, setCardsMine] = useState(0)
     //Cosas en comun
     const [cardsSteal, setCardsSteal] = useState(50);
     const [stompClient, setStompClient] = useState(null);
@@ -61,8 +62,9 @@ const WebSocketComponent = () => {
        [cardsSteal[i], cardsSteal[j]] = [cardsSteal[j], cardsSteal[i]];
        }
 
-    //Jugador 1
+
     useEffect(() => {
+
         if (matchId)
             handleAssignPLayers();
 
@@ -70,6 +72,13 @@ const WebSocketComponent = () => {
         const client = Stomp.over(socket);
 
         client.connect({}, () => {
+            client.subscribe(`/topic/${matchId}/gunfighter0`, (message) => {
+                const body = JSON.parse(message.body);
+                setHealthMine(body.health);
+                setPrecisionMine(body.precision);
+                setBulletsMine(body.bullets);
+            });
+
             client.subscribe(`/topic/${matchId}/gunfighter1`, (message) => {
                 const body = JSON.parse(message.body);
                 setHealthMine(body.health);
@@ -78,8 +87,9 @@ const WebSocketComponent = () => {
             });
 
             setStompClient(client);
-        });
 
+        });
+ 
         return () => {
             if (client && client.connected) {
                 client.disconnect();
@@ -87,28 +97,6 @@ const WebSocketComponent = () => {
         };
     }, []);
 
-    // Jugador 2
-    useEffect(() => {
-        const socket = new SockJS('http://localhost:8080/ws');
-        const client = Stomp.over(socket);
-
-        client.connect({}, () => {
-            client.subscribe(`/topic/${matchId}/gunfighter2`, (message) => {
-                const body = JSON.parse(message.body);
-                setHealth(body.health);
-                setPrecision(body.precision);
-                setBullets(body.bullets);
-            });
-
-            setStompClient(client);
-        });
-
-        return () => {
-            if (client && client.connected) {
-                client.disconnect();
-            }
-        };
-    }, [matchId])
 
     async function handleSendMessage(type) {
     //Mensaje por cada accion
@@ -172,77 +160,32 @@ const WebSocketComponent = () => {
     };
 
     return (
-        <div>
-            <h> {playerNumber}</h>
-            <Form onSubmit={handleUpdatePlayerMine}>
-                <FormGroup>
-                    <Label for="healthMine">Salud mia:</Label>
-                    <Input
-                        id="healthMine"
-                        name="healthMine"
-                        type="number"
-                        value={healthMine}
-                        onChange={handleInputChange(setHealthMine)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="precisionMine">Precisión mia:</Label>
-                    <Input
-                        id="precisionMine"
-                        name="precisionMine"
-                        type="number"
-                        value={precisionMine}
-                        onChange={handleInputChange(setPrecisionMine)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="bulletsMine">Balas mias:</Label>
-                    <Input
-                        id="bulletsMine"
-                        name="bulletsMine"
-                        type="number"
-                        value={bulletsMine}
-                        onChange={handleInputChange(setBulletsMine)}
-                    />
-                </FormGroup>
-                <Button type="submit">Actualizar jugador mio</Button>
-            </Form>
-
-            <Form onSubmit={handleUpdatePlayer}>
-                <FormGroup>
-                    <Label for="health">Salud:</Label>
-                    <Input
-                        id="health"
-                        name="health"
-                        type="number"
-                        value={health}
-                        onChange={handleInputChange(setHealth)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="precision">Precisión:</Label>
-                    <Input
-                        id="precision"
-                        name="precision"
-                        type="number"
-                        value={precision}
-                        onChange={handleInputChange(setPrecision)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="bullets">Balas:</Label>
-                    <Input
-                        id="bullets"
-                        name="bullets"
-                        type="number"
-                        value={bullets}
-                        onChange={handleInputChange(setBullets)}
-                    />
-                </FormGroup>
-                <Button type="submit">Actualizar jugador</Button>
-            </Form>
+      <div className="card-hand-grid">
+            <div className="top-row">
+                <button className="small-button">1</button>
+                <button className="small-button">2</button>
+                <button className="small-button">3</button>
+                <button className="small-button">4</button>
+                <button className="small-button">5</button>
+                <button className="small-button">6</button>
+                <button className="small-button">7</button>
+            </div>
+            <div className="middle-row">
+                <button className="middle-button">1</button>
+                <button className="middle-button">2</button>
+                <button className="middle-button">3</button>
+                <button className="middle-button">4</button>
+            </div>
+            <div className="bottom-row">
+                <button className="large-button">1</button>
+                <button className="large-button">2</button>
+                <button className="large-button">3</button>
+                <button className="large-button">4</button>
+                <button className="large-button">5</button>
+                <button className="large-button">6</button>
+                <button className="large-button">7</button>
+            </div>
         </div>
     );
 };
-
 export default WebSocketComponent;
