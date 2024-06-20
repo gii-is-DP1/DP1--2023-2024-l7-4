@@ -6,6 +6,7 @@ import { registerFormMatchInputs } from "./RegisterFormMatchInputs";
 import tokenService from "../services/token.service";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
+import FormWithSoundButtonGenerator from "../components/formGenerator/formWithSoundButtonGenerator";
 
 
 const jwt = tokenService.getLocalAccessToken();
@@ -91,19 +92,20 @@ export default function CreateMatch() {
 
   return (
     <div className="auth-page-container">
-      <h1>START DUEL</h1>
-      <div className="auth-form-container">
-        <FormGenerator
-          ref={creationFormRef}
-          inputs={
-            registerFormMatchInputs
-          }
-          onSubmit={handleSubmit}
-          numberOfColumns={1}
-          listenEnterKey
-          buttonText="FIRE!!"
-          buttonClassName="auth-button"
-        />
+      <div className="hero-div">
+        <h1>START DUEL</h1>
+        <div className="auth-form-container2">
+          <FormWithSoundButtonGenerator
+            ref={creationFormRef}
+            inputs={
+              registerFormMatchInputs
+            }
+            onSubmit={handleSubmit}
+            numberOfColumns={1}
+            listenEnterKey
+            buttonText="FIRE!!"
+          />
+        </div>
       </div>
     </div>
   );

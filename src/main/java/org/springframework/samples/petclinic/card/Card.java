@@ -4,6 +4,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -16,15 +17,15 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name = "card")
-public class Card extends BaseEntity {
+@Table(name = "cards")
+public class Card extends BaseEntity{
 
-	@Column(name = "name")
-	@NotEmpty
-	private String nombre;
+    @Column(name = "name")
+	@NotBlank
+	private String name;
 
-	@Column(name = "action")
-	@NotEmpty
+    @Column(name = "action")
+	@NotBlank
 	private String action;
 
 	@Column(name = "card_value")
@@ -36,13 +37,16 @@ public class Card extends BaseEntity {
 	private Category category;
 
 	@Column(name = "bullet")
+	@NotNull
 	private Integer bullet;
-	
+
 	@Column(name = "accuracy")
+	@NotNull
 	private Integer accuracy;
 
-	@Column(name = "discart")
-	private Boolean discart;
+    @Column(name = "discart")
+	@NotEmpty
+	private String discart;
 
 	
 }

@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -90,7 +91,15 @@ public class MatchRestController {
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
-
+    @PatchMapping("/{id}/start")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<Match> updateMatchStart(@PathVariable("id") Integer id) {
+        Match m = matchService.findMatchById(id);
+        if (m.getMatchState() == MatchState.OPEN)
+            m.setMatchState(MatchState.IN_PROGRESS);
+        Match savedMatch = matchService.saveMatch(m);
+        return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable(name = "id") int id) {
         matchService.deleteMatch(id);
@@ -109,4 +118,16 @@ public class MatchRestController {
         return new MatchMessage(message.getType(), message.getMessage());
     }
 
+    @MessageMapping("/match/{id}/game")
+    @SendTo("/topic/match/{id}/game")
+    public MatchMessage particularGameMessage(@DestinationVariable int id,  MatchMessage message) {
+        return new MatchMessage(message.getType(), message.getMessage());
+    }
+
+
+    @MessageMapping("/match/{id}/cards")
+    @SendTo("/topic/match/{id}/cards")
+    public MatchDeckMessage particularGameMessage(@DestinationVariable int id,  MatchDeckMessage deckMessage) {
+        return new MatchDeckMessage(deckMessage.getType(), deckMessage.getCards());
+    }
 }

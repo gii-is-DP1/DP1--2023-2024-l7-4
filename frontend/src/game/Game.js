@@ -1,84 +1,173 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
+import tokenService from '../services/token.service';
+import jwtDecode from 'jwt-decode';
+import '../static/css/GameBoard.css';
+import CardButton from '../components/buttons/cardButton';
+import { generateUniqueRandomNumbers, initialDeal } from '../util/game/utils'
 
 const WebSocketComponent = () => {
+    const jwt = tokenService.getLocalAccessToken();
+    const username = jwt ? jwtDecode(jwt).sub : "null";
+    const [playerNumber, setPlayerNumber] = useState(-1);
+    const [rightButtonImg, setRightButtonImg] = useState('');
+
     //Jugador 1
-    const [health, setHealth] = useState(2);
-    const [bullets, setBullets] = useState(2);
-    const [precision, setPrecision] = useState(2);
-    const [cards, setCards] = useState(7)
+    const [health0, setHealth0] = useState(2);
+    const [bullets0, setBullets0] = useState(2);
+    const [precision0, setPrecision0] = useState(2);
+    const [cards0, setCards0] = useState(0);
+
     // Jugador 2
-    const [healthMine, setHealthMine] = useState(2);
-    const [bulletsMine, setBulletsMine] = useState(2);
-    const [precisionMine, setPrecisionMine] = useState(2);
-    const [cardsMine, setCardsMine] = useState(7)
+    const [health1, setHealth1] = useState(2);
+    const [bullets1, setBullets1] = useState(2);
+    const [precision1, setPrecision1] = useState(2);
+    const [cards1, setCards1] = useState(0);
+
     //Cosas en comun
-    const [cardsSteal, setCardsSteal] = useState(50)
+    const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());
+    const [cardsDiscard, setCardsDiscard] = useState(0);
     const [stompClient, setStompClient] = useState(null);
-    const [cardsPlayed, setCardsPlayed] = useState(0)
+    const [cardsPlayed, setCardsPlayed] = useState(0);
+
+    let initial = true;
 
     const matchId = getIdFromUrl(2);
 
-    // 1) hacer fetch de la match dada la Id y traer los jugadores
-    // 2) Una vez traida la match con la lista de jugadores se le asigna con el índice que sea a cada jugador
-    // 3) De tal forma un jugador tendrá el índice 0 y el otro el 1 y se podrá distinguir a los dos pistoleros
-    // a la hora de usar los canales.
+
+    async function handleAssignPLayers() {
+        const matchPlayerList = await fetch(`/api/v1/matches/${matchId}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(match => { return match.joinedPlayers; }).then((matchPlayerList) => {
+                setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
+            })
+            .catch(error => { console.error('Error fetching match:', error); return null; });
+
+
+    }
 
     useEffect(() => {
+
+        if (matchId)
+            handleAssignPLayers();
+
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
 
         client.connect({}, () => {
-            client.subscribe(`/topic/${matchId}/gunfighter1`, (message) => {
-                const body = JSON.parse(message.body);
-                setHealthMine(body.health);
-                setPrecisionMine(body.precision);
-                setBulletsMine(body.bullets);
+            client.subscribe(`/topic/${matchId}/cards`, (message) => {
+                const body = message.body;
+                if (body.type === 'DECK') {
+                    setDeckOfCards(body.cards);
+                    if (initial){
+                        const cardsPlayer1 = initialDeal(deckOfCards);
+                        setCards1(cardsPlayer1);
+                        initial = !initial;
+                    }
+                } else if (body.type === 'DECK0') {
+                    setCards0(body.cards);
+                } else if (body.type === 'DECK1') {
+                    setCards1(body.cards);
+                }
             });
-
             setStompClient(client);
         });
+
+        if (initial && playerNumber === 0 && deckOfCards.length === 50) {
+            const cardsPlayer0 = initialDeal(deckOfCards);
+            setCards0(cardsPlayer0);
+            initial = false;
+            handleSendDeckMessage('DECK');
+            handleSendDeckMessage('DECK0');
+        }
+
 
         return () => {
             if (client && client.connected) {
                 client.disconnect();
             }
         };
-    }, []);
+    }, [playerNumber]);
 
 
-    useEffect(() => {
-        const socket = new SockJS('http://localhost:8080/ws');
-        const client = Stomp.over(socket);
+    
+    async function handleSendDeckMessage(type) {
 
-        client.connect({}, () => {
-            client.subscribe(`/topic/${matchId}/gunfighter2`, (message) => {
-                const body = JSON.parse(message.body);
-                setHealth(body.health);
-                setPrecision(body.precision);
-                setBullets(body.bullets);
-            });
+        if (type === 'DECK') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: type,
+                cards: deckOfCards,
+            }));
+        }
+        else if (type === 'DECK0') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: type,
+                cards: cards0,
+            }));
+        }
+        else if (type === 'DECK1') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type:  type,
+                cards: cards1,
+            }));
+        }
+    }
 
-            setStompClient(client);
-        });
+    async function handleSendMessage(type) {
+        //Mensaje por cada accion
 
-        return () => {
-            if (client && client.connected) {
-                client.disconnect();
-            }
-        };
-    }, [matchId])
+        if (type === 'DECK') {
+            stompClient.send(`/app/match/${matchId}/game`, {}, JSON.stringify({
+                type: type,
+                message: 'Baraja'
+            }));
+        }
+        else if (type === 'Player2') {
+            stompClient.send(`/app/match/${matchId}/game`, {}, JSON.stringify({
+                type: 'type',
+                message: 'Player2'
+            }));
+        }
+    }
 
+    //funciones que por cada accion envie mensaje y que por cada mensaje recibido envie una funcion
+    async function updatePlayer() {
+        try {
+            await fetch(`/api/v1/matches/game/${matchId}`, {
+                method: 'DELETE',
+                headers: {
+                    "Authorization": `Bearer ${jwt}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(handleSendMessage('DELETE'));
+
+        } catch (error) {
+            console.error('Error Deleting:', error);
+        }
+    }
+
+    /*
     const handleUpdatePlayerMine = (event) => {
         event.preventDefault();
         if (stompClient && stompClient.connected) {
             stompClient.send('/app/gunfighter', {}, JSON.stringify({
-                health: healthMine,
-                precision: precisionMine,
-                bullets: bulletsMine
+                
             }));
         }
     };
@@ -94,83 +183,58 @@ const WebSocketComponent = () => {
         }
     };
 
+*/
+
     const handleInputChange = (setter) => (event) => {
         const value = event.target.value;
         setter(value === '' ? 0 : parseInt(value, 10));
     };
+    
+    const handleMouseEnter = (imgSrc) => {
+        setRightButtonImg(imgSrc);
+    };
 
     return (
-        <div>
-            <Form onSubmit={handleUpdatePlayerMine}>
-                <FormGroup>
-                    <Label for="healthMine">Salud mia:</Label>
-                    <Input
-                        id="healthMine"
-                        name="healthMine"
-                        type="number"
-                        value={healthMine}
-                        onChange={handleInputChange(setHealthMine)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="precisionMine">Precisión mia:</Label>
-                    <Input
-                        id="precisionMine"
-                        name="precisionMine"
-                        type="number"
-                        value={precisionMine}
-                        onChange={handleInputChange(setPrecisionMine)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="bulletsMine">Balas mias:</Label>
-                    <Input
-                        id="bulletsMine"
-                        name="bulletsMine"
-                        type="number"
-                        value={bulletsMine}
-                        onChange={handleInputChange(setBulletsMine)}
-                    />
-                </FormGroup>
-                <Button type="submit">Actualizar jugador mio</Button>
-            </Form>
+        <div className="card-hand-grid">
+            <h>{playerNumber}</h>
+            <div className="top-row">
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+            </div>
+            <div className="middle-row">
+                <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <button className="middleleft-button">2</button>
+                <button className="middlerigth-button">3</button>
+                <CardButton className="rigth-button" imgSrc={rightButtonImg}/>
+            </div>
 
-            <Form onSubmit={handleUpdatePlayer}>
-                <FormGroup>
-                    <Label for="health">Salud:</Label>
-                    <Input
-                        id="health"
-                        name="health"
-                        type="number"
-                        value={health}
-                        onChange={handleInputChange(setHealth)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="precision">Precisión:</Label>
-                    <Input
-                        id="precision"
-                        name="precision"
-                        type="number"
-                        value={precision}
-                        onChange={handleInputChange(setPrecision)}
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="bullets">Balas:</Label>
-                    <Input
-                        id="bullets"
-                        name="bullets"
-                        type="number"
-                        value={bullets}
-                        onChange={handleInputChange(setBullets)}
-                    />
-                </FormGroup>
-                <Button type="submit">Actualizar jugador</Button>
-            </Form>
-            <h> {}</h>
+           {playerNumber === 0 ?
+                <div className="bottom-row">
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)}/>
+                </div>
+                :
+                <div className="bottom-row">
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)}/>
+                </div>
+                }
         </div>
     );
 };
-
 export default WebSocketComponent;
