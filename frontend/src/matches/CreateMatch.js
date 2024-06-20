@@ -6,7 +6,6 @@ import { registerFormMatchInputs } from "./RegisterFormMatchInputs";
 import tokenService from "../services/token.service";
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
-import ButtonWithSound from "../util/ButtonWithSound";
 import FormWithSoundButtonGenerator from "../components/formGenerator/formWithSoundButtonGenerator";
 
 
