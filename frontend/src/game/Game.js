@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
@@ -6,12 +6,13 @@ import getIdFromUrl from "../util/getIdFromUrl";
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
 
+import tokenService from '../services/token.service';
+import jwtDecode from 'jwt-decode';
+
 const WebSocketComponent = () => {
-
     const jwt = tokenService.getLocalAccessToken();
-    const username = jwtDecode(jwt).sub;
-
-
+    const username = jwt ? jwtDecode(jwt).sub : "null";
+    const [playerNumber, setPlayerNumber] = useState(-1);
     //Jugador 1
     const [health, setHealth] = useState(2);
     const [bullets, setBullets] = useState(2);
@@ -21,13 +22,36 @@ const WebSocketComponent = () => {
     const [healthMine, setHealthMine] = useState(2);
     const [bulletsMine, setBulletsMine] = useState(2);
     const [precisionMine, setPrecisionMine] = useState(2);
-    const [cardsMine, setCardsMine] = useState([1])
+    const [cardsMine, setCardsMine] = useState(7)
     //Cosas en comun
-    const [cardsSteal, setCardsSteal] = useState(50)
+    const [cardsSteal, setCardsSteal] = useState(50);
     const [stompClient, setStompClient] = useState(null);
-    const [cardsPlayed, setCardsPlayed] = useState(0)
+    const [cardsPlayed, setCardsPlayed] = useState(0);
 
     const matchId = getIdFromUrl(2);
+
+
+    async function handleAssignPLayers() {
+        const matchPlayerList = await fetch(`/api/v1/matches/${matchId}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(match => { return match.joinedPlayers; })
+            .catch(error => { console.error('Error fetching match:', error); return null; });
+
+        setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
+
+    }
 
     // 1) hacer fetch de la match dada la Id y traer los jugadores
     // 2) Una vez traida la match con la lista de jugadores se le asigna con el índice que sea a cada jugador
@@ -42,6 +66,9 @@ const WebSocketComponent = () => {
 
     //Jugador 1
     useEffect(() => {
+        if (matchId)
+            handleAssignPLayers();
+
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
 
@@ -149,6 +176,7 @@ const WebSocketComponent = () => {
 
     return (
         <div>
+            <h> {playerNumber}</h>
             <Form onSubmit={handleUpdatePlayerMine}>
                 <FormGroup>
                     <Label for="healthMine">Salud mia:</Label>
