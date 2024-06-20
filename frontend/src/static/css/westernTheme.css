@@ -5,7 +5,7 @@ body {
 }
 
 .hero-div {
-    background-color: rgba(210, 180, 140, 0);
+    background-color: rgba(210, 180, 140, 0.618);
     border: 5px solid #8b4513;
     padding: 20px;
     text-align: center;
@@ -108,3 +108,7 @@ body {
 .image-button:hover {
     opacity: 0.8; /* Efecto hover, ajusta según sea necesario */
 }
+
+.transparent-navbar {
+    background-color: transparent !important;
+  }
