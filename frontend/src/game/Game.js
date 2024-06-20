@@ -13,6 +13,7 @@ const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
     const username = jwt ? jwtDecode(jwt).sub : "null";
     const [playerNumber, setPlayerNumber] = useState(-1);
+    const [rightButtonImg, setRightButtonImg] = useState('');
 
     //Jugador 1
     const [health0, setHealth0] = useState(2);
@@ -188,37 +189,51 @@ const WebSocketComponent = () => {
         const value = event.target.value;
         setter(value === '' ? 0 : parseInt(value, 10));
     };
+    
+    const handleMouseEnter = (imgSrc) => {
+        setRightButtonImg(imgSrc);
+    };
 
     return (
         <div className="card-hand-grid">
             <h>{playerNumber}</h>
             <div className="top-row">
-                <CardButton
-                    className="small-button"
-                    imgSrc={`${process.env.PUBLIC_URL}/cards/card1.png`}
-                />
-                <button className="small-button">2</button>
-                <button className="small-button">3</button>
-                <button className="small-button">4</button>
-                <button className="small-button">5</button>
-                <button className="small-button">6</button>
-                <button className="small-button">7</button>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
             </div>
             <div className="middle-row">
-                <button className="left-button">1</button>
+                <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
                 <button className="middleleft-button">2</button>
                 <button className="middlerigth-button">3</button>
-                <button className="rigth-button">4</button>
+                <CardButton className="rigth-button" imgSrc={rightButtonImg}/>
             </div>
-            <div className="bottom-row">
-                <button className="large-button">1</button>
-                <button className="large-button">2</button>
-                <button className="large-button">3</button>
-                <button className="large-button">4</button>
-                <button className="large-button">5</button>
-                <button className="large-button">6</button>
-                <button className="large-button">7</button>
-            </div>
+
+           {playerNumber === 0 ?
+                <div className="bottom-row">
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)}/>
+                </div>
+                :
+                <div className="bottom-row">
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`)}/>
+                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)}/>
+                </div>
+                }
         </div>
     );
 };
