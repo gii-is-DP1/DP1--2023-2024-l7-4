@@ -6,9 +6,6 @@ import getIdFromUrl from "../util/getIdFromUrl";
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
 
-import tokenService from '../services/token.service';
-import jwtDecode from 'jwt-decode';
-
 const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
     const username = jwt ? jwtDecode(jwt).sub : "null";
