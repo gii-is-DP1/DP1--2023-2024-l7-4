@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Input, Button } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
@@ -13,21 +13,24 @@ const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
     const username = jwt ? jwtDecode(jwt).sub : "null";
     const [playerNumber, setPlayerNumber] = useState(null);
-    const [timeoutId, setTimeoutId] = useState(-1);
     const [received, setReceived] = useState(false);
     const [rightButtonImg, setRightButtonImg] = useState('');
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
 
     //Jugador 0
     const [health0, setHealth0] = useState(2);
     const [bullets0, setBullets0] = useState(2);
     const [precision0, setPrecision0] = useState(2);
     const [cards0, setCards0] = useState([]);
+    const [acceptDuel0, setAcceptDuel0] = useState(false);
 
     // Jugador 1
     const [health1, setHealth1] = useState(2);
     const [bullets1, setBullets1] = useState(2);
     const [precision1, setPrecision1] = useState(2);
     const [cards1, setCards1] = useState([]);
+    const [acceptDuel1, setAcceptDuel1] = useState(false);
 
     //Cosas en comun
     const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());
@@ -79,14 +82,9 @@ const WebSocketComponent = () => {
                     setDeckOfCards(body.deckCards);
                     setCards1(body.player1Cards);
                     setCards0(body.player0Cards);
-                    if (!received && playerNumber === 0 && body.player1Cards.length !== 0) {
-                        setReceived(true);
-                    } else if (playerNumber === 1 && body.player1Cards.length === 0) {
-                        const cardsPlayer1 = initialDeal(deckOfCards);
-                        setCards1(cardsPlayer1);
-                        setDeckOfCards(deckOfCards);
-                        handleSendDeckMessage();
-                    }
+                }
+                if (body.type === 'READY'){
+                    setReceived(true)
                 }
 
             });
@@ -97,55 +95,51 @@ const WebSocketComponent = () => {
             if (client && client.connected) {
                 client.disconnect();
             }
-            if (timeoutId) {
-                clearTimeout(timeoutId);
-            }
         };
 
-    }, [matchId, playerNumber]);
+    }, [matchId, playerNumber,received]);
 
 
     useEffect(() => {
-        let IDtimeout = null;
-        if (stompClient && playerNumber === 0 && !received) {
+        if (stompClient && playerNumber === 0 && received) {
             const cardsPlayer0 = initialDeal(deckOfCards);
             setCards0(cardsPlayer0);
-
-            const sendDeckMessageRepeatedly = () => {
-                handleSendDeckMessage();
-                if (!received) {
-                    IDtimeout = setTimeout(sendDeckMessageRepeatedly, 1000);
-                    setTimeoutId(IDtimeout);
-                }
-            };
-
-            sendDeckMessageRepeatedly();
+            const cardsPlayer1 = initialDeal(deckOfCards)
+            setCards1(cardsPlayer1)
+            handleSendDeckMessage('DECKS');
+        }
+        if(playerNumber === 1 && !received){
+            handleSendDeckMessage('RECEIVED');
         }
 
-        return () => {
-            if (IDtimeout) {
-                clearTimeout(IDtimeout);
-            }
-        };
+
     }, [playerNumber, stompClient, received]);
 
 
-    async function handleSendDeckMessage() {
-        stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
-            type: 'DECKS',
-            deckCards: deckOfCards,
-            player0Cards: cards0,
-            player1Cards: cards1,
-        }));
-    }
+    async function handleSendDeckMessage(type) {
+        if (type === 'DECKS'){
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: 'DECKS',
+                deckCards: deckOfCards,
+                player0Cards: cards0,
+                player1Cards: cards1,
+            }));
+        } else if (type === 'RECEIVED'){
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: 'READY',
+                message: 'RECEIVED'
+            }));
 
-    const handleInputChange = (setter) => (event) => {
-        const value = event.target.value;
-        setter(value === '' ? 0 : parseInt(value, 10));
-    };
+        }
+
+    }
     
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc);
+    };
+        
+    const handleRendirte = () => {
+        setShowConfirmationModal(false); 
     };
 
     return (
@@ -188,6 +182,19 @@ const WebSocketComponent = () => {
                 <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)}/>
                 </div>
                 }
+
+
+
+
+                <Modal isOpen={showConfirmationModal}>
+                <ModalHeader>Rendirte</ModalHeader>
+                <ModalBody>
+                    ¿Quieres Rendirte?
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleRendirte}>Si</Button>
+                </ModalFooter>
+            </Modal>
         </div>
     );
 };

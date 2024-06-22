@@ -169,7 +169,7 @@ export default function WaitingRoom() {
 
     return (
         <div className="admin-page-container">
-            <Modal isOpen={showConfirmationModal} toggle={handleCancelLeave}>
+            <Modal isOpen={showConfirmationModal}>
                 <ModalHeader toggle={handleCancelLeave}>Confirmación</ModalHeader>
                 <ModalBody>
                     ¿Estás seguro de que quieres salir de esta página?
