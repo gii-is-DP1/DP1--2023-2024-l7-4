@@ -9,5 +9,10 @@ public class MatchDeckMessage {
     
     private TypeMessage type;
 
-    private List<Integer> cards;    
+    private List<Integer> deckCards;    
+
+    private List<Integer> player0Cards;    
+
+    private List<Integer> player1Cards;    
+
 }

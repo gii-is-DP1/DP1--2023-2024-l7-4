@@ -12,20 +12,22 @@ import { generateUniqueRandomNumbers, initialDeal } from '../util/game/utils'
 const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
     const username = jwt ? jwtDecode(jwt).sub : "null";
-    const [playerNumber, setPlayerNumber] = useState(-1);
+    const [playerNumber, setPlayerNumber] = useState(null);
+    const [timeoutId, setTimeoutId] = useState(-1);
+    const [received, setReceived] = useState(false);
     const [rightButtonImg, setRightButtonImg] = useState('');
 
-    //Jugador 1
+    //Jugador 0
     const [health0, setHealth0] = useState(2);
     const [bullets0, setBullets0] = useState(2);
     const [precision0, setPrecision0] = useState(2);
-    const [cards0, setCards0] = useState(0);
+    const [cards0, setCards0] = useState([]);
 
-    // Jugador 2
+    // Jugador 1
     const [health1, setHealth1] = useState(2);
     const [bullets1, setBullets1] = useState(2);
     const [precision1, setPrecision1] = useState(2);
-    const [cards1, setCards1] = useState(0);
+    const [cards1, setCards1] = useState([]);
 
     //Cosas en comun
     const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());
@@ -33,13 +35,12 @@ const WebSocketComponent = () => {
     const [stompClient, setStompClient] = useState(null);
     const [cardsPlayed, setCardsPlayed] = useState(0);
 
-    let initial = true;
 
     const matchId = getIdFromUrl(2);
 
 
     async function handleAssignPLayers() {
-        const matchPlayerList = await fetch(`/api/v1/matches/${matchId}`, {
+        await fetch(`/api/v1/matches/${matchId}`, {
             method: 'GET',
             headers: {
                 "Authorization": `Bearer ${jwt}`,
@@ -66,124 +67,77 @@ const WebSocketComponent = () => {
         if (matchId)
             handleAssignPLayers();
 
+
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
 
+
         client.connect({}, () => {
-            client.subscribe(`/topic/${matchId}/cards`, (message) => {
-                const body = message.body;
-                if (body.type === 'DECK') {
-                    setDeckOfCards(body.cards);
-                    if (initial){
+            client.subscribe(`/topic/match/${matchId}/cards`, (message) => {
+                const body = JSON.parse(message.body);
+                if (body.type === 'DECKS') {
+                    setDeckOfCards(body.deckCards);
+                    setCards1(body.player1Cards);
+                    setCards0(body.player0Cards);
+                    if (!received && playerNumber === 0 && body.player1Cards.length !== 0) {
+                        setReceived(true);
+                    } else if (playerNumber === 1 && body.player1Cards.length === 0) {
                         const cardsPlayer1 = initialDeal(deckOfCards);
                         setCards1(cardsPlayer1);
-                        initial = !initial;
+                        setDeckOfCards(deckOfCards);
+                        handleSendDeckMessage();
                     }
-                } else if (body.type === 'DECK0') {
-                    setCards0(body.cards);
-                } else if (body.type === 'DECK1') {
-                    setCards1(body.cards);
                 }
+
             });
             setStompClient(client);
         });
-
-        if (initial && playerNumber === 0 && deckOfCards.length === 50) {
-            const cardsPlayer0 = initialDeal(deckOfCards);
-            setCards0(cardsPlayer0);
-            initial = false;
-            handleSendDeckMessage('DECK');
-            handleSendDeckMessage('DECK0');
-        }
-
 
         return () => {
             if (client && client.connected) {
                 client.disconnect();
             }
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
         };
-    }, [playerNumber]);
+
+    }, [matchId, playerNumber]);
 
 
-    
-    async function handleSendDeckMessage(type) {
+    useEffect(() => {
+        let IDtimeout = null;
+        if (stompClient && playerNumber === 0 && !received) {
+            const cardsPlayer0 = initialDeal(deckOfCards);
+            setCards0(cardsPlayer0);
 
-        if (type === 'DECK') {
-            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
-                type: type,
-                cards: deckOfCards,
-            }));
-        }
-        else if (type === 'DECK0') {
-            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
-                type: type,
-                cards: cards0,
-            }));
-        }
-        else if (type === 'DECK1') {
-            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
-                type:  type,
-                cards: cards1,
-            }));
-        }
-    }
-
-    async function handleSendMessage(type) {
-        //Mensaje por cada accion
-
-        if (type === 'DECK') {
-            stompClient.send(`/app/match/${matchId}/game`, {}, JSON.stringify({
-                type: type,
-                message: 'Baraja'
-            }));
-        }
-        else if (type === 'Player2') {
-            stompClient.send(`/app/match/${matchId}/game`, {}, JSON.stringify({
-                type: 'type',
-                message: 'Player2'
-            }));
-        }
-    }
-
-    //funciones que por cada accion envie mensaje y que por cada mensaje recibido envie una funcion
-    async function updatePlayer() {
-        try {
-            await fetch(`/api/v1/matches/game/${matchId}`, {
-                method: 'DELETE',
-                headers: {
-                    "Authorization": `Bearer ${jwt}`,
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
+            const sendDeckMessageRepeatedly = () => {
+                handleSendDeckMessage();
+                if (!received) {
+                    IDtimeout = setTimeout(sendDeckMessageRepeatedly, 1000);
+                    setTimeoutId(IDtimeout);
                 }
-            }).then(handleSendMessage('DELETE'));
+            };
 
-        } catch (error) {
-            console.error('Error Deleting:', error);
+            sendDeckMessageRepeatedly();
         }
+
+        return () => {
+            if (IDtimeout) {
+                clearTimeout(IDtimeout);
+            }
+        };
+    }, [playerNumber, stompClient, received]);
+
+
+    async function handleSendDeckMessage() {
+        stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+            type: 'DECKS',
+            deckCards: deckOfCards,
+            player0Cards: cards0,
+            player1Cards: cards1,
+        }));
     }
-
-    /*
-    const handleUpdatePlayerMine = (event) => {
-        event.preventDefault();
-        if (stompClient && stompClient.connected) {
-            stompClient.send('/app/gunfighter', {}, JSON.stringify({
-                
-            }));
-        }
-    };
-
-    const handleUpdatePlayer = (event) => {
-        event.preventDefault();
-        if (stompClient && stompClient.connected) {
-            stompClient.send(`/app/${matchId}/gunfighter`, {}, JSON.stringify({
-                health,
-                precision,
-                bullets
-            }));
-        }
-    };
-
-*/
 
     const handleInputChange = (setter) => (event) => {
         const value = event.target.value;
