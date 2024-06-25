@@ -1,23 +1,33 @@
-:root{
-  --color-input: #303030;
-  --color-label: #5e5e5e;
+:root {
+  --color-input: #d2b48c;
+  --color-label: #ffffff;
   --color-btn-disabled: #5757577e;
   --color-error: #cc0033;
   --color-error-background: #fce4e4;
   --color-border-disabled: #706c6c;
-  --main-button-hover-dark-color: #23c483;
-  --main-button-hover-light-color: #23c483;
-  --main-button-shadow-hover-color: rgba(0,0,0,0.4);
+  --main-button-hover-dark-color: #8b4513;
+  --main-button-hover-light-color: #8b4513;
+  --main-button-shadow-hover-color: rgba(0, 0, 0, 0.4);
   --main-black: #111;
+  --input-border-color: #0000003d;
+}
+
+body {
+  font-family: 'Cedarville Cursive', cursive;
+  background-color: #f8f4e3;
+  color: #4d2e0a;
 }
 
 /* FORM */
 
 .class-profile-form {
   position: relative;
-  width: 100%;
-  height: 100%;
-  background-color: var(--main-button-background-color);
+  width: 100%; /* Ajusta el tamaño del formulario para que sea más cuadrado */
+  background-color: rgba(210, 180, 140, 0.8); /* Fondo semitransparente */
+  border: 5px solid #00000031; /* Borde estilo western */
+  padding: 20px;
+  border-radius: 10px; /* Esquinas redondeadas */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra */
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
@@ -27,7 +37,7 @@
 .class-profile-img {
   width: 100px;
   height: 100px;
-  border-radius: 50px;
+  border-radius: 50%;
   border: 1px solid var(--main-button-hover-dark-color);
 }
 
@@ -42,13 +52,13 @@
   justify-content: center;
   align-items: center;
   column-gap: 20px;
-  height: 100%;
   width: 100%;
   padding-bottom: 20px;
 }
 
 .class-form-group {
   position: relative;
+  width: 100%; /* Asegura que los grupos de formulario ocupen todo el ancho */
 }
 
 input.class-form-input,
@@ -58,10 +68,10 @@ select.class-form-input {
   font-size: 1rem;
   color: var(--color-input);
   padding: 0.6em 0.3em;
-  border: none;
+  border: 2px solid var(--input-border-color); /* Borde de color azul */
+  border-radius: 5px; /* Esquinas curvadas para los inputs */
   outline: none;
-  border-bottom: 1px solid var(--main-button-hover-dark-color);
-  background-color: transparent;
+  background-color: rgba(139, 69, 19, 0.5); /* Fondo semitransparente */
 }
 
 textarea.class-form-input {
@@ -70,7 +80,8 @@ textarea.class-form-input {
   font-size: 1rem;
   color: var(--color-input);
   padding: 0.6em 0.3em;
-  border: 1px solid var(--main-button-hover-dark-color);
+  border: 2px solid var(--input-border-color); /* Borde de color azul */
+  border-radius: 5px; /* Esquinas curvadas para los inputs */
   outline: none;
   background-color: transparent;
   resize: none;
@@ -96,7 +107,7 @@ textarea.class-form-input {
   cursor: pointer;
 }
 
-.interval-group{
+.interval-group {
   margin-bottom: 20px;
 }
 
@@ -106,7 +117,24 @@ textarea.class-form-input {
 }
 
 .class-profile-btn {
-  width: auto;
+  background-color: #8b4513;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1rem;
+  margin: 10px 5px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.class-profile-btn:hover {
+  background-color: #5c3317;
+  transform: scale(1.1); /* Ajusta el factor de escala según sea necesario */
 }
 
 input.class-form-input[required] + label.class-form-label:after,
@@ -134,11 +162,11 @@ select.class-form-input {
 }
 
 @media screen and (max-width: 450px) {
-    .class-form-group{
-        width: 90% !important;
-        margin-top: 20px;
-    }
+  .class-form-group {
+    width: 90% !important;
+    margin-top: 20px;
   }
+}
 
 /* ERRORS */
 

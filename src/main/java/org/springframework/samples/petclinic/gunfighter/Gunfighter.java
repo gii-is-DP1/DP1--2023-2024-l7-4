@@ -10,5 +10,7 @@ public class Gunfighter {
     private Integer health;
     private Integer precision;
     private Integer bullets;
+    private boolean preventDamage;
+   
 
 }

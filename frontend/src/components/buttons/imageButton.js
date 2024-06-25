@@ -1,12 +1,26 @@
 import React from 'react';
 import { Button } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import '../../static/css/westernTheme.css'; // Asegúrate de tener tus estilos CSS de western theme importados aquí
+import { Link, Navigate } from 'react-router-dom';
 
-const ImageButton = ({ to, imgSrc, altText, className, style }) => {
+
+const ImageButton = ({ imgSrc, altText }) => {
     return (
-        <Button outline color="success" className={className} style={style}>
-            <Link to={to} style={{ textDecoration: "none", display: "flex", justifyContent: "center", alignItems: "center" }}>
-                <img src={imgSrc} alt={altText} style={{ width: "100%", height: "100%" }} />
+        <Button
+            className="button-container"
+            style={{
+                backgroundImage: `url(${imgSrc})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                width: '50px',
+                height: '50px',
+                border: 'none', // Ajusta o elimina el borde si es necesario
+                padding: 0, // Ajusta el padding según sea necesario
+                transition: 'transform 0.2s ease-in-out' // Transición suave para el efecto de agrandamiento
+            }}
+        >
+            <Link to="/match/create" style={{ textDecoration: 'none', width: '100%', height: '100%', display: 'block' }}>
+                <span className="sr-only">{altText}</span>
             </Link>
         </Button>
     );
