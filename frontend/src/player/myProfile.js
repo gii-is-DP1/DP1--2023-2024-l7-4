@@ -23,10 +23,6 @@ export default function MyProfile() {
     avatar: "",
     nickname: "",
     email: "",
-    username: "",
-    password: "",
-    total_score: "",
-    total_bloqs: "",
   };
 
   const [player, setPlayer] = useFetchState(
@@ -61,10 +57,6 @@ export default function MyProfile() {
               <tr>
                 <th width="10%">Nickname</th>
                 <td>{player.nickname}</td>
-              </tr>
-              <tr>
-                <th width="10%">Total Score</th>
-                <td>{player.total_score}</td>
               </tr>
             </tbody>
           </Table>

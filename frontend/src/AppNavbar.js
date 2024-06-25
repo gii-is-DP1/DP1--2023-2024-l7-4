@@ -53,17 +53,12 @@ function AppNavbar() {
                 </>
             )
         }
-        if (role === "OWNER") {
+        if (role === "PLAYER") {
             ownerLinks = (
+                /* aqui va solo la navegacion de la parte de arriba*/
                 <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/myPets">My Pets</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
-                    </NavItem>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/plan">Plan</NavLink>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/api/v1/players/username/:username">My Profile</NavLink>
                     </NavItem>
                 </>
             )
@@ -101,12 +96,6 @@ function AppNavbar() {
     if (!jwt) {
         publicLinks = (
             <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="docs" tag={Link} to="/docs">Docs</NavLink>
-                </NavItem>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} id="plans" tag={Link} to="/plans">Pricing Plans</NavLink>
-                </NavItem>
                 <NavItem>
                     <NavLink style={{ color: "white" }} id="register" tag={Link} to="/register">Register</NavLink>
                 </NavItem>

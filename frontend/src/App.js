@@ -15,6 +15,7 @@ import OwnerVisitEdit from "./owner/visits/visitEdit";
 import PlanList from "./public/plan";
 import tokenService from "./services/token.service";
 import OwnerDashboard from "./owner/dashboard";
+import MyProfile from "./player/myProfile";
 import OwnerConsultationList from "./owner/consultations/consultationList";
 import OwnerConsultationEdit from "./owner/consultations/consultationEdit";
 import OwnerConsultationTickets from "./owner/consultations/tickets/ticketList";
@@ -100,17 +101,11 @@ function App() {
           <Route path="/consultations/:consultationId/tickets" exact={true} element={<PrivateRoute><TicketListAdmin /></PrivateRoute>} />
         </>)
     }
-    if (role === "OWNER") {
+    if (role === "PLAYER") {
       ownerRoutes = (
         <>
-          <Route path="/dashboard" element={<PrivateRoute><OwnerDashboard /></PrivateRoute>} />
-          <Route path="/plan" exact={true} element={<PrivateRoute><PricingPlan /></PrivateRoute>} />
-          <Route path="/myPets" exact={true} element={<PrivateRoute><OwnerPetList /></PrivateRoute>} />
-          <Route path="/myPets/:id" exact={true} element={<PrivateRoute><OwnerPetEdit /></PrivateRoute>} />
-          <Route path="/myPets/:id/visits/:id" exact={true} element={<PrivateRoute><OwnerVisitEdit /></PrivateRoute>} />
-          <Route path="/consultations" exact={true} element={<PrivateRoute><OwnerConsultationList /></PrivateRoute>} />
-          <Route path="/consultations/:consultationId" exact={true} element={<PrivateRoute><OwnerConsultationEdit /></PrivateRoute>} />
-          <Route path="/consultations/:consultationId/tickets" exact={true} element={<PrivateRoute><OwnerConsultationTickets /></PrivateRoute>} />
+    {/* aqui se meten todas las rutas que voy a usar */}
+          <Route path="/api/v1/players/username/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
         </>)
     }
     if (role === "VET") {

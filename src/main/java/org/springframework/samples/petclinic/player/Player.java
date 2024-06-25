@@ -1,17 +1,20 @@
 package org.springframework.samples.petclinic.player;
 
-import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.samples.petclinic.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.Setter;
 
+
 @Getter
 @Setter
 @Entity
-public class Player extends User{
+@Table(name = "players")
+public class Player extends User {
   
     @Column(name = "name")
     @NotEmpty
