@@ -26,13 +26,15 @@ public class PlayerService {
 		return (List<Player>) playerRepository.findAll();
 	}
 
- 
-
     @Transactional(readOnly = true)
 	public Player findPlayer(int id) throws DataAccessException {
 		return this.playerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
 	}
 
+    @Transactional(readOnly = true)
+    public Player findByUsername(String username) throws DataAccessException {
+        return this.playerRepository.existsPlayer(username).orElseThrow(() -> new ResourceNotFoundException("Player", "username", username));
+    }
 
     @Transactional
 	public Player savePlayer(Player player) throws DataAccessException {

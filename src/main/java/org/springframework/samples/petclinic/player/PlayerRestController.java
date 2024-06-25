@@ -47,6 +47,10 @@ public class PlayerRestController {
 		}
 		return p;
 	}	
+	@GetMapping(value = "/username/{id}")
+	public ResponseEntity<Player> findByUsername(@PathVariable("id") String username) {
+		return new ResponseEntity<>(playerService.findByUsername(username), HttpStatus.OK);
+	}
 
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
