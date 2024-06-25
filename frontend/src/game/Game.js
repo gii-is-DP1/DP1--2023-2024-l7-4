@@ -92,13 +92,9 @@ const WebSocketComponent = () => {
                 if (body.type === 'PLAYEDCARD') {
                     if (playerNumber === 0 && body.playedCard1 !== -1) {
                         setCardPlayed1(body.playedCard1);
-                        setWaiting(false);
-                        if (cardPlayed0) setShowCards(true);
                     }
                     if (playerNumber === 1 && body.playedCard0 !== -1) {
                         setCardPlayed0(body.playedCard0);
-                        setWaiting(false);
-                        if (cardPlayed1) setShowCards(true);
                     }
                 }
 
@@ -173,7 +169,8 @@ const WebSocketComponent = () => {
             setWaiting(true);
             await setCardPlayed0(cards0[cardNumber]);
             handleSendDeckMessage('PLAYEDCARD', cards0[cardNumber]);
-        } else if (player === 1 && !waiting) {
+        }
+        if (player === 1 && !waiting) {
             setWaiting(true);
             await setCardPlayed1(cards1[cardNumber]);
             handleSendDeckMessage('PLAYEDCARD', cards1[cardNumber]);
@@ -186,6 +183,8 @@ const WebSocketComponent = () => {
 
     const handleActionConfirmed = () => {
         setShowConfirmationModal(false);
+        setShowCards(false);
+        setWaiting(false);
         setCardPlayed0(-1);
         setCardPlayed1(-1);
     }
@@ -243,12 +242,12 @@ const WebSocketComponent = () => {
 
 
             <Modal isOpen={showConfirmationModal}>
-                <ModalHeader>Rendirte</ModalHeader>
+                <ModalHeader>Acciones realizadas</ModalHeader>
                 <ModalBody>
-                    ¿Quieres Rendirte?
+                    Confirmar turno
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={handleActionConfirmed}>Si</Button>
+                    <Button color="danger" onClick={handleActionConfirmed}>Confirmar</Button>
                 </ModalFooter>
             </Modal>
         </div>
