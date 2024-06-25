@@ -15,4 +15,7 @@ public class MatchDeckMessage {
 
     private List<Integer> player1Cards;    
 
+    private Integer playedCard0;
+
+    private Integer playedCard1;
 }

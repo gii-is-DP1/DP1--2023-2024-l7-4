@@ -16,7 +16,7 @@ const WebSocketComponent = () => {
     const [received, setReceived] = useState(false);
     const [rightButtonImg, setRightButtonImg] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
+    const [showCards, setShowCards] = useState(false);
 
     //Jugador 0
     const [health0, setHealth0] = useState(2);
@@ -33,10 +33,12 @@ const WebSocketComponent = () => {
     const [cardPlayed1, setCardPlayed1] = useState(null);
 
 
+    const [waiting, setWaiting] = useState(false);
+
 
     //Cosas en comun
     const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());
-    const [cardsDiscard, setCardsDiscard] = useState(0);
+    const [cardsDiscard, setCardsDiscard] = useState([]);
     const [stompClient, setStompClient] = useState(null);
 
 
@@ -84,8 +86,20 @@ const WebSocketComponent = () => {
                     setCards1(body.player1Cards);
                     setCards0(body.player0Cards);
                 }
-                if (body.type === 'READY'){
+                if (body.type === 'READY') {
                     setReceived(true)
+                }
+                if (body.type === 'PLAYEDCARD') {
+                    if (playerNumber === 0 && body.playedCard1 !== -1) {
+                        setCardPlayed1(body.playedCard1);
+                        setWaiting(false);
+                        if (cardPlayed0) setShowCards(true);
+                    }
+                    if (playerNumber === 1 && body.playedCard0 !== -1) {
+                        setCardPlayed0(body.playedCard0);
+                        setWaiting(false);
+                        if (cardPlayed1) setShowCards(true);
+                    }
                 }
 
             });
@@ -98,7 +112,7 @@ const WebSocketComponent = () => {
             }
         };
 
-    }, [matchId, playerNumber,received]);
+    }, [matchId, playerNumber, received]);
 
 
     useEffect(() => {
@@ -109,7 +123,7 @@ const WebSocketComponent = () => {
             setCards1(cardsPlayer1)
             handleSendDeckMessage('DECKS');
         }
-        if(playerNumber === 1 && !received){
+        if (playerNumber === 1 && !received) {
             handleSendDeckMessage('RECEIVED');
         }
 
@@ -117,83 +131,124 @@ const WebSocketComponent = () => {
     }, [playerNumber, stompClient, received]);
 
 
-    async function handleSendDeckMessage(type) {
-        if (type === 'DECKS'){
+    async function handleSendDeckMessage(type, cardNumber = -1) {
+        if (type === 'DECKS') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'DECKS',
                 deckCards: deckOfCards,
                 player0Cards: cards0,
                 player1Cards: cards1,
+                playedCard0: -1,
+                playedCard1: -1,
             }));
-        } else if (type === 'RECEIVED'){
+        } else if (type === 'RECEIVED') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'READY',
                 message: 'RECEIVED'
             }));
-
         }
-
+        if (type === 'PLAYEDCARD') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: 'PLAYEDCARD',
+                deckCards: [],
+                player0Cards: [],
+                player1Cards: [],
+                playedCard0: playerNumber === 0 ? cardNumber : -1,
+                playedCard1: playerNumber === 1 ? cardNumber : -1,
+            }));
+        }
     }
-    
+
+
+    useEffect(() => {
+        if (cardPlayed0 > 0 && cardPlayed1 > 0) {
+            setShowCards(true);
+            // HACER ACCIONES DE CARTAS
+            setShowConfirmationModal(true);
+        }
+    }, [cardPlayed0, cardPlayed1])
+
+    async function handleSetCardPlayed(player, cardNumber) {
+        if (player === 0 && !waiting) {
+            setWaiting(true);
+            await setCardPlayed0(cards0[cardNumber]);
+            handleSendDeckMessage('PLAYEDCARD', cards0[cardNumber]);
+        } else if (player === 1 && !waiting) {
+            setWaiting(true);
+            await setCardPlayed1(cards1[cardNumber]);
+            handleSendDeckMessage('PLAYEDCARD', cards1[cardNumber]);
+        }
+    }
+
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc)
     }
-        
-    const handleRendirte = () => {
-        setShowConfirmationModal(false)
+
+    const handleActionConfirmed = () => {
+        setShowConfirmationModal(false);
+        setCardPlayed0(-1);
+        setCardPlayed1(-1);
     }
 
     return (
         <div className="card-hand-grid">
             <h>{playerNumber}</h>
             <div className="top-row">
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
             </div>
-            <div className="middle-row">
-                <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
-                <button className="middleleft-button">{playerNumber===0 ?(cardPlayed0?cardPlayed0:null) :(cardPlayed1?cardPlayed1:null)}</button>
-                <button className="middlerigth-button">{playerNumber===1 ?(cardPlayed1?cardPlayed1:null) :(cardPlayed0?cardPlayed0:null)}</button>
-                <CardButton className="rigth-button" imgSrc={rightButtonImg}/>
-            </div>
-            <div>{playerNumber===0? `HP: ${health0} Bullets: ${bullets0} Accuracy: ${precision0}` : `HP: ${health1} Bullets: ${bullets1} Accuracy: ${precision1}`}</div>
-           {playerNumber === 0 ?
+            {playerNumber === 0 &&
+                <div className="middle-row">
+                    <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middleleft-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middlerigth-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="rigth-button" imgSrc={rightButtonImg} />
+                </div>
+            }
+            {playerNumber === 1 &&
+                <div className="middle-row">
+                    <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middleleft-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middlerigth-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="rigth-button" imgSrc={rightButtonImg} />
+                </div>
+            }
+            <div>{playerNumber === 0 ? `HP: ${health0} Bullets: ${bullets0} Accuracy: ${precision0}` : `HP: ${health1} Bullets: ${bullets1} Accuracy: ${precision1}`}</div>
+            {playerNumber === 0 ?
                 <div className="bottom-row">
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[0])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[1])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[2])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[3])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[4])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[5])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed0(cards0[6])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)}/>
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 0)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 1)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 2)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 3)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 4)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 5)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 6)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)} />
                 </div>
                 :
                 <div className="bottom-row">
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[0])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[1])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[2])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[3])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[4])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[5])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`)}/>
-                <CardButton className="large-button" onClick={() =>setCardPlayed1(cards1[6])} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)}/>
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 0)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 1)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 2)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 3)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 4)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 5)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 6)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)} />
                 </div>
-                }
+            }
 
 
-
-
-                <Modal isOpen={showConfirmationModal}>
+            <Modal isOpen={showConfirmationModal}>
                 <ModalHeader>Rendirte</ModalHeader>
                 <ModalBody>
                     ¿Quieres Rendirte?
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={handleRendirte}>Si</Button>
+                    <Button color="danger" onClick={handleActionConfirmed}>Si</Button>
                 </ModalFooter>
             </Modal>
         </div>

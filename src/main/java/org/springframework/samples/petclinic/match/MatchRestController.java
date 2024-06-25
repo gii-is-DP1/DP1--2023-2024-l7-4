@@ -128,7 +128,8 @@ public class MatchRestController {
     @MessageMapping("/match/{id}/cards")
     @SendTo("/topic/match/{id}/cards")
     public MatchDeckMessage particularGameMessage(@DestinationVariable int id,  MatchDeckMessage deckMessage) {
-        return new MatchDeckMessage(deckMessage.getType(), deckMessage.getDeckCards(), deckMessage.getPlayer0Cards(), deckMessage.getPlayer1Cards());
+        return new MatchDeckMessage(deckMessage.getType(), deckMessage.getDeckCards(),
+         deckMessage.getPlayer0Cards(), deckMessage.getPlayer1Cards(), deckMessage.getPlayedCard0(), deckMessage.getPlayedCard1());
     }
 
     
