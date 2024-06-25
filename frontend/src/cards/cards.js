@@ -11,6 +11,7 @@ export default function CardGame() {
   const [message, setMessage] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const [playerHand, setPlayerHand] = useState([]);
+  const [discardPile, setDiscardPile] = useState([]);
 
   const username = tokenService.getUser().username;
 
@@ -61,8 +62,15 @@ export default function CardGame() {
     }
 
     const card = playerHand[0];
-    setPlayerHand(playerHand.slice(1)); 
+    setPlayerHand(playerHand.slice(1));
     stompClient.send("/app/playCard", {}, JSON.stringify(card));
+  }
+
+   function discardCard(index) {
+    const cardToDiscard = playerHand[index];
+    setPlayerHand(prevHand => prevHand.filter((_, i) => i !== index));
+    setDiscardPile(prevPile => [...prevPile, cardToDiscard]);
+    stompClient.send("/app/discardCard", {}, JSON.stringify(cardToDiscard));
   }
 
   function showCard(card) {
@@ -79,6 +87,7 @@ export default function CardGame() {
         <p><strong>Bullet:</strong> {card.bullet}</p>
         <p><strong>Accuracy:</strong> {card.accuracy}</p>
         <p><strong>Discart:</strong> {card.discart.toString()}</p>
+        <button onClick={() => discardCard(index)}>Discard</button>
       </div>
     ));
   }

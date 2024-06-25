@@ -177,33 +177,20 @@ const WebSocketComponent = () => {
                 />
             </div>
             <div className="middle-row">
-                <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`}/>
+                <button className="left-button">1</button>
                 <button className="middleleft-button">2</button>
                 <button className="middlerigth-button">3</button>
-                <CardButton className="rigth-button" imgSrc={rightButtonImg}/>
+                <button className="rigth-button">4</button>
             </div>
-
-           {playerNumber === 0 ?
-                <div className="bottom-row">
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)}/>
-                </div>
-                :
-                <div className="bottom-row">
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`)}/>
-                <CardButton className="large-button" imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)}/>
-                </div>
-                }
+            <div className="bottom-row">
+                <button className="large-button">1</button>
+                <button className="large-button">2</button>
+                <button className="large-button">3</button>
+                <button className="large-button">4</button>
+                <button className="large-button">5</button>
+                <button className="large-button">6</button>
+                <button className="large-button">7</button>
+            </div>
         </div>
     );
 };
