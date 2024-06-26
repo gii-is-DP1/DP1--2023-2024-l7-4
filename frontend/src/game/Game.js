@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Input, Button } from 'reactstrap';
+import { Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Card } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
@@ -8,6 +8,9 @@ import jwtDecode from 'jwt-decode';
 import '../static/css/GameBoard.css';
 import CardButton from '../components/buttons/cardButton';
 import { generateUniqueRandomNumbers, initialDeal } from '../util/game/utils'
+import DiscardCardsModalContent from '../components/modals/DiscardCardsModalContent';
+import CardRow from '../components/modals/CardRow';
+import TopRow from '../components/modals/TopRow';
 
 const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
@@ -16,6 +19,7 @@ const WebSocketComponent = () => {
     const [received, setReceived] = useState(false);
     const [rightButtonImg, setRightButtonImg] = useState('');
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [showDiscardModal, setShowDiscardModal] = useState(false);
     const [showCards, setShowCards] = useState(false);
 
     //Jugador 0
@@ -35,7 +39,8 @@ const WebSocketComponent = () => {
 
     const [waiting, setWaiting] = useState(false); //Estado para saber si el otro jugador ya ha jugado
     const [played, setPlayed] = useState(false); //Estado para bloquear los botones una vez jugada una carta
-
+    const [readyForDiscard, setReadyForDiscard] = useState(false);
+    const [discardedCards, setDiscardedCards] = useState([]);
 
     //Cosas en comun
     const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());// Crea un array de números del 1 al 50);
@@ -85,6 +90,8 @@ const WebSocketComponent = () => {
                     setDeckOfCards(body.deckCards);
                     setCards1(body.player1Cards);
                     setCards0(body.player0Cards);
+                    if (playerNumber === 1 && body.player1Cards.length === 8)
+                        setReadyForDiscard(true);
                 }
                 if (body.type === 'READY') {
                     setReceived(true);
@@ -136,10 +143,11 @@ const WebSocketComponent = () => {
     }, [playerNumber, stompClient, received]);
 
 
-    // Reparto inicial
+    // Reparto inicial ya que en el otro useEffect no se mandaba a tiempo
     useEffect(() => {
         if (cards0.length > 0 && cards1.length > 0 && playerNumber === 0 && received) {
             handleSendDeckMessage('DECKS');
+            setReadyForDiscard(true);
             setReceived(false);
         }
     }, [cards0, cards1]);
@@ -179,13 +187,20 @@ const WebSocketComponent = () => {
         }
     }
 
+    // TODO: Borrar las cartas que esten dentro de discardedCards
+    const handleDiscardConfirmed = () => {
+        setShowDiscardModal(false);
+        setReadyForDiscard(false);
+
+    }
+
     async function handleSetCardPlayed(player, cardNumber) {
-        if (player === 0 && !played) {
+        if (player === 0 && !played && !readyForDiscard) {
             await setCardPlayed0(cardNumber === 51 ? cardNumber : cards0[cardNumber]);
             handleSendDeckMessage('PLAYEDCARD', cardNumber === 51 ? cardNumber : cards0[cardNumber]);
             setPlayed(true);
         }
-        if (player === 1 && !played) {
+        if (player === 1 && !played && !readyForDiscard) {
             await setCardPlayed1(cardNumber === 51 ? cardNumber : cards1[cardNumber]);
             handleSendDeckMessage('PLAYEDCARD', cardNumber === 51 ? cardNumber : cards1[cardNumber]);
             setPlayed(true);
@@ -220,6 +235,50 @@ const WebSocketComponent = () => {
         }
     }
 
+    //TODO: Optimizar borrado va muy lento no se porque
+    async function handleSetDiscardCard(player, cardNumber) {
+        switch (discardedCards.length) {
+            case 0:
+                if (player === 0)
+                    discardedCards.push(cards0[cardNumber]);
+                if (player === 1)
+                    discardedCards.push(cards1[cardNumber]);
+                break;
+            case 1:
+                if (player === 0) {
+                    const index = discardedCards.indexOf(cards0[cardNumber]);
+                    if (index !== -1)
+                        discardedCards.pop();
+                    else
+                        discardedCards.push(cards0[cardNumber]);
+                }
+                if (player === 1) {
+                    const index = discardedCards.indexOf(cards1[cardNumber]);
+                    if (index !== -1)
+                        discardedCards.pop();
+                    else
+                        discardedCards.push(cards1[cardNumber]);
+                }
+                break;
+            case 2:
+                if (player === 0) {
+                    const index = discardedCards.indexOf(cards0[cardNumber]);
+                    if (index !== -1) {
+                        discardedCards.splice(index, 1);
+                    }
+                }
+                if (player === 1) {
+                    const index = discardedCards.indexOf(cards1[cardNumber]);
+                    if (index !== -1) {
+                        discardedCards.splice(index, 1);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc)
     }
@@ -227,15 +286,7 @@ const WebSocketComponent = () => {
     return (
         <div className="card-hand-grid">
             <h>{playerNumber}</h>
-            <div className="top-row">
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                <CardButton className="small-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-            </div>
+            <TopRow />
             {playerNumber === 0 &&
                 <div className="middle-row">
                     <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
@@ -253,30 +304,21 @@ const WebSocketComponent = () => {
                 </div>
             }
             <div>{playerNumber === 0 ? `HP: ${health0} Bullets: ${bullets0} Accuracy: ${precision0}` : `HP: ${health1} Bullets: ${bullets1} Accuracy: ${precision1}`}</div>
-            {playerNumber === 0 ?
-                <div className="bottom-row">
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 0)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[0]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 1)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[1]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 2)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[2]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 3)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[3]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 4)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 5)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 6)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 51)} imgSrc={`${process.env.PUBLIC_URL}/cards/card51.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card51.png`)} />
-                </div>
-                :
-                <div className="bottom-row">
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 0)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[0]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 1)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[1]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 2)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[2]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 3)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[3]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 4)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[4]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 5)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[5]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 6)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards1[6]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 51)} imgSrc={`${process.env.PUBLIC_URL}/cards/card51.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card51.png`)} />
-                </div>
-            }
-
+            {playerNumber === 0 ? (
+                <CardRow
+                    player={0}
+                    cards={cards0}
+                    handleSetCardPlayed={handleSetCardPlayed}
+                    handleMouseEnter={handleMouseEnter}
+                />
+            ) : (
+                <CardRow
+                    player={1}
+                    cards={cards1}
+                    handleSetCardPlayed={handleSetCardPlayed}
+                    handleMouseEnter={handleMouseEnter}
+                />
+            )}
 
             <Modal isOpen={showConfirmationModal}>
                 <ModalHeader>Acciones realizadas</ModalHeader>
@@ -287,6 +329,29 @@ const WebSocketComponent = () => {
                     <Button color="danger" onClick={handleActionConfirmed}>Confirmar</Button>
                 </ModalFooter>
             </Modal>
+            <Modal isOpen={readyForDiscard}>
+            <ModalHeader>Descarta dos cartas</ModalHeader>
+            <ModalBody>
+                {playerNumber === 0 ? (
+                    <DiscardCardsModalContent
+                        cards={cards0}
+                        discardedCards={discardedCards}
+                        handleSetDiscardCard={(index) => handleSetDiscardCard(0, index)}
+                        handleMouseEnter={handleMouseEnter}
+                    />
+                ) : (
+                    <DiscardCardsModalContent
+                        cards={cards1}
+                        discardedCards={discardedCards}
+                        handleSetDiscardCard={(index) => handleSetDiscardCard(1, index)}
+                        handleMouseEnter={handleMouseEnter}
+                    />
+                )}
+            </ModalBody>
+            <ModalFooter>
+                <Button color="danger" onClick={handleDiscardConfirmed}>Descartar</Button>
+            </ModalFooter>
+        </Modal>
         </div>
     );
 };

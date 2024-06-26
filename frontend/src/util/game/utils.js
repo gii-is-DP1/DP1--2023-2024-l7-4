@@ -26,10 +26,10 @@ export function initialDeal(deck) {
         deck = deck.sort(() => Math.random() - 0.5);
 
         // Deal cards to both players
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 8; i++) {
             deckPlayer0.push(deck.shift());
         }
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 8; i++) {
             deckPlayer1.push(deck.shift());
         }
 
