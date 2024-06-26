@@ -10,7 +10,7 @@ const DiscardCardsModalContent = ({ cards, discardedCards, handleSetDiscardCard,
                     className="large-button"
                     onClick={() => handleSetDiscardCard(index)}
                     imgSrc={discardedCards.includes(card) ? `${process.env.PUBLIC_URL}/cards/backface.png` : `${process.env.PUBLIC_URL}/cards/card${card}.png`}
-                    onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${card}.png`)}
+                    onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${card?card:'backface'}.png`)}
                 />
             ))}
         </>

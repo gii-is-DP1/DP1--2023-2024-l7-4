@@ -6,6 +6,18 @@ export function generateUniqueRandomNumbers() {
     }
     return numbers;
 }
+
+
+export function generateNewRandomNumbers(cards0, cards1) {
+    let numbers = Array.from({ length: 50 }, (_, i) => i + 1); // Crea un array de números del 1 al 50
+    numbers = numbers.filter((card) => !cards0.includes(card) && !cards1.includes(card));
+    for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Selecciona un índice aleatorio
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]]; // Intercambia los elementos
+    }
+    return numbers;
+}
+
 export function initialDeal(deck) {
     let deckPlayer0 = [];
     let deckPlayer1 = [];

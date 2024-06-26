@@ -1,0 +1,19 @@
+.player-stats {
+    display: flex;
+    gap: 5px;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stat-pair {
+    display: flex;
+    align-items: center;
+    margin-right: 40px; /* Espacio entre las parejas */
+}
+.stat-pair svg {
+    margin-right: 5px; /* Espacio entre el icono y el valor */
+}

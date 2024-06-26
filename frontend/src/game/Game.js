@@ -6,11 +6,16 @@ import getIdFromUrl from "../util/getIdFromUrl";
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
 import '../static/css/GameBoard.css';
+import '../static/css/playerStats.css';
 import CardButton from '../components/buttons/cardButton';
-import { generateUniqueRandomNumbers, initialDeal } from '../util/game/utils'
+import { generateNewRandomNumbers, generateUniqueRandomNumbers, initialDeal } from '../util/game/utils'
 import DiscardCardsModalContent from '../components/modals/DiscardCardsModalContent';
 import CardRow from '../components/modals/CardRow';
 import TopRow from '../components/modals/TopRow';
+import { FaHeart, FaCrosshairs } from 'react-icons/fa';
+import { GiHeavyBullets } from "react-icons/gi";
+
+
 
 const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
@@ -24,15 +29,15 @@ const WebSocketComponent = () => {
 
     //Jugador 0
     const [health0, setHealth0] = useState(2);
-    const [bullets0, setBullets0] = useState(3);
-    const [precision0, setPrecision0] = useState(1);
+    const [bullets0, setBullets0] = useState(2);
+    const [precision0, setPrecision0] = useState(2);
     const [cards0, setCards0] = useState([]);
     const [cardPlayed0, setCardPlayed0] = useState(null);
 
     // Jugador 1
     const [health1, setHealth1] = useState(2);
-    const [bullets1, setBullets1] = useState(1);
-    const [precision1, setPrecision1] = useState(3);
+    const [bullets1, setBullets1] = useState(2);
+    const [precision1, setPrecision1] = useState(2);
     const [cards1, setCards1] = useState([]);
     const [cardPlayed1, setCardPlayed1] = useState(null);
 
@@ -165,6 +170,11 @@ const WebSocketComponent = () => {
     }, [cardPlayed0, cardPlayed1, played]);
 
 
+    // Rebarajar las cartas una vez que se acaben las cartas del mazo
+    useEffect(() => {
+        if (deckOfCards.length < 1)
+            setDeckOfCards(generateNewRandomNumbers(cards0, cards1));
+    }, [deckOfCards]);
 
     const handleActionConfirmed = () => {
         setShowConfirmationModal(false);
@@ -189,9 +199,18 @@ const WebSocketComponent = () => {
 
     // TODO: Borrar las cartas que esten dentro de discardedCards
     const handleDiscardConfirmed = () => {
+        if (playerNumber === 0) {
+            setCards0((prevCards0) => {
+                return prevCards0.filter((card) => !discardedCards.includes(card));
+            });
+        } else {
+            setCards1((prevCards1) => {
+                return prevCards1.filter((card) => !discardedCards.includes(card));
+            });
+        }
+        setDiscardedCards([]);
         setShowDiscardModal(false);
         setReadyForDiscard(false);
-
     }
 
     async function handleSetCardPlayed(player, cardNumber) {
@@ -237,122 +256,149 @@ const WebSocketComponent = () => {
 
     //TODO: Optimizar borrado va muy lento no se porque
     async function handleSetDiscardCard(player, cardNumber) {
-        switch (discardedCards.length) {
-            case 0:
-                if (player === 0)
-                    discardedCards.push(cards0[cardNumber]);
-                if (player === 1)
-                    discardedCards.push(cards1[cardNumber]);
-                break;
-            case 1:
-                if (player === 0) {
-                    const index = discardedCards.indexOf(cards0[cardNumber]);
-                    if (index !== -1)
-                        discardedCards.pop();
-                    else
-                        discardedCards.push(cards0[cardNumber]);
-                }
-                if (player === 1) {
-                    const index = discardedCards.indexOf(cards1[cardNumber]);
-                    if (index !== -1)
-                        discardedCards.pop();
-                    else
-                        discardedCards.push(cards1[cardNumber]);
-                }
-                break;
-            case 2:
-                if (player === 0) {
-                    const index = discardedCards.indexOf(cards0[cardNumber]);
-                    if (index !== -1) {
-                        discardedCards.splice(index, 1);
-                    }
-                }
-                if (player === 1) {
-                    const index = discardedCards.indexOf(cards1[cardNumber]);
-                    if (index !== -1) {
-                        discardedCards.splice(index, 1);
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+        const card = player === 0 ? cards0[cardNumber] : cards1[cardNumber];
+        setDiscardedCards((prevDiscardedCards) => {
+            const index = prevDiscardedCards.indexOf(card);
+
+            if (index !== -1) {
+                return prevDiscardedCards.filter((_, i) => i !== index);
+            } else if (prevDiscardedCards.length < 2) {
+                return [...prevDiscardedCards, card];
+            } else {
+                return prevDiscardedCards;
+            }
+        });
     }
+
 
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc)
     }
 
     return (
-        <div className="card-hand-grid">
-            <h>{playerNumber}</h>
-            <TopRow />
-            {playerNumber === 0 &&
-                <div className="middle-row">
-                    <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middleleft-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middlerigth-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="rigth-button" imgSrc={rightButtonImg} />
-                </div>
-            }
-            {playerNumber === 1 &&
-                <div className="middle-row">
-                    <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middleleft-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middlerigth-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="rigth-button" imgSrc={rightButtonImg} />
-                </div>
-            }
-            <div>{playerNumber === 0 ? `HP: ${health0} Bullets: ${bullets0} Accuracy: ${precision0}` : `HP: ${health1} Bullets: ${bullets1} Accuracy: ${precision1}`}</div>
-            {playerNumber === 0 ? (
-                <CardRow
-                    player={0}
-                    cards={cards0}
-                    handleSetCardPlayed={handleSetCardPlayed}
-                    handleMouseEnter={handleMouseEnter}
-                />
-            ) : (
-                <CardRow
-                    player={1}
-                    cards={cards1}
-                    handleSetCardPlayed={handleSetCardPlayed}
-                    handleMouseEnter={handleMouseEnter}
-                />
-            )}
+            <div className="card-hand-grid">
+                <div className="player-stats">
+                    {playerNumber === 0 ? (
+                        <>
+                            <div className="stat-pair">
+                                <FaHeart />  : {health0}
+                            </div>
+                            <div className="stat-pair">
+                                <GiHeavyBullets /> : {bullets0}
+                            </div>
+                            <div className="stat-pair">
+                                <FaCrosshairs /> : {precision0}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="stat-pair">
+                                <FaHeart /> : {health1}
+                            </div>
 
-            <Modal isOpen={showConfirmationModal}>
-                <ModalHeader>Acciones realizadas</ModalHeader>
-                <ModalBody>
-                    Confirmar turno
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="danger" onClick={handleActionConfirmed}>Confirmar</Button>
-                </ModalFooter>
-            </Modal>
-            <Modal isOpen={readyForDiscard}>
-            <ModalHeader>Descarta dos cartas</ModalHeader>
-            <ModalBody>
+                            <div className="stat-pair">
+                                <GiHeavyBullets /> : {bullets1}
+                            </div>
+                            <div className="stat-pair">
+                                <FaCrosshairs /> : {precision1}
+                            </div>
+                        </>
+                    )}
+                </div>
+                <TopRow />
+                {playerNumber === 0 &&
+                    <div className="middle-row">
+                        <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                        <CardButton className="middleleft-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                        <CardButton className="middlerigth-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                        <CardButton className="rigth-button" imgSrc={rightButtonImg} />
+                    </div>
+                }
+                {playerNumber === 1 &&
+                    <div className="middle-row">
+                        <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                        <CardButton className="middleleft-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                        <CardButton className="middlerigth-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                        <CardButton className="rigth-button" imgSrc={rightButtonImg} />
+                    </div>
+                }
+                <div className="player-stats">
+                    {playerNumber === 0 ? (
+                        <>
+                            <div className="stat-pair">
+                                <FaHeart />  : {health0}
+                            </div>
+                            <div className="stat-pair">
+                                <GiHeavyBullets /> : {bullets0}
+                            </div>
+                            <div className="stat-pair">
+                                <FaCrosshairs /> : {precision0}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className="stat-pair">
+                                <FaHeart /> : {health1}
+                            </div>
+
+                            <div className="stat-pair">
+                                <GiHeavyBullets /> : {bullets1}
+                            </div>
+                            <div className="stat-pair">
+                                <FaCrosshairs /> : {precision1}
+                            </div>
+                        </>
+                    )}
+                </div>
                 {playerNumber === 0 ? (
-                    <DiscardCardsModalContent
+                    <CardRow
+                        player={0}
                         cards={cards0}
-                        discardedCards={discardedCards}
-                        handleSetDiscardCard={(index) => handleSetDiscardCard(0, index)}
+                        handleSetCardPlayed={handleSetCardPlayed}
                         handleMouseEnter={handleMouseEnter}
                     />
                 ) : (
-                    <DiscardCardsModalContent
+                    <CardRow
+                        player={1}
                         cards={cards1}
-                        discardedCards={discardedCards}
-                        handleSetDiscardCard={(index) => handleSetDiscardCard(1, index)}
+                        handleSetCardPlayed={handleSetCardPlayed}
                         handleMouseEnter={handleMouseEnter}
                     />
                 )}
-            </ModalBody>
-            <ModalFooter>
-                <Button color="danger" onClick={handleDiscardConfirmed}>Descartar</Button>
-            </ModalFooter>
-        </Modal>
-        </div>
+
+                <Modal isOpen={showConfirmationModal}>
+                    <ModalHeader>Acciones realizadas</ModalHeader>
+                    <ModalBody>
+                        Confirmar turno
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" onClick={handleActionConfirmed}>Confirmar</Button>
+                    </ModalFooter>
+                </Modal>
+                <Modal isOpen={readyForDiscard}>
+                    <ModalHeader>Descarta dos cartas</ModalHeader>
+                    <ModalBody>
+                        {playerNumber === 0 ? (
+                            <DiscardCardsModalContent
+                                cards={cards0}
+                                discardedCards={discardedCards}
+                                handleSetDiscardCard={(index) => handleSetDiscardCard(0, index)}
+                                handleMouseEnter={handleMouseEnter}
+                            />
+                        ) : (
+                            <DiscardCardsModalContent
+                                cards={cards1}
+                                discardedCards={discardedCards}
+                                handleSetDiscardCard={(index) => handleSetDiscardCard(1, index)}
+                                handleMouseEnter={handleMouseEnter}
+                            />
+                        )}
+                    </ModalBody>
+                    <ModalFooter>
+                        <Button color="danger" onClick={handleDiscardConfirmed}>Descartar</Button>
+                    </ModalFooter>
+                </Modal>
+            </div>
     );
 };
 export default WebSocketComponent;
