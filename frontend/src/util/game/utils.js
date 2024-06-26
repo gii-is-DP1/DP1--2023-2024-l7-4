@@ -7,19 +7,46 @@ export function generateUniqueRandomNumbers() {
     return numbers;
 }
 export function initialDeal(deck) {
-    const deckPlayer0 = [];
-    const deckPlayer1 = [];
-    for (let i = 0; i < 7; i++) {
-        deckPlayer0.push(deck.shift());
-      }
-    for (let i = 0; i < 7; i++) {
-        deckPlayer1.push(deck.shift());
-      }
+    let deckPlayer0 = [];
+    let deckPlayer1 = [];
+
+    function isValidDeck(deck) {
+        const range1 = deck.some(card => card >= 10 && card <= 18);
+        const range2 = deck.some(card => card >= 19 && card <= 27);
+        return range1 && range2;
+    }
+
+    let validDeal = false;
+
+    while (!validDeal) {
+        deckPlayer0 = [];
+        deckPlayer1 = [];
+
+        // Shuffle the deck
+        deck = deck.sort(() => Math.random() - 0.5);
+
+        // Deal cards to both players
+        for (let i = 0; i < 7; i++) {
+            deckPlayer0.push(deck.shift());
+        }
+        for (let i = 0; i < 7; i++) {
+            deckPlayer1.push(deck.shift());
+        }
+
+        // Check if both decks are valid
+        if (isValidDeck(deckPlayer0) && isValidDeck(deckPlayer1)) {
+            validDeal = true;
+        } else {
+            // si no es válido entonces devolvemos las cartas al mazo para barajarlas de nuevo
+            deck = [...deck, ...deckPlayer0, ...deckPlayer1];
+        }
+    }
+
     return [deck, deckPlayer0, deckPlayer1];
 }
 
 export function steal(deck) {
-    const myDeck= deck;
+    const myDeck = deck;
     myDeck.push(deck.shift());
     return myDeck;
 }

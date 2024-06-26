@@ -262,7 +262,7 @@ const WebSocketComponent = () => {
                     <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 4)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[4]}.png`)} />
                     <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 5)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[5]}.png`)} />
                     <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 6)} imgSrc={`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card${cards0[6]}.png`)} />
-                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(1, 51)} imgSrc={`${process.env.PUBLIC_URL}/cards/card51.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card51.png`)} />
+                    <CardButton className="large-button" onClick={() => handleSetCardPlayed(0, 51)} imgSrc={`${process.env.PUBLIC_URL}/cards/card51.png`} onMouseEnter={() => handleMouseEnter(`${process.env.PUBLIC_URL}/cards/card51.png`)} />
                 </div>
                 :
                 <div className="bottom-row">
