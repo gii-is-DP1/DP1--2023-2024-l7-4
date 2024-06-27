@@ -52,6 +52,11 @@ public class MatchRestController {
         return new ResponseEntity<>(matchService.findMatchById(id), HttpStatus.OK);
     }
 
+    @GetMapping("/player/{username}")
+    public ResponseEntity<List<Match>> findAllByUsername(@PathVariable(name = "username") String username) {
+            return new ResponseEntity<>((List<Match>) this.matchService.findMatchsByPlayer(username), HttpStatus.OK);
+    }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> create(@RequestBody @Valid Match match) throws URISyntaxException {
@@ -78,7 +83,7 @@ public class MatchRestController {
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
 
-   @PutMapping("/{id}/unjoin")
+    @PutMapping("/{id}/unjoin")
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> updateMatchUnjoining(@PathVariable("id") Integer id, @RequestBody String username) {
         Match m = matchService.findMatchById(id);
@@ -93,10 +98,11 @@ public class MatchRestController {
     }
 
     /*
-    @PutMapping("/{id}/winner")
-    @ResponseStatus(HttpStatus.CREATED)
-
- */
+     * @PutMapping("/{id}/winner")
+     * 
+     * @ResponseStatus(HttpStatus.CREATED)
+     * 
+     */
     @PatchMapping("/{id}/start")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Match> updateMatchStart(@PathVariable("id") Integer id) {
@@ -106,6 +112,7 @@ public class MatchRestController {
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable(name = "id") int id) {
         matchService.deleteMatch(id);
@@ -120,35 +127,37 @@ public class MatchRestController {
 
     @MessageMapping("/match/{id}/messages")
     @SendTo("/topic/match/{id}/messages")
-    public MatchMessage particularMatchMessage(@DestinationVariable int id,  MatchMessage message) {
+    public MatchMessage particularMatchMessage(@DestinationVariable int id, MatchMessage message) {
         return new MatchMessage(message.getType(), message.getMessage());
     }
 
     @MessageMapping("/match/{id}/game")
     @SendTo("/topic/match/{id}/game")
-    public MatchMessage particularGameMessage(@DestinationVariable int id,  MatchMessage message) {
+    public MatchMessage particularGameMessage(@DestinationVariable int id, MatchMessage message) {
         return new MatchMessage(message.getType(), message.getMessage());
     }
 
-
     @MessageMapping("/match/{id}/cards")
     @SendTo("/topic/match/{id}/cards")
-    public MatchDeckMessage particularGameMessage(@DestinationVariable int id,  MatchDeckMessage deckMessage) {
+    public MatchDeckMessage particularGameMessage(@DestinationVariable int id, MatchDeckMessage deckMessage) {
         return new MatchDeckMessage(deckMessage.getType(), deckMessage.getDeckCards(),
-         deckMessage.getPlayer0Cards(), deckMessage.getPlayer1Cards(), deckMessage.getPlayedCard0(), deckMessage.getPlayedCard1());
+                deckMessage.getPlayer0Cards(), deckMessage.getPlayer1Cards(), deckMessage.getPlayedCard0(),
+                deckMessage.getPlayedCard1());
     }
 
     @MessageMapping("/match/{id}/players")
     @SendTo("/topic/match/{id}/players")
-    public MatchGunfighterMessage particularGamePlayerMessage(@DestinationVariable int id,  MatchGunfighterMessage playerMessage) {
-        return new MatchGunfighterMessage(playerMessage.getType(),playerMessage.getHealth(), playerMessage.getBullets(),
-         playerMessage.getPrecision(), playerMessage.getPlayerNumber());
+    public MatchGunfighterMessage particularGamePlayerMessage(@DestinationVariable int id,
+            MatchGunfighterMessage playerMessage) {
+        return new MatchGunfighterMessage(playerMessage.getType(), playerMessage.getHealth(),
+                playerMessage.getBullets(),
+                playerMessage.getPrecision(), playerMessage.getPlayerNumber());
     }
-    
 
     @MessageMapping("/match/{id}/actions")
     @SendTo("/topic/match/{id}/actions")
-    public MatchActionsPlayersMessage particularGameActionMessage(@DestinationVariable int id,  MatchActionsPlayersMessage actionMessage) {
-        return new MatchActionsPlayersMessage(actionMessage.getAction(),actionMessage.getPlayerNumber());
+    public MatchActionsPlayersMessage particularGameActionMessage(@DestinationVariable int id,
+            MatchActionsPlayersMessage actionMessage) {
+        return new MatchActionsPlayersMessage(actionMessage.getAction(), actionMessage.getPlayerNumber());
     }
 }

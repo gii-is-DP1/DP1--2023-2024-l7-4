@@ -50,6 +50,7 @@ import VetEditClinicOwner from "./clinicOwner/vets/VetEditClinicOwner";
 import WaitingRoom from "./matches/WaitingRoom";
 import CreateMatch from "./matches/CreateMatch";
 import Game from "./game/Game";
+import MyMatches from "./matches/myMatches";
 import './static/css/westernTheme.css';
 
 
@@ -120,7 +121,7 @@ function App() {
           <Route path="/consultations/:consultationId/tickets" exact={true} element={<PrivateRoute><OwnerConsultationTickets /></PrivateRoute>} />
           <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
           <Route path="/game/:matchId" exact={true} element={<PrivateRoute><Game /></PrivateRoute>} />
-
+          <Route path="/myMatches" exact={true} element={<PrivateRoute><MyMatches /></PrivateRoute>} />
         </>)
     }
     if (role === "VET") {
