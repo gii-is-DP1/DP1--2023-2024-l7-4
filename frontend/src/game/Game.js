@@ -12,8 +12,7 @@ import { generateNewRandomNumbers, generateUniqueRandomNumbers, initialDeal } fr
 import DiscardCardsModalContent from '../components/modals/DiscardCardsModalContent';
 import CardRow from '../components/modals/CardRow';
 import TopRow from '../components/modals/TopRow';
-import { FaHeart, FaCrosshairs } from 'react-icons/fa';
-import { GiHeavyBullets } from "react-icons/gi";
+import PlayerStats from '../util/game/playerStatsModal';
 
 
 
@@ -49,7 +48,6 @@ const WebSocketComponent = () => {
 
     //Cosas en comun
     const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());// Crea un array de números del 1 al 50);
-    const [cardsDiscard, setCardsDiscard] = useState([]);
     const [stompClient, setStompClient] = useState(null);
 
 
@@ -197,7 +195,6 @@ const WebSocketComponent = () => {
         }
     }
 
-    // TODO: Borrar las cartas que esten dentro de discardedCards
     const handleDiscardConfirmed = () => {
         if (playerNumber === 0) {
             setCards0((prevCards0) => {
@@ -254,7 +251,6 @@ const WebSocketComponent = () => {
         }
     }
 
-    //TODO: Optimizar borrado va muy lento no se porque
     async function handleSetDiscardCard(player, cardNumber) {
         const card = player === 0 ? cards0[cardNumber] : cards1[cardNumber];
         setDiscardedCards((prevDiscardedCards) => {
@@ -277,34 +273,7 @@ const WebSocketComponent = () => {
 
     return (
             <div className="card-hand-grid">
-                <div className="player-stats">
-                    {playerNumber === 0 ? (
-                        <>
-                            <div className="stat-pair">
-                                <FaHeart />  : {health0}
-                            </div>
-                            <div className="stat-pair">
-                                <GiHeavyBullets /> : {bullets0}
-                            </div>
-                            <div className="stat-pair">
-                                <FaCrosshairs /> : {precision0}
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="stat-pair">
-                                <FaHeart /> : {health1}
-                            </div>
-
-                            <div className="stat-pair">
-                                <GiHeavyBullets /> : {bullets1}
-                            </div>
-                            <div className="stat-pair">
-                                <FaCrosshairs /> : {precision1}
-                            </div>
-                        </>
-                    )}
-                </div>
+                <PlayerStats health={playerNumber === 0 ? health1 : health0} bullets={playerNumber === 0 ? bullets1 : bullets0} precision={playerNumber === 0 ? precision1 : precision0} />
                 <TopRow />
                 {playerNumber === 0 &&
                     <div className="middle-row">
@@ -322,50 +291,8 @@ const WebSocketComponent = () => {
                         <CardButton className="rigth-button" imgSrc={rightButtonImg} />
                     </div>
                 }
-                <div className="player-stats">
-                    {playerNumber === 0 ? (
-                        <>
-                            <div className="stat-pair">
-                                <FaHeart />  : {health0}
-                            </div>
-                            <div className="stat-pair">
-                                <GiHeavyBullets /> : {bullets0}
-                            </div>
-                            <div className="stat-pair">
-                                <FaCrosshairs /> : {precision0}
-                            </div>
-                        </>
-                    ) : (
-                        <>
-                            <div className="stat-pair">
-                                <FaHeart /> : {health1}
-                            </div>
-
-                            <div className="stat-pair">
-                                <GiHeavyBullets /> : {bullets1}
-                            </div>
-                            <div className="stat-pair">
-                                <FaCrosshairs /> : {precision1}
-                            </div>
-                        </>
-                    )}
-                </div>
-                {playerNumber === 0 ? (
-                    <CardRow
-                        player={0}
-                        cards={cards0}
-                        handleSetCardPlayed={handleSetCardPlayed}
-                        handleMouseEnter={handleMouseEnter}
-                    />
-                ) : (
-                    <CardRow
-                        player={1}
-                        cards={cards1}
-                        handleSetCardPlayed={handleSetCardPlayed}
-                        handleMouseEnter={handleMouseEnter}
-                    />
-                )}
-
+                <PlayerStats health={playerNumber === 0 ? health0 : health1} bullets={playerNumber === 0 ? bullets0 : bullets1} precision={playerNumber === 0 ? precision0 : precision1} />
+                <CardRow player={playerNumber} cards={playerNumber === 0 ? cards0 : cards1} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
                 <Modal isOpen={showConfirmationModal}>
                     <ModalHeader>Acciones realizadas</ModalHeader>
                     <ModalBody>

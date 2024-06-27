@@ -1,6 +1,10 @@
 .player-stats {
+    background-color: rgb(210, 180, 140);
+    border: 5px solid #8b4513;
+    border-radius: 10px;
     display: flex;
-    gap: 5px;
+    font-family: 'Cedarville Cursive', cursive;
+    color: #4d2e0a;
 }
 
 .stat {
@@ -10,9 +14,11 @@
 }
 
 .stat-pair {
+
     display: flex;
     align-items: center;
-    margin-right: 40px; /* Espacio entre las parejas */
+    margin-right: 20px;
+    margin-left: 20px;
 }
 .stat-pair svg {
     margin-right: 5px; /* Espacio entre el icono y el valor */

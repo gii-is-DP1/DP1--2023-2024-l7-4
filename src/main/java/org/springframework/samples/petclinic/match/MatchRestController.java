@@ -79,7 +79,7 @@ public class MatchRestController {
     }
 
    @PutMapping("/{id}/unjoin")
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> updateMatchUnjoining(@PathVariable("id") Integer id, @RequestBody String username) {
         Match m = matchService.findMatchById(id);
         List<String> joinedPlayers = m.getJoinedPlayers();
@@ -91,6 +91,12 @@ public class MatchRestController {
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
+    /*
+    @PutMapping("/{id}/winner")
+    @ResponseStatus(HttpStatus.CREATED)
+
+ */
     @PatchMapping("/{id}/start")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Match> updateMatchStart(@PathVariable("id") Integer id) {
