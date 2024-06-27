@@ -40,10 +40,6 @@ function AppNavbar() {
         if (role === "OWNER") {
             ownerLinks = (
                 <>
-                    <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/game">Game</NavLink>
-                    </NavItem>
-
                 </>
             )
         }

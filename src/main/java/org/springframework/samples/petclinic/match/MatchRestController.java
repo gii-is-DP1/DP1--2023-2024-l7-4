@@ -138,5 +138,17 @@ public class MatchRestController {
          deckMessage.getPlayer0Cards(), deckMessage.getPlayer1Cards(), deckMessage.getPlayedCard0(), deckMessage.getPlayedCard1());
     }
 
+    @MessageMapping("/match/{id}/players")
+    @SendTo("/topic/match/{id}/players")
+    public MatchGunfighterMessage particularGamePlayerMessage(@DestinationVariable int id,  MatchGunfighterMessage playerMessage) {
+        return new MatchGunfighterMessage(playerMessage.getType(),playerMessage.getHealth(), playerMessage.getBullets(),
+         playerMessage.getPrecision(), playerMessage.getPlayerNumber());
+    }
     
+
+    @MessageMapping("/match/{id}/actions")
+    @SendTo("/topic/match/{id}/actions")
+    public MatchActionsPlayersMessage particularGameActionMessage(@DestinationVariable int id,  MatchActionsPlayersMessage actionMessage) {
+        return new MatchActionsPlayersMessage(actionMessage.getAction(),actionMessage.getPlayerNumber());
+    }
 }
