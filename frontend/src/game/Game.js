@@ -27,18 +27,22 @@ const WebSocketComponent = () => {
     const [showCards, setShowCards] = useState(false);
 
     //Jugador 0
-    const [health0, setHealth0] = useState(2);
-    const [bullets0, setBullets0] = useState(2);
-    const [precision0, setPrecision0] = useState(2);
-    const [cards0, setCards0] = useState([]);
-    const [cardPlayed0, setCardPlayed0] = useState(null);
+    const [statePlayer0, setStatePlayer0] = useState({
+        health: 2,
+        bullets: 2,
+        precision: 2,
+        cards: [],
+        cardPlayed: null,
+    })
 
     // Jugador 1
-    const [health1, setHealth1] = useState(2);
-    const [bullets1, setBullets1] = useState(2);
-    const [precision1, setPrecision1] = useState(2);
-    const [cards1, setCards1] = useState([]);
-    const [cardPlayed1, setCardPlayed1] = useState(null);
+    const [statePlayer1, setStatePlayer1] = useState({
+        health: 2,
+        bullets: 2,
+        precision: 2,
+        cards: [],
+        cardPlayed: null,
+    })
 
 
     const [waiting, setWaiting] = useState(false); //Estado para saber si el otro jugador ya ha jugado
@@ -91,27 +95,39 @@ const WebSocketComponent = () => {
                 const body = JSON.parse(message.body);
                 if (body.type === 'DECKS') {
                     setDeckOfCards(body.deckCards);
-                    setCards1(body.player1Cards);
-                    setCards0(body.player0Cards);
-                    if (playerNumber === 1 && body.player1Cards.length === 8)
+                    setStatePlayer1(prevState => ({
+                        ...prevState,
+                        cards: body.player1Cards,
+                    }));
+                    setStatePlayer0(prevState => ({
+                        ...prevState,
+                        cards: body.player0Cards,
+                    }));
+                    if (playerNumber === 1 && body.player1Cards.length === 8) {
                         setReadyForDiscard(true);
+                    }
                 }
                 if (body.type === 'READY') {
                     setReceived(true);
                 }
                 if (body.type === 'PLAYEDCARD') {
                     if (playerNumber === 0 && body.playedCard1 !== -1) {
-                        setCardPlayed1(body.playedCard1);
+                        setStatePlayer1(prevState => ({
+                            ...prevState,
+                            cardPlayed: body.playedCard1,
+                        }));
                         setShowCards(false);
                         setWaiting(true);
                     }
                     if (playerNumber === 1 && body.playedCard0 !== -1) {
-                        setCardPlayed0(body.playedCard0);
+                        setStatePlayer0(prevState => ({
+                            ...prevState,
+                            cardPlayed: body.playedCard0,
+                        }));
                         setShowCards(false);
                         setWaiting(true);
                     }
                 }
-
             });
             setStompClient(client);
         });
@@ -131,8 +147,14 @@ const WebSocketComponent = () => {
             console.log(deckOfCards);
             const cards = initialDeal(deckOfCards);
             setDeckOfCards(cards[0]);
-            setCards0(cards[1]);
-            setCards1(cards[2]);
+            setStatePlayer1(prevState => ({
+                ...prevState,
+                cards: cards[1]
+            }));
+            setStatePlayer0(prevState => ({
+                ...prevState,
+                cards: cards[2]
+            }));
         }
         if (playerNumber === 1 && !received) {
             interval = setInterval(() => {
@@ -148,88 +170,111 @@ const WebSocketComponent = () => {
 
     // Reparto inicial ya que en el otro useEffect no se mandaba a tiempo
     useEffect(() => {
-        if (cards0.length > 0 && cards1.length > 0 && playerNumber === 0 && received) {
+        if (statePlayer0.cards.length > 0 && statePlayer1.cards.length > 0 && playerNumber === 0 && received) {
             handleSendDeckMessage('DECKS');
             setReadyForDiscard(true);
             setReceived(false);
         }
-    }, [cards0, cards1]);
+    }, [statePlayer0.cards, statePlayer1.cards]);
 
 
     // Confirmaciones del turno y realización de acciones
     useEffect(() => {
-        if (cardPlayed0 > 0 && cardPlayed1 > 0 && played) {
+        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
             setShowCards(true);
+            //if (playerNumber === 0) actionCard(cardPlayed0, cardPlayed1, statePlayer);
             // HACER ACCIONES DE CARTAS
             setWaiting(false);
             setPlayed(false);
             setShowConfirmationModal(true);
         }
-    }, [cardPlayed0, cardPlayed1, played]);
+    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
 
     // Rebarajar las cartas una vez que se acaben las cartas del mazo
     useEffect(() => {
         if (deckOfCards.length < 1)
-            setDeckOfCards(generateNewRandomNumbers(cards0, cards1));
+            setDeckOfCards(generateNewRandomNumbers(statePlayer0.cards, statePlayer1.cards));
     }, [deckOfCards]);
 
     const handleActionConfirmed = () => {
         setShowConfirmationModal(false);
         setShowCards(false);
-        if (waiting) { //Se comprueba si ya ha recibido otra carta por pate del otro jugador, si es así entonces solo reseteamos la carta propia
+        if (waiting) { //Se comprueba si ya ha recibido otra carta por parte del otro jugador, si es así entonces solo reseteamos la carta propia
             switch (playerNumber) {
                 case 0:
-                    setCardPlayed0(-1);
+                    setStatePlayer0(prevState => ({
+                        ...prevState,
+                        cardPlayed: -1,
+                    }));
                     break;
                 case 1:
-                    setCardPlayed1(-1);
+                    setStatePlayer1(prevState => ({
+                        ...prevState,
+                        cardPlayed: -1,
+                    }));
                     break;
                 default:
                     break;
             }
+        } else {
+            setStatePlayer0(prevState => ({
+                ...prevState,
+                cardPlayed: -1,
+            }));
+            setStatePlayer1(prevState => ({
+                ...prevState,
+                cardPlayed: -1,
+            }));
         }
-        else {
-            setCardPlayed0(-1);
-            setCardPlayed1(-1);
-        }
-    }
+    };
 
     const handleDiscardConfirmed = () => {
         if (playerNumber === 0) {
-            setCards0((prevCards0) => {
-                return prevCards0.filter((card) => !discardedCards.includes(card));
-            });
+            setStatePlayer0(prevState => ({
+                ...prevState,
+                cards: prevState.cards.filter((card) => !discardedCards.includes(card)),
+            }));
         } else {
-            setCards1((prevCards1) => {
-                return prevCards1.filter((card) => !discardedCards.includes(card));
-            });
+            setStatePlayer1(prevState => ({
+                ...prevState,
+                cards: prevState.cards.filter((card) => !discardedCards.includes(card)),
+            }));
         }
         setDiscardedCards([]);
         setShowDiscardModal(false);
         setReadyForDiscard(false);
-    }
+    };
+    
 
-    async function handleSetCardPlayed(player, cardNumber) {
+    async function handleSetCardPlayed(player, cardIndex) {
         if (player === 0 && !played && !readyForDiscard) {
-            await setCardPlayed0(cardNumber === 51 ? cardNumber : cards0[cardNumber]);
-            handleSendDeckMessage('PLAYEDCARD', cardNumber === 51 ? cardNumber : cards0[cardNumber]);
+            const card = cardIndex === 51 ? cardIndex : statePlayer0.cards[cardIndex];
+            await setStatePlayer0((prevState) => ({
+                ...prevState,
+                cardPlayed: card,
+            }));
+            handleSendDeckMessage('PLAYEDCARD', card);
             setPlayed(true);
         }
         if (player === 1 && !played && !readyForDiscard) {
-            await setCardPlayed1(cardNumber === 51 ? cardNumber : cards1[cardNumber]);
-            handleSendDeckMessage('PLAYEDCARD', cardNumber === 51 ? cardNumber : cards1[cardNumber]);
+            const card = cardIndex === 51 ? cardIndex : statePlayer1.cards[cardIndex];
+            await setStatePlayer1((prevState) => ({
+                ...prevState,
+                cardPlayed: card,
+            }));
+            handleSendDeckMessage('PLAYEDCARD', card);
             setPlayed(true);
         }
-    }
+    };
 
     async function handleSendDeckMessage(type, cardNumber = -1) {
         if (type === 'DECKS') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'DECKS',
                 deckCards: deckOfCards,
-                player0Cards: cards0,
-                player1Cards: cards1,
+                player0Cards: statePlayer0.cards,
+                player1Cards: statePlayer1.cards,
                 playedCard0: -1,
                 playedCard1: -1,
             }));
@@ -249,10 +294,10 @@ const WebSocketComponent = () => {
                 playedCard1: playerNumber === 1 ? cardNumber : -1,
             }));
         }
-    }
+    };
 
     async function handleSetDiscardCard(player, cardNumber) {
-        const card = player === 0 ? cards0[cardNumber] : cards1[cardNumber];
+        const card = player === 0 ? statePlayer0.cards[cardNumber] : statePlayer1.cards[cardNumber];
         setDiscardedCards((prevDiscardedCards) => {
             const index = prevDiscardedCards.indexOf(card);
 
@@ -264,35 +309,35 @@ const WebSocketComponent = () => {
                 return prevDiscardedCards;
             }
         });
-    }
+    };
 
 
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc)
-    }
+    };
 
     return (
         <div className="card-hand-grid">
-            <PlayerStats health={playerNumber === 0 ? health1 : health0} bullets={playerNumber === 0 ? bullets1 : bullets0} precision={playerNumber === 0 ? precision1 : precision0} />
+            <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
             <TopRow />
             {playerNumber === 0 &&
                 <div className="middle-row">
                     <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middleleft-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middlerigth-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middleleft-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middlerigth-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
                     <CardButton className="rigth-button" imgSrc={rightButtonImg} />
                 </div>
             }
             {playerNumber === 1 &&
                 <div className="middle-row">
                     <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middleleft-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                    <CardButton className="middlerigth-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middleleft-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middlerigth-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
                     <CardButton className="rigth-button" imgSrc={rightButtonImg} />
                 </div>
             }
-            <PlayerStats health={playerNumber === 0 ? health0 : health1} bullets={playerNumber === 0 ? bullets0 : bullets1} precision={playerNumber === 0 ? precision0 : precision1} />
-            <CardRow player={playerNumber} cards={playerNumber === 0 ? cards0 : cards1} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
+            <PlayerStats health={playerNumber === 0 ? statePlayer0.health : statePlayer1.health} bullets={playerNumber === 0 ? statePlayer0.bullets : statePlayer1.bullets} precision={playerNumber === 0 ? statePlayer0.precision : statePlayer1.precision} />
+            <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer0.cards : statePlayer1.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
             <Modal isOpen={showConfirmationModal}>
                 <ModalHeader>Acciones realizadas</ModalHeader>
                 <ModalBody>
@@ -307,14 +352,14 @@ const WebSocketComponent = () => {
                 <ModalBody>
                     {playerNumber === 0 ? (
                         <DiscardCardsModalContent
-                            cards={cards0}
+                            cards={statePlayer0.cards}
                             discardedCards={discardedCards}
                             handleSetDiscardCard={(index) => handleSetDiscardCard(0, index)}
                             handleMouseEnter={handleMouseEnter}
                         />
                     ) : (
                         <DiscardCardsModalContent
-                            cards={cards1}
+                            cards={statePlayer1.cards}
                             discardedCards={discardedCards}
                             handleSetDiscardCard={(index) => handleSetDiscardCard(1, index)}
                             handleMouseEnter={handleMouseEnter}
