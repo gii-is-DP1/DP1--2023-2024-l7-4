@@ -49,6 +49,12 @@ import ConsultationEditClinicOwner from "./clinicOwner/consultations/Consultatio
 import VetListClinicOwner from "./clinicOwner/vets/VetListClinicOwner";
 import VetEditClinicOwner from "./clinicOwner/vets/VetEditClinicOwner";
 import PlayerEdit from "./player";
+import WaitingRoom from "./matches/WaitingRoom";
+import CreateMatch from "./matches/CreateMatch";
+import Game from "./game/Game";
+import MyMatches from "./matches/myMatches";
+import './static/css/westernTheme.css';
+
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -108,6 +114,11 @@ function App() {
     {/* aqui se meten todas las rutas que voy a usar */}
           <Route path="/myProfile/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
           <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
+          <Route path="/game" element={<PrivateRoute><Game/></PrivateRoute>} />
+          <Route path="/match/:id/waitingRoom" element={<PrivateRoute><WaitingRoom/></PrivateRoute>} />
+          <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
+          <Route path="/game/:matchId" exact={true} element={<PrivateRoute><Game /></PrivateRoute>} />
+          <Route path="/myMatches" exact={true} element={<PrivateRoute><MyMatches /></PrivateRoute>} />
         </>)
     }
     if (role === "VET") {
