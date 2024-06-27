@@ -272,60 +272,60 @@ const WebSocketComponent = () => {
     }
 
     return (
-            <div className="card-hand-grid">
-                <PlayerStats health={playerNumber === 0 ? health1 : health0} bullets={playerNumber === 0 ? bullets1 : bullets0} precision={playerNumber === 0 ? precision1 : precision0} />
-                <TopRow />
-                {playerNumber === 0 &&
-                    <div className="middle-row">
-                        <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                        <CardButton className="middleleft-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                        <CardButton className="middlerigth-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                        <CardButton className="rigth-button" imgSrc={rightButtonImg} />
-                    </div>
-                }
-                {playerNumber === 1 &&
-                    <div className="middle-row">
-                        <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
-                        <CardButton className="middleleft-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                        <CardButton className="middlerigth-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-                        <CardButton className="rigth-button" imgSrc={rightButtonImg} />
-                    </div>
-                }
-                <PlayerStats health={playerNumber === 0 ? health0 : health1} bullets={playerNumber === 0 ? bullets0 : bullets1} precision={playerNumber === 0 ? precision0 : precision1} />
-                <CardRow player={playerNumber} cards={playerNumber === 0 ? cards0 : cards1} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
-                <Modal isOpen={showConfirmationModal}>
-                    <ModalHeader>Acciones realizadas</ModalHeader>
-                    <ModalBody>
-                        Confirmar turno
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" onClick={handleActionConfirmed}>Confirmar</Button>
-                    </ModalFooter>
-                </Modal>
-                <Modal isOpen={readyForDiscard}>
-                    <ModalHeader>Descarta dos cartas</ModalHeader>
-                    <ModalBody>
-                        {playerNumber === 0 ? (
-                            <DiscardCardsModalContent
-                                cards={cards0}
-                                discardedCards={discardedCards}
-                                handleSetDiscardCard={(index) => handleSetDiscardCard(0, index)}
-                                handleMouseEnter={handleMouseEnter}
-                            />
-                        ) : (
-                            <DiscardCardsModalContent
-                                cards={cards1}
-                                discardedCards={discardedCards}
-                                handleSetDiscardCard={(index) => handleSetDiscardCard(1, index)}
-                                handleMouseEnter={handleMouseEnter}
-                            />
-                        )}
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" onClick={handleDiscardConfirmed}>Descartar</Button>
-                    </ModalFooter>
-                </Modal>
-            </div>
+        <div className="card-hand-grid">
+            <PlayerStats health={playerNumber === 0 ? health1 : health0} bullets={playerNumber === 0 ? bullets1 : bullets0} precision={playerNumber === 0 ? precision1 : precision0} />
+            <TopRow />
+            {playerNumber === 0 &&
+                <div className="middle-row">
+                    <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middleleft-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middlerigth-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="rigth-button" imgSrc={rightButtonImg} />
+                </div>
+            }
+            {playerNumber === 1 &&
+                <div className="middle-row">
+                    <CardButton className="left-button" imgSrc={`${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middleleft-button" imgSrc={cardPlayed1 && cardPlayed1 !== -1 ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed1}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="middlerigth-button" imgSrc={cardPlayed0 && cardPlayed0 !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${cardPlayed0}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+                    <CardButton className="rigth-button" imgSrc={rightButtonImg} />
+                </div>
+            }
+            <PlayerStats health={playerNumber === 0 ? health0 : health1} bullets={playerNumber === 0 ? bullets0 : bullets1} precision={playerNumber === 0 ? precision0 : precision1} />
+            <CardRow player={playerNumber} cards={playerNumber === 0 ? cards0 : cards1} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
+            <Modal isOpen={showConfirmationModal}>
+                <ModalHeader>Acciones realizadas</ModalHeader>
+                <ModalBody>
+                    Confirmar turno
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleActionConfirmed}>Confirmar</Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={readyForDiscard}>
+                <ModalHeader>Descarta dos cartas</ModalHeader>
+                <ModalBody>
+                    {playerNumber === 0 ? (
+                        <DiscardCardsModalContent
+                            cards={cards0}
+                            discardedCards={discardedCards}
+                            handleSetDiscardCard={(index) => handleSetDiscardCard(0, index)}
+                            handleMouseEnter={handleMouseEnter}
+                        />
+                    ) : (
+                        <DiscardCardsModalContent
+                            cards={cards1}
+                            discardedCards={discardedCards}
+                            handleSetDiscardCard={(index) => handleSetDiscardCard(1, index)}
+                            handleMouseEnter={handleMouseEnter}
+                        />
+                    )}
+                </ModalBody>
+                <ModalFooter>
+                    {discardedCards.length === 2 && (<Button color="danger" onClick={handleDiscardConfirmed}>Descartar</Button>)}
+                </ModalFooter>
+            </Modal>
+        </div>
     );
 };
 export default WebSocketComponent;
