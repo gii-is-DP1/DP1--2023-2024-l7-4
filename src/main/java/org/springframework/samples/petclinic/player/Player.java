@@ -39,23 +39,5 @@ public class Player extends User {
     @Column(name = "email", unique = true)
     @NotEmpty
     String email;
-
-    @NotNull
-	@ManyToOne(optional = false)
-	@JoinColumn(name = "authority")
-	Authorities authority;
-
-
-	public Boolean hasAuthority(String auth) {
-		return authority.getAuthority().equals(auth);
-	}
-
-	public Boolean hasAnyAuthority(String... authorities) {
-		Boolean cond = false;
-		for (String auth : authorities) {
-			if (auth.equals(authority.getAuthority()))
-				cond = true;
-		}
-		return cond;
-	}
+    
 }
