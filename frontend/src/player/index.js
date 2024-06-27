@@ -92,6 +92,11 @@ class PlayerEdit extends Component {
                             onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
+                        <Label for="nickname">Email</Label>
+                        <Input type="text" required name="email" id="email" value={item.email}
+                            onChange={this.handleChange} />
+                    </FormGroup>
+                    <FormGroup>
                         <Button color="primary" type="submit">Save</Button>{' '}
                         <Button color="secondary" tag={Link} to="/">Cancel</Button>
                     </FormGroup>

@@ -58,7 +58,7 @@ function AppNavbar() {
                 /* aqui va solo la navegacion de la parte de arriba*/
                 <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/api/v1/players/username/:username">My Profile</NavLink>
+                        <NavLink style={{ color: "white" }} tag={Link} to={`/myProfile/${username}`}>{username}My Profile</NavLink>
                     </NavItem>
                 </>
             )

@@ -48,6 +48,7 @@ import ConsultationListClinicOwner from "./clinicOwner/consultations/Consultatio
 import ConsultationEditClinicOwner from "./clinicOwner/consultations/ConsultationEditClinicOwner";
 import VetListClinicOwner from "./clinicOwner/vets/VetListClinicOwner";
 import VetEditClinicOwner from "./clinicOwner/vets/VetEditClinicOwner";
+import PlayerEdit from "./player";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -105,7 +106,8 @@ function App() {
       ownerRoutes = (
         <>
     {/* aqui se meten todas las rutas que voy a usar */}
-          <Route path="/api/v1/players/username/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
+          <Route path="/myProfile/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
+          <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
         </>)
     }
     if (role === "VET") {
