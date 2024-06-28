@@ -76,24 +76,73 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
         handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, sendModal);
         handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, sendModal);
     }
+
 };
 
 const handleActionSingleCard = (card, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) => {
     switch (card) {
         default:
             break;
-        //case 1:
-            //CardUses.executeCard1(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
-            //break;
-        //case 2:
-            //CardUses.executeCard2(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
-            //break;
-        //case 3:
-            //CardUses.executeCard3(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
-            //break;
+        case 1:
+            CardUses.executeCard1(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 2:
+            CardUses.executeCard2(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 3:
+            CardUses.executeCard3(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 4:
+            CardUses.executeCard4(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 5:
+            CardUses.executeCard5(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 6:
+            CardUses.executeCard6(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 7:
+            CardUses.executeCard7(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 8:
+            CardUses.executeCard8(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 9:
+            CardUses.executeCard9(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 10:
+            CardUses.executeCard10(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 11:
+            CardUses.executeCard11(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 12:
+            CardUses.executeCard12(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 13:
+            CardUses.executeCard13(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 14:
+            CardUses.executeCard14(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 15:
+            CardUses.executeCard15(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 16:
+            CardUses.executeCard16(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 17:
+            CardUses.executeCard17(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
+        case 18:
+            CardUses.executeCard18(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            break;
         case 51:
             CardUses.executeCard51(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+
     };
+
+    //modalAction('')
 
 
 

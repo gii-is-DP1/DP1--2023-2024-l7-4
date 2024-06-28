@@ -71,18 +71,26 @@ const WebSocketHandler = ({
                         break;
                     case 'PLAYEDCARD':
                         if (playerNumber === 0 && body.playedCard1 !== -1) {
-                            setStatePlayer1(prevState => ({
-                                ...prevState,
-                                cardPlayed: body.playedCard1,
-                            }));
+                            setStatePlayer1(prevState => {
+                                return {
+                                    ...prevState,
+                                    cardPlayedBefore: prevState.cardPlayed, 
+                                    cardPlayed: body.playedCard1,        
+                                    precisionBefore: prevState.precision,
+                                };
+                            });
                             setShowCards(false);
                             setWaiting(true);
                         }
                         if (playerNumber === 1 && body.playedCard0 !== -1) {
-                            setStatePlayer0(prevState => ({
-                                ...prevState,
-                                cardPlayed: body.playedCard0,
-                            }));
+                            setStatePlayer0(prevState => {
+                                return {
+                                    ...prevState,
+                                    cardPlayedBefore: prevState.cardPlayed, 
+                                    cardPlayed: body.playedCard0,     
+                                    precisionBefore: prevState.precision,
+                                };
+                            });
                             setShowCards(false);
                             setWaiting(true);
                         }

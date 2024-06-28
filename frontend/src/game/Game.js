@@ -31,16 +31,26 @@ const WebSocketComponent = () => {
         health: 2,
         bullets: 2,
         precision: 2,
+        precisionBefore: null,
+        precisionChange: true,
         cards: [],
         cardPlayed: null,
+        preventDamage: false,
+        cardPlayedBefore: null,
+        failing: 0,
     });
 
     const [statePlayer1, setStatePlayer1] = useState({
         health: 2,
         bullets: 2,
         precision: 2,
+        precisionBefore: null,
+        precisionChange: true,
         cards: [],
         cardPlayed: null,
+        preventDamage: false,
+        cardPlayedBefore: null,
+        failing: 0,
     });
 
     const [waiting, setWaiting] = useState(false);
@@ -82,7 +92,7 @@ const WebSocketComponent = () => {
     }, [playerNumber, stompClient, received]);
 
 
-    //Mandar cartas cuando jugador 1 estÃ© listo
+    //Mandar cartas cuando jugador 1 esta listo
     useEffect(() => {
         if (statePlayer0.cards.length > 0 && statePlayer1.cards.length > 0 && playerNumber === 0 && received) {
             handleSendDeckMessage('DECKS');
