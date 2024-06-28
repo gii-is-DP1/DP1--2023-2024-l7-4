@@ -40,10 +40,40 @@ function AppNavbar() {
                 </>
             )
         }
-        if (role === "OWNER") {
+        if (role === "PLAYER") {
+            ownerLinks = (
+                /* aqui va solo la navegacion de la parte de arriba*/
+                <>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to={`/myProfile/${username}`}>{username} Profile</NavLink>
+                    </NavItem>
+                </>
+            )
+        }
+        if (role === "VET") {
             ownerLinks = (
                 <>
                     <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
+                    </NavItem>
+                </>
+            )
+        }
+
+        if (role === "CLINIC_OWNER") {
+            ownerLinks = (
+                <>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/clinics">Clinics</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/owners">Owners</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/consultations">Consultations</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/vets">Vets</NavLink>
                         <NavLink style={{ color: "white" }} tag={Link} to="/myMatches">My matches</NavLink>
                     </NavItem>
                 </>
