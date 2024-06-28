@@ -31,4 +31,6 @@ public class Match extends BaseEntity {
     @Column(name = "matchState")
     private MatchState matchState;
 
+    @Column
+    private String winner;
 }

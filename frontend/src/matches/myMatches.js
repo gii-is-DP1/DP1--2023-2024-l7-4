@@ -16,28 +16,29 @@ export default function MyMatches() {
     const [message, setMessage] = useState(null);
     const [visible, setVisible] = useState(false);
     const [filterCreated, setFilterCreated] = useState(false);
+    const [stompClient, setStompClient] = useState(null);
     const [matches, setMatches] = useFetchState(
         [],
-        `/api/v1/matches/player/${username}`,
+        `/api/v1/matches`,
         jwt,
         setMessage,
         setVisible
     );
+    const [matchList, setMatchList] = useState([]);
 
+
+
+    useEffect(() => {
+        if (filterCreated) {
+            setMatchList(matches.filter((match) => match.joinedPlayers[0] === username));
+        } else {
+            setMatchList(matches.filter((match) => match.joinedPlayers.includes(username)));
+        }
+    }, [filterCreated, matches]);
 
     const toggleFilterCreated = () => {
         setFilterCreated(!filterCreated);
     };
-
-    const matchesList = matches.map((m) => {
-        return (
-            <tr key={m.id}>
-                <td className='table-western'>{m.name}</td>
-                <td className='table-western'>{m.matchState}</td>
-                <td className='table-western'>{m.joinedPlayers[0] === username ? 'CREATOR' : 'NOT CREATOR'}</td>
-            </tr>
-        );
-    });
 
     return (
         <div>
@@ -51,9 +52,20 @@ export default function MyMatches() {
                                     <th className="table-western">NAME</th>
                                     <th className="table-western">STATE</th>
                                     <th className="table-western">CREATOR</th>
+                                    <th className="table-western">WON</th>
+
                                 </tr>
                             </thead>
-                            <tbody>{filterCreated ? matchesList.filter((match) => match.matchState === 'CREATED') : matchesList}</tbody>
+                            <tbody>{
+                                matchList.map((m) => (
+                                    <tr key={m.id}>
+                                        <td className='table-western'>{m.name}</td>
+                                        <td className='table-western'>{m.matchState}</td>
+                                        <td className='table-western'>{m.joinedPlayers[0] === username ? 'YES' : 'NO'}</td>
+                                        <td className='table-western'>{m.winner === username ? 'YES' : 'NO'}</td>
+                                    </tr>
+                                ))
+                            }</tbody>
                         </Table>
                         <div style={{ textAlign: 'center' }}>
                             <Button onClick={toggleFilterCreated}>

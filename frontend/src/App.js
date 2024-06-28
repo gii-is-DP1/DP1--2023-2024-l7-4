@@ -52,6 +52,7 @@ import CreateMatch from "./matches/CreateMatch";
 import Game from "./game/Game";
 import MyMatches from "./matches/myMatches";
 import './static/css/westernTheme.css';
+import MyMatchesAdmin from "./matches/myMatchesAdmin";
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -104,6 +105,7 @@ function App() {
           <Route path="/consultations" exact={true} element={<PrivateRoute><ConsultationListAdmin /></PrivateRoute>} />
           <Route path="/consultations/:consultationId" exact={true} element={<PrivateRoute><ConsultationEditAdmin /></PrivateRoute>} />
           <Route path="/consultations/:consultationId/tickets" exact={true} element={<PrivateRoute><TicketListAdmin /></PrivateRoute>} />
+          <Route path="/allMatches" exact={true} element={<PrivateRoute><MyMatchesAdmin /></PrivateRoute>} />
         </>)
     }
     if (role === "OWNER") {
