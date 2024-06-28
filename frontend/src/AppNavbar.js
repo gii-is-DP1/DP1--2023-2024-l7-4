@@ -32,8 +32,8 @@ function AppNavbar() {
             adminLinks = (
                 <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/users">Users</NavLink>
-                    </NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/players">Players</NavLink>
+                    </NavItem >
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/allMatches">Matches</NavLink>
                     </NavItem>
@@ -42,7 +42,6 @@ function AppNavbar() {
         }
         if (role === "PLAYER") {
             ownerLinks = (
-                /* aqui va solo la navegacion de la parte de arriba*/
                 <>
                     <NavItem>
                         <NavLink style={{ color: "white" }} tag={Link} to="/myMatches">My matches</NavLink>
@@ -98,9 +97,13 @@ function AppNavbar() {
         )
         userLogout = (
             <>
-                <NavItem>
-                    <NavLink style={{ color: "white" }} tag={Link} to={`/myProfile/${username}`}>{username}</NavLink>
-                </NavItem>
+                {!roles.includes('ADMIN') ?
+                    <NavItem>
+                        <NavLink style={{ color: "white" }} tag={Link} to={`/myProfile/${username}`}>{username}</NavLink>
+                    </NavItem>
+                    :
+                    <NavbarText style={{ color: "white" }} className="justify-content-end">{username}</NavbarText>
+                }
                 <NavItem className="d-flex">
                     <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
                 </NavItem>

@@ -120,11 +120,14 @@ public class MatchRestController {
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
 
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable(name = "id") int id) {
         matchService.deleteMatch(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 
     @MessageMapping("/match/messages")
     @SendTo("/topic/match/messages")
@@ -167,4 +170,5 @@ public class MatchRestController {
             MatchActionsPlayersMessage actionMessage) {
         return new MatchActionsPlayersMessage(actionMessage.getAction(), actionMessage.getPlayerNumber());
     }
+
 }

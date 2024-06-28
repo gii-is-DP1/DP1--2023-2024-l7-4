@@ -61,5 +61,9 @@ public class MatchService {
 		matchRepository.delete(toDelete);
 	}
 
+    @Transactional
+	public void deleteMatches(List<Match> matches) throws DataAccessException {
+		matchRepository.deleteAll(matches);
+	}
 
 }

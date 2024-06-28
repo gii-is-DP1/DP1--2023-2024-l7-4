@@ -55,4 +55,14 @@ public class PlayerService {
         playerRepository.delete(toDelete);
     }
 
+    @Transactional
+    public void deletePlayer( String username) throws DataAccessException {
+        Player toDelete = findByUsername(username);
+        playerRepository.delete(toDelete);
+    }
+
+    public Boolean existsPlayer(String username) throws DataAccessException {
+        return !playerRepository.existsPlayer(username).isEmpty();
+    }
+
 }
