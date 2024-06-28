@@ -8,13 +8,14 @@ import jwtDecode from 'jwt-decode';
 import '../static/css/GameBoard.css';
 import '../static/css/playerStats.css';
 import CardButton from '../components/buttons/cardButton';
-import { generateNewRandomNumbers, generateUniqueRandomNumbers, initialDeal } from '../util/game/utils';
+import { generateNewRandomNumbers, generateUniqueRandomNumbers, initialDeal, handleActionCard } from '../util/game/utils';
 import DiscardCardsModalContent from '../components/modals/DiscardCardsModalContent';
 import CardRow from '../components/modals/CardRow';
 import TopRow from '../components/modals/TopRow';
 import PlayerStats from '../util/game/playerStatsModal';
 import GameModals from '../components/modals/GameModals';
 import WebSocketHandler from './WebSocketHandler';
+
 
 const WebSocketComponent = () => {
     const jwt = tokenService.getLocalAccessToken();
@@ -81,7 +82,7 @@ const WebSocketComponent = () => {
     }, [playerNumber, stompClient, received]);
 
 
-    //Mandar cartas cuando jugador 1 esté listo
+    //Mandar cartas cuando jugador 1 estÃ© listo
     useEffect(() => {
         if (statePlayer0.cards.length > 0 && statePlayer1.cards.length > 0 && playerNumber === 0 && received) {
             handleSendDeckMessage('DECKS');
@@ -90,33 +91,45 @@ const WebSocketComponent = () => {
         }
     }, [statePlayer0.cards, statePlayer1.cards]);
 
+
     //Rebarajar las cartas
     useEffect(() => {
         if (deckOfCards.length < 1 && statePlayer0.cards.length !== 0 && statePlayer1.cards.length !== 0)
             setDeckOfCards(generateNewRandomNumbers(statePlayer0.cards, statePlayer1.cards));
     }, [deckOfCards]);
 
+
     //Acciones 
     useEffect(() => {
-        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
+        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played && !updatePlayers) {
             setShowCards(true);
             if (playerNumber === 0)
-                handleActionCard(statePlayer0.cardPlayed, statePlayer1.cardPlayed);
+                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, null);
             setWaiting(false);
             setPlayed(false);
             setShowConfirmationModal(true);
             setUpdatePlayers(true);
         }
-    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
+    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played, updatePlayers]);
+
 
     //Mandar los cambios al jugador 1
     useEffect(() => {
-        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && updatePlayers) {
-            handleSendPlayerUpdate(0, statePlayer0);
-            handleSendPlayerUpdate(1, statePlayer1);
+        if (updatePlayers) {
+            if (playerNumber === 0){
+            const timeout = setTimeout(() => {
+                handleSendPlayerUpdate(0, statePlayer0);
+                handleSendPlayerUpdate(1, statePlayer1);
+                setUpdatePlayers(false);
+            }, 0);
+
+            return () => clearTimeout(timeout);
+        }else {
             setUpdatePlayers(false);
         }
-    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, updatePlayers]);
+    }
+    }, [statePlayer0, statePlayer1]);
+
 
     //Accionar el final de partida
     useEffect(() => {
@@ -125,22 +138,7 @@ const WebSocketComponent = () => {
 
     }, [statePlayer0.health, statePlayer1.health])
 
-    const handleActionCard = (cardNumber0, cardNumber1) => {
-        if (cardNumber0 === 51) {
-            setStatePlayer0(prevState => ({
-                ...prevState,
-                health: prevState.health - 1,
-                bullets: prevState.bullets + 1,
-            }));
-        }
-        if (cardNumber1 === 51) {
-            setStatePlayer1(prevState => ({
-                ...prevState,
-                health: prevState.health - 1,
-                bullets: prevState.bullets + 1,
-            }));
-        }
-    };
+    // 
 
     const handleActionConfirmed = () => {
         setShowConfirmationModal(false);

@@ -1,3 +1,5 @@
+import * as CardUses from '../../cards/cardUses'
+
 export function generateUniqueRandomNumbers() {
     const numbers = Array.from({ length: 50 }, (_, i) => i + 1); // Crea un array de números del 1 al 50
     for (let i = numbers.length - 1; i > 0; i--) {
@@ -61,4 +63,44 @@ export function steal(deck) {
     const myDeck = deck;
     myDeck.push(deck.shift());
     return myDeck;
+}
+
+
+export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, sendModal) => {
+    const card0 = statePlayer0.cardPlayed;
+    const card1 = statePlayer1.cardPlayed;
+    if (statePlayer0.bullets > statePlayer1.bullets) {
+        handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, sendModal);
+        handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, sendModal);
+    } else {
+        handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, sendModal);
+        handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, sendModal);
+    }
+};
+
+const handleActionSingleCard = (card, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) => {
+    switch (card) {
+        default:
+            break;
+        //case 1:
+            //CardUses.executeCard1(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            //break;
+        //case 2:
+            //CardUses.executeCard2(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            //break;
+        //case 3:
+            //CardUses.executeCard3(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+            //break;
+        case 51:
+            CardUses.executeCard51(statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal);
+    };
+
+
+
+
+
+
+
+
+
 }
