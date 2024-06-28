@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Form, Input, Label } from "reactstrap";
+import { Form, Input, Label, FormGroup } from "reactstrap";
 import tokenService from "../../services/token.service";
-import "../../static/css/admin/adminPage.css";
+import '../../static/css/westernTheme.css';
+import '../../App.css'
 import getErrorModal from "../../util/getErrorModal";
 import getIdFromUrl from "../../util/getIdFromUrl";
 import useFetchData from "../../util/useFetchData";
@@ -71,109 +72,48 @@ export default function PlayerEditAdmin() {
   ));
 
   return (
-    <div className="auth-page-container">
+    <div className="auth-page-container2">
+      <div className="hero-div">
       {<h2>{player.id ? "Edit Player" : "Add Player"}</h2>}
       {modal}
-      <div className="auth-form-container">
-        <Form onSubmit={handleSubmit}>
-        <div className="custom-form-input">
-            <Label for="name" className="custom-form-input-label">
-              Name
-            </Label>
-            <Input
-              type="text"
-              required
-              name="name"
-              id="name"
-              value={player.name || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div><div className="custom-form-input">
-            <Label for="surname" className="custom-form-input-label">
-              Surname
-            </Label>
-            <Input
-              type="text"
-              required
-              name="surname"
-              id="surname"
-              value={player.surname || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="avatar" className="custom-form-input-label">
-              Avatar
-            </Label>
-            <Input
-              type="text"
-              required
-              name="avatar"
-              id="avatar"
-              value={player.avatar || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="email" className="custom-form-input-label">
-              Email
-            </Label>
-            <Input
-              type="text"
-              required
-              name="email"
-              id="email"
-              value={player.email || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="nickname" className="custom-form-input-label">
-              Nickname
-            </Label>
-            <Input
-              type="text"
-              required
-              name="nickname"
-              id="nickname"
-              value={player.nickname || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="username" className="custom-form-input-label">
-              Username
-            </Label>
-            <Input
-              type="text"
-              required
-              name="username"
-              id="username"
-              value={player.username || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <div className="custom-form-input">
-            <Label for="lastName" className="custom-form-input-label">
-              Password
-            </Label>
-            <Input
-              type="password"
-              required
-              name="password"
-              id="password"
-              value={player.password || ""}
-              onChange={handleChange}
-              className="custom-input"
-            />
-          </div>
-          <Label for="authority" className="custom-form-input-label">
+      <Form onSubmit={handleSubmit} className='auth-form-container2'>
+        <FormGroup>
+          <Label for="name">Name</Label>
+          <Input type="text" required name="name" id="name" value={player.name || ""}
+            onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="surname">Surname</Label>
+          <Input type="text" required name="surname" id="surname" value={player.surname || ""}
+            onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="avatar">Avatar</Label>
+            <Input type="text" required name="avatar" id="avatar" value={player.avatar || ""}
+              onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="nickname">Nickname</Label>
+            <Input type="text" required name="nickname" id="nickname" value={player.nickname || ""}
+              onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="email">Email</Label>
+          <Input type="text" required name="email" id="email" value={player.email || ""}
+            onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="username">Username</Label>
+          <Input type="text" required name="username" id="username" value={player.username || ""}
+            onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="password">Password</Label>
+          <Input type="password" required name="password" id="password" value={player.password || ""}
+            onChange={handleChange} />
+        </FormGroup>
+        <FormGroup>
+          <Label for="authority">
             Authority
           </Label>
           <div className="custom-form-input">
@@ -205,6 +145,7 @@ export default function PlayerEditAdmin() {
               </Input>
             )}
           </div>
+          </FormGroup>
           <div className="custom-button-row">
             <button className="auth-button">Save</button>
             <Link

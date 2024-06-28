@@ -112,3 +112,14 @@ body {
 .transparent-navbar {
     background-color: transparent !important;
   }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+.pagination Button {
+    margin: 0 5px;
+  }
