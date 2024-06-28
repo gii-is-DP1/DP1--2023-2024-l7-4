@@ -4,7 +4,8 @@ import tokenService from "../services/token.service";
 import getErrorModal from "../util/getErrorModal";
 import useFetchState from "../util/useFetchState";
 import getIdFromUrl from "../util/getIdFromUrl";
-import "../static/css/admin/adminPage.css";
+import '../static/css/westernTheme.css';
+import '../App.css';
 import { Link } from "react-router-dom";
 import { Button } from "reactstrap";
 
@@ -43,27 +44,29 @@ export default function MyProfile() {
   return (
     <div>
       <div className="admin-page-container">
-        <h1 className="text-center">PROFILE</h1>
-        {modal}
-        <div>
-          <Table aria-label="players" className="mt-4">
-            <tbody>
-              <tr>
-                <th width="10%">Avatar</th>
-                <td className="text-center">
-                  <img src={player.avatar ? player.avatar : imgnotfound} alt={player.name} width="50px" />
-                </td>
-              </tr>
-              <tr>
-                <th width="10%">Nickname</th>
-                <td>{player.nickname}</td>
-              </tr>
-            </tbody>
-          </Table>
-          <Link to={`/players/edit/${username}`}>
-          <Button color="primary">Edit Profile</Button>
-          </Link>
-         
+        <div className="hero-div">
+          <h1 className="text-center">PROFILE</h1>
+          {modal}
+          <div>
+            <Table aria-label="players" className="table-western">
+              <tbody>
+                <tr>
+                  <th width="10%" className="table-western">Avatar</th>
+                  <td className="table-western">
+                    <img src={player.avatar ? player.avatar : imgnotfound} alt={player.name} width="50px" />
+                  </td>
+                </tr>
+                <tr>
+                  <th width="10%" className="table-western">Nickname</th>
+                  <td className="table-western">{player.nickname}</td>
+                </tr>
+              </tbody>
+            </Table>
+            <Link to={`/players/edit/${username}`}>
+              <button className="auth-button">Edit Profile</button>
+            </Link>
+
+          </div>
         </div>
       </div>
     </div>

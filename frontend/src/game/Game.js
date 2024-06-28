@@ -53,7 +53,7 @@ const WebSocketComponent = () => {
 
     const matchId = getIdFromUrl(2);
 
-    
+
     //UseEffect inicial para hacer reparto de cartas si jugador = 0 o para esperar a recibirlas si jugador = 1
     useEffect(() => {
         let interval = null;
@@ -72,13 +72,14 @@ const WebSocketComponent = () => {
         }
         if (playerNumber === 1 && !received) {
             interval = setInterval(() => {
-                handleSendDeckMessage('RECEIVED');
+                handleSendDeckMessage('READY');
             }, 1000);
         }
         return () => {
             clearInterval(interval);
         };
     }, [playerNumber, stompClient, received]);
+
 
     //Mandar cartas cuando jugador 1 esté listo
     useEffect(() => {
@@ -108,6 +109,7 @@ const WebSocketComponent = () => {
         }
     }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
+    //Mandar los cambios al jugador 1
     useEffect(() => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && updatePlayers) {
             handleSendPlayerUpdate(0, statePlayer0);
@@ -219,7 +221,7 @@ const WebSocketComponent = () => {
                 playedCard0: -1,
                 playedCard1: -1,
             }));
-        } else if (type === 'RECEIVED') {
+        } else if (type === 'READY') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'READY',
                 message: 'RECEIVED'

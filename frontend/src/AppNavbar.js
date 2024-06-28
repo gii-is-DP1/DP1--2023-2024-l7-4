@@ -45,7 +45,7 @@ function AppNavbar() {
                 /* aqui va solo la navegacion de la parte de arriba*/
                 <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to={`/myProfile/${username}`}>{username} Profile</NavLink>
+                        <NavLink style={{ color: "white" }} tag={Link} to="/myMatches">My matches</NavLink>
                     </NavItem>
                 </>
             )
@@ -98,7 +98,9 @@ function AppNavbar() {
         )
         userLogout = (
             <>
-                <NavbarText style={{ color: "white" }} className="justify-content-end">{username}</NavbarText>
+                <NavItem>
+                    <NavLink style={{ color: "white" }} tag={Link} to={`/myProfile/${username}`}>{username}</NavLink>
+                </NavItem>
                 <NavItem className="d-flex">
                     <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
                 </NavItem>
