@@ -180,7 +180,7 @@ export default function PlayerEditAdmin() {
             {player.id ? (
               <Input
                 type="select"
-                disabled
+                required
                 name="authority"
                 id="authority"
                 value={player.authority?.id || ""}
