@@ -30,6 +30,7 @@ const WebSocketComponent = () => {
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
         bullets: 2,
+        bulletsChange: true,
         precision: 2,
         precisionBefore: null,
         precisionChange: true,
@@ -38,11 +39,14 @@ const WebSocketComponent = () => {
         preventDamage: false,
         cardPlayedBefore: null,
         failing: 0,
+        recievex2damage: false,
+        intimidationCardInHand: false,
     });
 
     const [statePlayer1, setStatePlayer1] = useState({
         health: 2,
         bullets: 2,
+        bulletsChange: true,
         precision: 2,
         precisionBefore: null,
         precisionChange: true,
@@ -51,6 +55,9 @@ const WebSocketComponent = () => {
         preventDamage: false,
         cardPlayedBefore: null,
         failing: 0,
+        recievex2damage: false,
+        intimidationCardInHand: false,
+
     });
 
     const [waiting, setWaiting] = useState(false);
@@ -99,6 +106,16 @@ const WebSocketComponent = () => {
             setReadyForDiscard(true);
             setReceived(false);
         }
+        
+        setStatePlayer0(prevState => ({
+            ...prevState,
+            intimidationCardInHand: prevState.cards.includes(44),
+        }));
+
+        setStatePlayer1(prevState => ({
+            ...prevState,
+            intimidationCardInHand: prevState.cards.includes(44),
+        }));
     }, [statePlayer0.cards, statePlayer1.cards]);
 
 
@@ -126,18 +143,18 @@ const WebSocketComponent = () => {
     //Mandar los cambios al jugador 1
     useEffect(() => {
         if (updatePlayers) {
-            if (playerNumber === 0){
-            const timeout = setTimeout(() => {
-                handleSendPlayerUpdate(0, statePlayer0);
-                handleSendPlayerUpdate(1, statePlayer1);
-                setUpdatePlayers(false);
-            }, 0);
+            if (playerNumber === 0) {
+                const timeout = setTimeout(() => {
+                    handleSendPlayerUpdate(0, statePlayer0);
+                    handleSendPlayerUpdate(1, statePlayer1);
+                    setUpdatePlayers(false);
+                }, 0);
 
-            return () => clearTimeout(timeout);
-        }else {
-            setUpdatePlayers(false);
+                return () => clearTimeout(timeout);
+            } else {
+                setUpdatePlayers(false);
+            }
         }
-    }
     }, [statePlayer0, statePlayer1]);
 
 
@@ -329,6 +346,13 @@ const WebSocketComponent = () => {
                 setStompClient={setStompClient}
             />
             <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
+            {playerNumber === 0 ?
+
+                (statePlayer1.intimidationCardInHand ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+                :
+                (statePlayer0.intimidationCardInHand ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+
+            }
             <TopRow />
             {playerNumber === 0 &&
                 <div className="middle-row">
