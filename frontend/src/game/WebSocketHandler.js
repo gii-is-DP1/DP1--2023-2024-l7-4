@@ -56,14 +56,15 @@ const WebSocketHandler = ({
                         setDeckOfCards(body.deckCards);
                         setStatePlayer1(prevState => ({
                             ...prevState,
-                            cards: body.player1Cards,
+                            cards: body.player1Cards.length !== 0 ? body.player1Cards : prevState.cards,
                         }));
                         setStatePlayer0(prevState => ({
                             ...prevState,
-                            cards: body.player0Cards,
+                            cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
                         }));
                         if (playerNumber === 1 && body.player1Cards.length === 8) {
                             setReadyForDiscard(true);
+                            setReceived(true);
                         }
                         break;
                     case 'READY':
@@ -74,8 +75,8 @@ const WebSocketHandler = ({
                             setStatePlayer1(prevState => {
                                 return {
                                     ...prevState,
-                                    cardPlayedBefore: prevState.cardPlayed, 
-                                    cardPlayed: body.playedCard1,        
+                                    cardPlayedBefore: prevState.cardPlayed,
+                                    cardPlayed: body.playedCard1,
                                     precisionBefore: prevState.precision,
                                 };
                             });
@@ -86,8 +87,8 @@ const WebSocketHandler = ({
                             setStatePlayer0(prevState => {
                                 return {
                                     ...prevState,
-                                    cardPlayedBefore: prevState.cardPlayed, 
-                                    cardPlayed: body.playedCard0,     
+                                    cardPlayedBefore: prevState.cardPlayed,
+                                    cardPlayed: body.playedCard0,
                                     precisionBefore: prevState.precision,
                                 };
                             });

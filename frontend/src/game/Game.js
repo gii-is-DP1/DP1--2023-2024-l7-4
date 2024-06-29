@@ -26,6 +26,7 @@ const WebSocketComponent = () => {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [showCards, setShowCards] = useState(false);
     const [showEndModal, setShowEndModal] = useState(false);
+    const [endAction, setEndAction] = useState(false);
 
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
@@ -88,7 +89,7 @@ const WebSocketComponent = () => {
                 cards: cards[2]
             }));
         }
-        if (playerNumber === 1 && !received) {
+        if (playerNumber === 1 && !received && statePlayer1.cards.length === 0) {
             interval = setInterval(() => {
                 handleSendDeckMessage('READY');
             }, 1000);
@@ -96,7 +97,7 @@ const WebSocketComponent = () => {
         return () => {
             clearInterval(interval);
         };
-    }, [playerNumber, stompClient, received]);
+    }, [playerNumber, stompClient, received, statePlayer1]);
 
 
     //Mandar cartas cuando jugador 1 esta listo
@@ -106,15 +107,15 @@ const WebSocketComponent = () => {
             setReadyForDiscard(true);
             setReceived(false);
         }
-        
+
         setStatePlayer0(prevState => ({
             ...prevState,
-            intimidationCardInHand: prevState.cards.includes(44),
+            intimidationCardInHand: prevState.cards.includes(45),
         }));
 
         setStatePlayer1(prevState => ({
             ...prevState,
-            intimidationCardInHand: prevState.cards.includes(44),
+            intimidationCardInHand: prevState.cards.includes(45),
         }));
     }, [statePlayer0.cards, statePlayer1.cards]);
 
@@ -130,8 +131,9 @@ const WebSocketComponent = () => {
     useEffect(() => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played && !updatePlayers) {
             setShowCards(true);
-            if (playerNumber === 0)
-                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, null);
+            if (playerNumber === 0) {
+                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, setEndAction, null);
+            }
             setWaiting(false);
             setPlayed(false);
             setShowConfirmationModal(true);
@@ -158,6 +160,16 @@ const WebSocketComponent = () => {
     }, [statePlayer0, statePlayer1]);
 
 
+    //Mandar los cambios al jugador 1 de las cartas
+    useEffect(() => {
+        if (endAction) {
+            if (playerNumber === 0) {
+                handleSendDeckMessage('DECKS')
+                setEndAction(false);
+            }
+        }
+    }, [endAction]);
+
     //Accionar el final de partida
     useEffect(() => {
         if (statePlayer0.health === 0 || statePlayer1.health === 0)
@@ -165,7 +177,18 @@ const WebSocketComponent = () => {
 
     }, [statePlayer0.health, statePlayer1.health])
 
-    // 
+
+    //UseEffect para enviar las cartas una vez descartadas
+    useEffect(() => {
+        if (!readyForDiscard && discardedCards.length === 0 && received) {
+            if (playerNumber === 0) {
+                handleSendDeckMessage('CUSTOM', 0);
+            } else {
+                handleSendDeckMessage('CUSTOM', 1);
+                setReceived(false);
+            }
+        }
+    }, [statePlayer0.cards, statePlayer1.cards, received, discardedCards, readyForDiscard]);
 
     const handleActionConfirmed = () => {
         setShowConfirmationModal(false);
@@ -237,6 +260,10 @@ const WebSocketComponent = () => {
     };
 
     const handleSendDeckMessage = (type, cardNumber = -1) => {
+        if (!stompClient) {
+            console.error('stompClient is not initialized');
+            return;
+        }
         if (type === 'DECKS') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'DECKS',
@@ -259,6 +286,15 @@ const WebSocketComponent = () => {
                 player1Cards: [],
                 playedCard0: playerNumber === 0 ? cardNumber : -1,
                 playedCard1: playerNumber === 1 ? cardNumber : -1,
+            }));
+        } else if (type === 'CUSTOM') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: 'DECKS',
+                deckCards: deckOfCards,
+                player0Cards: cardNumber === 0 ? statePlayer0.cards : Array.of(),
+                player1Cards: cardNumber === 1 ? statePlayer1.cards : Array.of(),
+                playedCard0: -1,
+                playedCard1: -1,
             }));
         }
     };
