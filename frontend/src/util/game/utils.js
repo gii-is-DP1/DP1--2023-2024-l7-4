@@ -1,29 +1,64 @@
-export function generateUniqueRandomNumbers(count = 50, min = 1, max = 50) {
-    if (count > (max - min + 1)) {
-        throw new Error("Count exceeds the range of unique numbers available.");
+export function generateUniqueRandomNumbers() {
+    const numbers = Array.from({ length: 50 }, (_, i) => i + 1); // Crea un array de números del 1 al 50
+    for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Selecciona un índice aleatorio
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]]; // Intercambia los elementos
     }
+    return numbers;
+}
 
-    const numbers = [];
-    while (numbers.length < count) {
-        const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-        if (!numbers.includes(randomNum)) {
-            numbers.push(randomNum);
-        }
+
+export function generateNewRandomNumbers(cards0, cards1) {
+    let numbers = Array.from({ length: 50 }, (_, i) => i + 1); // Crea un array de números del 1 al 50
+    numbers = numbers.filter((card) => !cards0.includes(card) && !cards1.includes(card));
+    for (let i = numbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Selecciona un índice aleatorio
+        [numbers[i], numbers[j]] = [numbers[j], numbers[i]]; // Intercambia los elementos
     }
     return numbers;
 }
 
 export function initialDeal(deck) {
-    const newDeck = [];
-    for (let i = 0; i < 7; i++) {
-        newDeck.push(deck.shift());
-      }
-    
-    return newDeck;
+    let deckPlayer0 = [];
+    let deckPlayer1 = [];
+
+    function isValidDeck(deck) {
+        const range1 = deck.some(card => card >= 10 && card <= 18);
+        const range2 = deck.some(card => card >= 19 && card <= 27);
+        return range1 && range2;
+    }
+
+    let validDeal = false;
+
+    while (!validDeal) {
+        deckPlayer0 = [];
+        deckPlayer1 = [];
+
+        // Shuffle the deck
+        deck = deck.sort(() => Math.random() - 0.5);
+
+        // Deal cards to both players
+        for (let i = 0; i < 8; i++) {
+            deckPlayer0.push(deck.shift());
+        }
+        for (let i = 0; i < 8; i++) {
+            deckPlayer1.push(deck.shift());
+        }
+
+        // Check if both decks are valid
+        if (isValidDeck(deckPlayer0) && isValidDeck(deckPlayer1)) {
+            validDeal = true;
+        } else {
+            // si no es válido entonces devolvemos las cartas al mazo para barajarlas de nuevo
+            deck = [...deck, ...deckPlayer0, ...deckPlayer1];
+        }
+    }
+
+    return [deck, deckPlayer0, deckPlayer1];
 }
 
 export function steal(deck) {
-    const myDeck= deck;
+    const myDeck = deck;
     myDeck.push(deck.shift());
-    return myDeck
+    return myDeck;
 }

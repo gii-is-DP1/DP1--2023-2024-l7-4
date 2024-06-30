@@ -4,10 +4,11 @@ import '../../static/css/westernTheme.css'; // Asegúrate de tener tus estilos C
 import { Link, Navigate } from 'react-router-dom';
 
 
-const CardButton = ({ className ,imgSrc, onMouseEnter}) => {
+const CardButton = ({ className ,imgSrc, onMouseEnter,onClick}) => {
     return (
         <Button
             className= {className}
+            onClick={onClick}
             onMouseEnter= {onMouseEnter}
             style={{
                 backgroundImage: `url(${imgSrc})`,
