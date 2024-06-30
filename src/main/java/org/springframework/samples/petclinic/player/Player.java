@@ -1,15 +1,13 @@
 package org.springframework.samples.petclinic.player;
 
-import org.springframework.samples.petclinic.user.Authorities;
 import org.springframework.samples.petclinic.user.User;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,10 +20,12 @@ public class Player extends User {
   
     @Column(name = "name")
     @NotEmpty
+    @Size(max=50)
     String name;
 
     @Column(name = "surname")
-    @NotEmpty   
+    @NotEmpty  
+    @Size(max=80) 
     String surname;
 
     @Column(name = "avatar")
@@ -34,10 +34,12 @@ public class Player extends User {
 
     @Column(name = "nickname")
     @NotEmpty
+    @Size(max=30)
     String nickname;
 
     @Column(name = "email", unique = true)
     @NotEmpty
+    @Email
     String email;
     
 }
