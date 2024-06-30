@@ -44,6 +44,8 @@ const WebSocketComponent = () => {
         failing: 0,
         recievex2damage: false,
         intimidationCardInHand: false,
+        playerNumber: 0,
+        doubleCard: false,
     });
 
     const [statePlayer1, setStatePlayer1] = useState({
@@ -60,7 +62,8 @@ const WebSocketComponent = () => {
         failing: 0,
         recievex2damage: false,
         intimidationCardInHand: false,
-
+        playerNumber: 1,
+        doubleCard: false,
     });
 
     const [waiting, setWaiting] = useState(false);
@@ -276,7 +279,7 @@ const WebSocketComponent = () => {
         }
     };
 
-    const handleSendDeckMessage = (type, cardNumber = -1) => {
+    const handleSendDeckMessage = (type, cardNumber = -1, player) => {
         if (!stompClient) {
             console.error('stompClient is not initialized');
             return;
@@ -316,8 +319,8 @@ const WebSocketComponent = () => {
         } else if (type === 'CHOOSE') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'CHOOSE',
-                playedCard0: playerNumber === 0 ? cardNumber : -1,
-                playedCard1: playerNumber === 1 ? cardNumber : -1,
+                playedCard0: player === 0 ? cardNumber : -1,
+                playedCard1: player === 1 ? cardNumber : -1,
 
             }));
         }
@@ -384,27 +387,6 @@ const WebSocketComponent = () => {
         });
     };
 
-
-    const handlePickCard = (chosenCard) => {
-        if (playerNumber === 0) {
-            setStatePlayer0(prevState => ({
-                ...prevState,
-                cards: [...prevState.cards, chosenCard]
-            }));
-        } else {
-            setStatePlayer1(prevState => ({
-                ...prevState,
-                cards: [...prevState.cards, chosenCard]
-            }));
-        }
-    };
-
-    const handleDiscardRemaining = (remainingCards) => {
-        setDeckOfCards(remainingCards);
-        setChooseCard(0);
-    };
-
-
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc);
     };
@@ -457,12 +439,14 @@ const WebSocketComponent = () => {
             <PlayerStats health={playerNumber === 0 ? statePlayer0.health : statePlayer1.health} bullets={playerNumber === 0 ? statePlayer0.bullets : statePlayer1.bullets} precision={playerNumber === 0 ? statePlayer0.precision : statePlayer1.precision} />
             <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer0.cards : statePlayer1.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
             <GameModals
-                showConfirmationModal={showConfirmationModal}
+                showConfirmationModal={showConfirmationModal && chooseCard === 0}
                 handleActionConfirmed={handleActionConfirmed}
                 readyForDiscard={readyForDiscard}
                 playerNumber={playerNumber}
                 statePlayer0={statePlayer0}
                 statePlayer1={statePlayer1}
+                setStatePlayer0={setStatePlayer0}
+                setStatePlayer1={setStatePlayer1}
                 discardedCards={discardedCards}
                 handleSetDiscardCard={handleSetDiscardCard}
                 handleMouseEnter={handleMouseEnter}
@@ -470,9 +454,10 @@ const WebSocketComponent = () => {
                 showEndModal={showEndModal}
                 handleGoToLobby={handleGoToLobby}
                 chooseCard={chooseCard}
+                setChooseCard={setChooseCard}
                 deckOfCards={deckOfCards}
-                handlePickCard={handlePickCard}
-                handleDiscardRemaining={handleDiscardRemaining}
+                setDeckOfCards={setDeckOfCards}
+                handleSendDeckMessage={handleSendDeckMessage}
             />
         </div>
     );

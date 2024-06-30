@@ -91,6 +91,7 @@ export default function MyMatchesAdmin() {
                                     <th className="table-western">NAME</th>
                                     <th className="table-western">STATE</th>
                                     <th className="table-western">CREATOR</th>
+                                    <th className="table-western">PLAYERS</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,6 +100,7 @@ export default function MyMatchesAdmin() {
                                         <td className='table-western'>{m.name}</td>
                                         <td className='table-western'>{m.matchState}</td>
                                         <td className='table-western'>{m.joinedPlayers[0]}</td>
+                                        <td className='table-western'>{m.joinedPlayers[0]}, {m.joinedPlayers[1]}</td>
                                     </tr>
                                 ))}
                             </tbody>

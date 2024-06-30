@@ -92,22 +92,21 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
         failing: prevState.failing > 0 ? prevState.failing - 1 : prevState.failing,
     }));
 
+    const executeActionsInOrder = (cardFirst, cardSecond, stateFirst, stateSecond, setStateFirst, setStateSecond) => {
+        handleActionSingleCard(cardFirst, stateFirst, stateSecond, setStateFirst, setStateSecond, deckOfCards, setDeckOfCards, sendModal);
+        handleActionSingleCard(cardSecond, stateSecond, stateFirst, setStateSecond, setStateFirst, deckOfCards, setDeckOfCards, sendModal);
+    };
 
     if (statePlayer0.bullets > statePlayer1.bullets) {
-        handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
-        handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
+        executeActionsInOrder(card0, card1, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1);
     } else if (statePlayer0.bullets === statePlayer1.bullets) {
-        const random = Math.random();
-        if (random < 0.5) {
-            handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
-            handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
+        if (Math.random() < 0.5) {
+            executeActionsInOrder(card1, card0, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0);
         } else {
-            handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
-            handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
+            executeActionsInOrder(card0, card1, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1);
         }
     } else {
-        handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
-        handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
+        executeActionsInOrder(card1, card0, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0);
     }
 
 };

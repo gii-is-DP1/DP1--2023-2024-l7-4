@@ -10,6 +10,8 @@ const GameModals = ({
     playerNumber,
     statePlayer0,
     statePlayer1,
+    setStatePlayer0,
+    setStatePlayer1,
     discardedCards,
     handleSetDiscardCard,
     handleMouseEnter,
@@ -17,13 +19,14 @@ const GameModals = ({
     showEndModal,
     handleGoToLobby,
     chooseCard,
+    setChooseCard,
     deckOfCards,
-    handlePickCard,
-    handleDiscardRemaining
+    setDeckOfCards,
+    handleSendDeckMessage,
 }) => {
     return (
         <>
-            <Modal isOpen={showConfirmationModal}>
+            <Modal isOpen={showConfirmationModal && chooseCard === 0}>
                 <ModalHeader>Next turn</ModalHeader>
                 <ModalBody>
                 </ModalBody>
@@ -67,8 +70,12 @@ const GameModals = ({
                 isOpen={chooseCard !== 0}
                 deckOfCards={deckOfCards}
                 chooseCard={chooseCard}
-                handlePickCard={handlePickCard}
-                handleDiscardRemaining={handleDiscardRemaining}
+                handleSendDeckMessage={handleSendDeckMessage}
+                playerNumber={playerNumber}
+                setStatePlayer0={setStatePlayer0}
+                setStatePlayer1={setStatePlayer1}
+                setDeckOfCards={setDeckOfCards}
+                setChooseCard={setChooseCard}
             />
         </>
     );

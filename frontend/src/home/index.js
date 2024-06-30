@@ -84,64 +84,64 @@ export default function Home() {
                 <div className="hero-div">
                     <h1>Gunfighter</h1>
                     <h3>---</h3>
-                    <h3>¿PREPARADO?</h3>
+                    <h3>READY?</h3>
                 </div>
             </div>
         );
     } else {
-        const matchesList = matches.map((m) => {
+            const matchesList = matches.map((m) => {
+                return (
+                    <tr key={m.id}>
+                        <td className='table-western'>{m.name}</td>
+                        <td className='table-western'>{m.matchState}</td>
+                        <td className='table-western'>
+                            {m.matchState === "OPEN" && (
+                                <Button outline color="success" size='sm' onClick={() => {
+                                    fetch('/api/v1/matches/' + m.id + "/join", {
+                                        method: 'PUT',
+                                        headers: {
+                                            "Authorization": `Bearer ${jwt}`,
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(username),
+                                    }).then(handleJoinGame(m.id));
+                                }}>
+                                    <Link to={`/match/${m.id}/waitingRoom`} className="btn btn-sm" style={{ textDecoration: "none" }}>ACCEPT</Link>
+                                </Button>
+                            )}
+                        </td>
+                    </tr>
+                );
+            });
+
             return (
-                <tr key={m.id}>
-                    <td className='table-western'>{m.name}</td>
-                    <td className='table-western'>{m.matchState}</td>
-                    <td className='table-western'>
-                        {m.matchState === "OPEN" && (
-                            <Button outline color="success" size='sm' onClick={() => {
-                                fetch('/api/v1/matches/' + m.id + "/join", {
-                                    method: 'PUT',
-                                    headers: {
-                                        "Authorization": `Bearer ${jwt}`,
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(username),
-                                }).then(handleJoinGame(m.id));
-                            }}>
-                                <Link to={`/match/${m.id}/waitingRoom`} className="btn btn-sm" style={{ textDecoration: "none" }}>ACCEPT</Link>
-                            </Button>
-                        )}
-                    </td>
-                </tr>
-            );
-        });
-    
-        return (
-            <div>
-                <div className="admin-page-container">
-                    <div className="hero-div">
-                        <h1 className="text-center"> ONLINE GAMES</h1>
-                        <div>
-                            <Table aria-label="onlineGames" className="table-western">
-                                <thead>
-                                    <tr>
-                                        <th className="table-western">NAME</th>
-                                        <th className="table-western">STATE</th>
-                                        <th className="table-western">PLAY</th>
-                                    </tr>
-                                </thead>
-                                <tbody>{matchesList}</tbody>
-                            </Table>
-                            <div style={{ textAlign: 'center' }}>
-                                <ImageButton
-                                    to='/match/create'
-                                    imgSrc={`${process.env.PUBLIC_URL}/scope.png`} // Cambia esto a la ruta de tu imagen
-                                    style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según tus necesidades
-                                />
+                <div>
+                    <div className="admin-page-container">
+                        <div className="hero-div">
+                            <h1 className="text-center"> ONLINE GAMES</h1>
+                            <div>
+                                <Table aria-label="onlineGames" className="table-western">
+                                    <thead>
+                                        <tr>
+                                            <th className="table-western">NAME</th>
+                                            <th className="table-western">STATE</th>
+                                            <th className="table-western">PLAY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>{matchesList}</tbody>
+                                </Table>
+                                <div style={{ textAlign: 'center' }}>
+                                    <ImageButton
+                                        to='/match/create'
+                                        imgSrc={`${process.env.PUBLIC_URL}/scope.png`} // Cambia esto a la ruta de tu imagen
+                                        style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según tus necesidades
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        );
-    }
+            );
+        }
 }

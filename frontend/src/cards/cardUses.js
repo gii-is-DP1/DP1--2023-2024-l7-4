@@ -42,17 +42,17 @@ export function executeCard51(deckOfCards, setDeckOfCards, statePlayerMain, stat
       ...statePlayerMain.cards.slice(0, RandomCardIndex),
       ...statePlayerMain.cards.slice(RandomCardIndex + 1),
     ];
-    
+
     const newCard = deckOfCards.pop();
     setDeckOfCards(deckOfCards);
-  
+
     setStatePlayerMain(prevState => ({
       ...prevState,
       cards: [...updatedCards, newCard],
     }));
   }
 
- 
+
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
@@ -123,10 +123,10 @@ export function executeCard3(deckOfCards, setDeckOfCards, statePlayerMain, state
 
   setStatePlayerMain(prevState => ({
     ...prevState,
-    cards: updatedCards,
+    cards: [...updatedCards],
   }));
 
-  sendModal('CHOOSE', 3);
+  sendModal('CHOOSE', 3, statePlayerMain.playerNumber);
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
@@ -421,7 +421,7 @@ export function executeCard17(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
 export function executeCard18(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  setStatePlayerSecondary(prevState => ({
+  setStatePlayerMain(prevState => ({
     ...prevState,
     bullets: limit(prevState.bullets - 1),
   }));
@@ -443,7 +443,7 @@ export function executeCard18(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
 
 
-// ------------------------------------------- FUNCIONES CARTAS DISPARO (COMPROBAR BALAS EN TODAS Y SI FALLA) -------------------
+// ------------------------------------------- FUNCIONES CARTAS DISPARO ----------------------------------------
 
 
 
@@ -453,13 +453,13 @@ export function executeCard19(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
   setStatePlayerMain(prevState => ({
     ...prevState,
-    precision: limit(prevState.precision - 5),
+    precision: statePlayerSecondary.intimidationCardInHand ? limit(prevState.precision - 6) : limit(prevState.precision - 5),
   }));
 
   if (aciertoDisparo && statePlayerMain.failing === 0)
     setStatePlayerSecondary(prevState => ({
       ...prevState,
-      health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+      health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
     }));
 
   const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
@@ -493,13 +493,13 @@ export function executeCard20(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
     setStatePlayerMain(prevState => ({
       ...prevState,
-      precision: limit(prevState.precision - 4),
+      precision: statePlayerSecondary.intimidationCardInHand ? limit(prevState.precision - 5) : limit(prevState.precision - 4),
     }));
 
     if (aciertoDisparo && statePlayerMain.failing === 0)
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
         bullets: prevState.bulletsChange ? limit(prevState.bullets - 2) : prevState.bullets,
       }));
 
@@ -524,7 +524,7 @@ export function executeCard21(deckOfCards, setDeckOfCards, statePlayerMain, stat
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     }
 
@@ -537,7 +537,7 @@ export function executeCard21(deckOfCards, setDeckOfCards, statePlayerMain, stat
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     }
 
@@ -566,13 +566,13 @@ export function executeCard22(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
     setStatePlayerMain(prevState => ({
       ...prevState,
-      precision: limit(prevState.precision - 4),
+      precision: statePlayerSecondary.intimidationCardInHand ? limit(prevState.precision - 5) : limit(prevState.precision - 4),
     }));
 
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
         precision: limit(prevState.precision - 3),
       }));
     }
@@ -602,9 +602,13 @@ export function executeCard23(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       // EL OBJETIVO DESCARTA 2 CARTAS AL AZAR Y ROBA OTRAS 2
+
+
+
+
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     }
 
@@ -634,7 +638,7 @@ export function executeCard24(deckOfCards, setDeckOfCards, statePlayerMain, stat
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     }
 
@@ -668,7 +672,7 @@ export function executeCard25(deckOfCards, setDeckOfCards, statePlayerMain, stat
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     }
 
@@ -712,10 +716,10 @@ export function executeCard26(deckOfCards, setDeckOfCards, statePlayerMain, stat
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     } else {
-      sendModal('CHOOSE', 1);
+      sendModal('CHOOSE', 1, statePlayerMain.playerNumber);
     }
 
 
@@ -747,7 +751,7 @@ export function executeCard27(deckOfCards, setDeckOfCards, statePlayerMain, stat
     if (aciertoDisparo && statePlayerMain.failing === 0) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
       }));
     }
 
@@ -907,18 +911,25 @@ export function executeCard35(deckOfCards, setDeckOfCards, statePlayerMain, stat
   if (statePlayerMain.bullets === 0) {
     setStatePlayerMain(prevState => ({
       ...prevState,
-      bullets: limit(prevState.bullets + 2),
+      bullets: limit(prevState.bullets + 3),
     }));
 
-    // DESCARTAR CARTA;
-    // ROBAR CARTA;
+    const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
+
+    const newCard = deckOfCards.pop();
+    setDeckOfCards(deckOfCards);
+
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      cards: [...updatedCards, newCard],
+    }));
   }
 
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
-
+//
 export function executeCard36(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
   setStatePlayerMain(prevState => ({
@@ -927,12 +938,13 @@ export function executeCard36(deckOfCards, setDeckOfCards, statePlayerMain, stat
   }));
 
   const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
+
   setStatePlayerMain(prevState => ({
     ...prevState,
-    cards: [updatedCards],
+    cards: [...updatedCards],
   }));
 
-  sendModal('CHOOSE', 3);
+  sendModal('CHOOSE', 3, statePlayerMain.playerNumber);
 
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
@@ -941,6 +953,7 @@ export function executeCard36(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
 // ----------------------------------------- CARTAS DE INTIMIDACIÓN --------------------------------------
 
+//DONE
 export function executeCard37(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
   const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
@@ -951,12 +964,8 @@ export function executeCard37(deckOfCards, setDeckOfCards, statePlayerMain, stat
   setStatePlayerMain(prevState => ({
     ...prevState,
     cards: [...updatedCards, newCard],
-  }));
-
-
-  setStatePlayerMain(prevState => ({
-    ...prevState,
     recievex2damage: true,
+
   }));
 
   setStatePlayerSecondary(prevState => ({
@@ -968,31 +977,35 @@ export function executeCard37(deckOfCards, setDeckOfCards, statePlayerMain, stat
 }
 
 
-
+//DONE
 export function executeCard38(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  setStatePlayerMain(prevState => ({
-    ...prevState,
-    bullets: limit(prevState.bullets - 1),
-    bulletsChange: false,
-    precisionChange: false,
-  }));
+  const prevBullets = statePlayerMain.bullets;
 
-  setStatePlayerSecondary(prevState => ({
-    ...prevState,
-    precision: prevState.precisionChange ? limit(prevState.precision - 3) : prevState.precision,
-  }));
+  if (prevBullets >= 1) {
 
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      bullets: limit(prevState.bullets - 1),
+      bulletsChange: false,
+      precisionChange: false,
+    }));
 
+    setStatePlayerSecondary(prevState => ({
+      ...prevState,
+      precision: prevState.precisionChange ? limit(prevState.precision - 3) : prevState.precision,
+    }));
+
+  }
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
 
-
+//DONE
 export function executeCard39(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
 
-  if ((statePlayerSecondary.cardPlayed >= 10 && statePlayerSecondary.cardPlayed <= 18) || statePlayerSecondary.cardPlayed === 48) {
+  if ((statePlayerSecondary.cardPlayedBefore >= 10 && statePlayerSecondary.cardPlayedBefore <= 18) || statePlayerSecondary.cardPlayedBefore === 48) {
     setStatePlayerMain(prevState => ({
       ...prevState,
       bullets: limit(prevState.bullets + 1),
@@ -1007,7 +1020,7 @@ export function executeCard39(deckOfCards, setDeckOfCards, statePlayerMain, stat
 }
 
 
-
+//DONE
 export function executeCard40(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
   const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
@@ -1040,12 +1053,25 @@ export function executeCard40(deckOfCards, setDeckOfCards, statePlayerMain, stat
 //TODO 
 export function executeCard41(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
+  const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
 
-  // CARTA TOCACOJONES
+  const newCard = deckOfCards.pop();
+  setDeckOfCards(deckOfCards);
+
+  setStatePlayerMain(prevState => ({
+    ...prevState,
+    cards: [...updatedCards, newCard],
+  }));
+
+  setStatePlayerMain(prevState => ({
+    ...prevState,
+    insidious: true,
+  }))
+
 }
 
 
-
+//TODO (EN CUALQUIER MOMENTO CON ALGUN USEEFFECT)
 export function executeCard42(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
 
@@ -1062,20 +1088,20 @@ export function executeCard42(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
   setStatePlayerSecondary(prevState => ({
     ...prevState,
-    precision: prevState.precisionChange ? limit(prevState.precision - 1) : prevState.precision,
+    bullets: prevState.bulletsChange ? limit(prevState.bullets - 1) : prevState.bullets,
   }));
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
-
+//DONE
 export function executeCard43(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  if ((statePlayerMain.cardPlayedBefore >= 10 && statePlayerMain.cardPlayedBefore <= 18)) {
+  if ((statePlayerMain.cardPlayedBefore >= 10 && statePlayerMain.cardPlayedBefore <= 18) || statePlayerMain.cardPlayedBefore === 48) {
     if (statePlayerSecondary.precision >= 4) {
       setStatePlayerSecondary(prevState => ({
         ...prevState,
-        precision: prevState.precisionChange ? limit(prevState.precision - 2) : prevState.precision,
+        precision: prevState.precisionChange ? limit(prevState.precision - 4) : prevState.precision,
       }));
     }
   }
@@ -1084,57 +1110,58 @@ export function executeCard43(deckOfCards, setDeckOfCards, statePlayerMain, stat
 }
 
 
-
+//DONE
 export function executeCard44(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-
-  setStatePlayerMain(prevState => ({
-    ...prevState,
-    bullets: limit(prevState.bullets - 1),
-    bulletsChange: false,
-    precisionChange: false,
-  }));
-
-  setStatePlayerSecondary(prevState => ({
-    ...prevState,
-    precision: prevState.precisionChange ? limit(prevState.precision - 3) : prevState.precision,
-  }));
-
-  if (statePlayerSecondary.health > statePlayerMain.health) {
+  const prevBullets = statePlayerMain.bullets;
+  if (prevBullets >= 1) {
     setStatePlayerMain(prevState => ({
       ...prevState,
-      precision: limit(prevState.precision + 2),
+      bullets: limit(prevState.bullets - 1),
+      bulletsChange: false,
+      precisionChange: false,
     }));
-  }
 
+    setStatePlayerSecondary(prevState => ({
+      ...prevState,
+      precision: prevState.precisionChange ? limit(prevState.precision - 3) : prevState.precision,
+    }));
+
+    if (statePlayerSecondary.health > statePlayerMain.health) {
+      setStatePlayerMain(prevState => ({
+        ...prevState,
+        precision: limit(prevState.precision + 2),
+      }));
+    }
+  }
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
 
-// INTIMIDACION TODO
 export function executeCard45(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  setStatePlayerSecondary(prevState => ({
-    ...prevState,
-    failing: 2,
-  }));
-
-
-
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
-
+//DONE
 export function executeCard46(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
 
   if (statePlayerMain.cardPlayedBefore === 46) {
-    // DESCARTAR CARTA;
-    // ROBAR CARTA;
+
+    const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
+
+    const newCard = deckOfCards.pop();
+    setDeckOfCards(deckOfCards);
+
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      cards: [...updatedCards, newCard],
+    }));
 
     setStatePlayerSecondary(prevState => ({
       ...prevState,
-      bullets: prevState.bulletsChange ? limit(prevState.bullets - 3) : prevState.bullets,
+      bullets: prevState.bulletsChange ? limit(prevState.bullets - 4) : prevState.bullets,
     }));
   }
 
@@ -1144,29 +1171,39 @@ export function executeCard46(deckOfCards, setDeckOfCards, statePlayerMain, stat
 
 
 
-
+//DONE
 export function executeCard47(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  setStatePlayerMain(prevState => ({
-    ...prevState,
-    bullets: limit(prevState.bullets - 1),
-    precisionChange: false,
-    bulletsChange: false,
-  }));
 
-  const aciertoDisparo = disparo(statePlayerMain.precision);
-  if (aciertoDisparo && statePlayerMain.failing === 0) {
-    setStatePlayerSecondary(prevState => ({
+  const prevBullets = statePlayerMain.bullets;
+
+  if (prevBullets >= 1) {
+    setStatePlayerMain(prevState => ({
       ...prevState,
-      health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+      bullets: limit(prevState.bullets - 1),
+      precisionChange: false,
+      bulletsChange: false,
     }));
-  }
 
+    const aciertoDisparo = disparo(statePlayerMain.precision);
+
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      precision: statePlayerSecondary.intimidationCardInHand ? limit(prevState.precision - 4) : limit(prevState.precision - 3),
+    }));
+
+    if (aciertoDisparo && statePlayerMain.failing === 0) {
+      setStatePlayerSecondary(prevState => ({
+        ...prevState,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
+      }));
+    }
+  }
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
-
+//DONE
 export function executeCard48(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
   setStatePlayerMain(prevState => ({
@@ -1175,55 +1212,88 @@ export function executeCard48(deckOfCards, setDeckOfCards, statePlayerMain, stat
     preventDamage: true,
   }));
 
+  setStatePlayerSecondary(prevState => ({
+    ...prevState,
+    failing: 1,
+
+  }));
   const probabilidadDescarte = Math.random();
+
   if (probabilidadDescarte > 0.5) {
-    //DESCARTAR CARTA FINTA
-    //ROBAR CARTA
-    setStatePlayerMain(prevState => ({
-      ...prevState,
-      bullets: limit(prevState.bullets + 2),
-      preventDamage: true,
-    }));
-  }
+    const cardToDiscardIndex = statePlayerMain.cards.findIndex(card => (card >= 10 && card <= 18) || card === 48);
+
+    if (cardToDiscardIndex !== -1) {
+      const updatedCards = statePlayerMain.cards.filter((_, index) => index !== cardToDiscardIndex);
+
+      const newCard = deckOfCards.pop();
+      setDeckOfCards(deckOfCards);
+
+      setStatePlayerMain(prevState => ({
+        ...prevState,
+        cards: [...updatedCards, newCard],
+        bullets: limit(prevState.bullets + 2),
+      }));
+    }
+  };
+
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
-
+//DONE
 export function executeCard49(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  // DESCARTAR 3 CARTAS;
+
+  const indicesAleatorios = [setStatePlayerMain.cardPlayed];
+  while (indicesAleatorios.length < 2) {
+    const indiceAleatorio = Math.floor(Math.random() * statePlayerMain.cards.length);
+    if (!indicesAleatorios.includes(indiceAleatorio)) {
+      indicesAleatorios.push(indiceAleatorio);
+    }
+  }
+
+  const cartasActualizadas = statePlayerMain.cards.filter((_, index) => !indicesAleatorios.includes(index));
+
   setStatePlayerMain(prevState => ({
     ...prevState,
+    cards: cartasActualizadas,
     health: limitHealth(prevState.health + 1),
   }));
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
+
+//DONE
 export function executeCard50(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
-  setStatePlayerMain(prevState => ({
-    ...prevState,
-    bullets: limit(prevState.bullets - 2),
-  }));
+  const prevBullets = statePlayerMain.bullets;
 
-  const aciertoDisparo = disparo(statePlayerMain.precision);
-
-  setStatePlayerMain(prevState => ({
-    ...prevState,
-    precision: limit(prevState.precision - 3),
-  }));
-  if (aciertoDisparo && statePlayerMain.failing === 0) {
-    setStatePlayerSecondary(prevState => ({
+  if (prevBullets >= 2) {
+    setStatePlayerMain(prevState => ({
       ...prevState,
-      health: !prevState.preventDamage ? limitHealth(prevState.health - 1) : prevState.health,
+      bullets: limit(prevState.bullets - 2),
     }));
+
+    const aciertoDisparo = disparo(statePlayerMain.precision);
 
     setStatePlayerMain(prevState => ({
       ...prevState,
-      precision: limit(prevState.precision + 3),
+      precision: statePlayerSecondary.intimidationCardInHand ? limit(prevState.precision - 4) : limit(prevState.precision - 3),
     }));
+
+    if (aciertoDisparo && statePlayerMain.failing === 0) {
+      setStatePlayerSecondary(prevState => ({
+        ...prevState,
+        health: !prevState.preventDamage ? (prevState.recievex2damage ? limitHealth(prevState.health - 2) : limitHealth(prevState.health - 1)) : prevState.health,
+      }));
+    } else {
+      setStatePlayerMain(prevState => ({
+        ...prevState,
+        precision: limit(prevState.precision + 3),
+      }));
+    }
+
   }
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };

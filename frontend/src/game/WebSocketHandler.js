@@ -24,28 +24,28 @@ const WebSocketHandler = ({
 
 
 
-useEffect(() => {
-    if (tempCardPlayed !== null) {
-        if (playerNumber === 0) {
-            setStatePlayer1(prevState => ({
-                ...prevState,
-                cardPlayedBefore: prevState.cardPlayed,
-                cardPlayed: tempCardPlayed,
-                precisionBefore: prevState.precision,
-            }));
-        } else {
-            setStatePlayer0(prevState => ({
-                ...prevState,
-                cardPlayedBefore: prevState.cardPlayed,
-                cardPlayed: tempCardPlayed,
-                precisionBefore: prevState.precision,
-            }));
+    useEffect(() => {
+        if (tempCardPlayed !== null) {
+            if (playerNumber === 0) {
+                setStatePlayer1(prevState => ({
+                    ...prevState,
+                    cardPlayedBefore: prevState.cardPlayed,
+                    cardPlayed: tempCardPlayed,
+                    precisionBefore: prevState.precision,
+                }));
+            } else {
+                setStatePlayer0(prevState => ({
+                    ...prevState,
+                    cardPlayedBefore: prevState.cardPlayed,
+                    cardPlayed: tempCardPlayed,
+                    precisionBefore: prevState.precision,
+                }));
+            }
+            setShowCards(false);
+            setWaiting(true);
+            setTempCardPlayed(null);
         }
-        setShowCards(false);
-        setWaiting(true);
-        setTempCardPlayed(null);
-    }
-}, [tempCardPlayed, playerNumber]);
+    }, [tempCardPlayed, playerNumber]);
 
     useEffect(() => {
         const handleAssignPlayers = async () => {
@@ -99,19 +99,19 @@ useEffect(() => {
                     case 'READY':
                         setReceived(true);
                         break;
-                        case 'PLAYEDCARD':
-                            if (playerNumber === 0 && body.playedCard1 !== -1) {
-                                setTempCardPlayed(body.playedCard1);
-                            }
-                            if (playerNumber === 1 && body.playedCard0 !== -1) {
-                                setTempCardPlayed(body.playedCard0);
-                            }
-                            break;
+                    case 'PLAYEDCARD':
+                        if (playerNumber === 0 && body.playedCard1 !== -1) {
+                            setTempCardPlayed(body.playedCard1);
+                        }
+                        if (playerNumber === 1 && body.playedCard0 !== -1) {
+                            setTempCardPlayed(body.playedCard0);
+                        }
+                        break;
                     case 'CHOOSE':
-                        if (body.cardPlayed0 > 0 && playerNumber === 0) {
-                            setChooseCard(body.cardPlayed0);
-                        } else if (body.cardPlayed1 > 0 && playerNumber === 1) {
-                            setChooseCard(body.cardPlayed1);
+                        if (body.playedCard0 > 0 && playerNumber === 0) {
+                            setChooseCard(body.playedCard0);
+                        } else if (body.playedCard1 > 0 && playerNumber === 1) {
+                            setChooseCard(body.playedCard1);
                         }
                         break;
                     default:
