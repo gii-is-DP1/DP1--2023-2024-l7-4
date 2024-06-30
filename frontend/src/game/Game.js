@@ -26,7 +26,7 @@ const WebSocketComponent = () => {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
     const [showCards, setShowCards] = useState(false);
     const [showEndModal, setShowEndModal] = useState(false);
-    const [endAction, setEndAction] = useState(false);
+    const [chooseCard, setChooseCard] = useState(0);
 
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
@@ -132,7 +132,7 @@ const WebSocketComponent = () => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played && !updatePlayers) {
             setShowCards(true);
             if (playerNumber === 0) {
-                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, setEndAction, null);
+                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, handleSendDeckMessage);
             }
             setWaiting(false);
             setPlayed(false);
@@ -149,6 +149,7 @@ const WebSocketComponent = () => {
                 const timeout = setTimeout(() => {
                     handleSendPlayerUpdate(0, statePlayer0);
                     handleSendPlayerUpdate(1, statePlayer1);
+                    handleSendDeckMessage('DECKS')
                     setUpdatePlayers(false);
                 }, 0);
 
@@ -160,15 +161,7 @@ const WebSocketComponent = () => {
     }, [statePlayer0, statePlayer1]);
 
 
-    //Mandar los cambios al jugador 1 de las cartas
-    useEffect(() => {
-        if (endAction) {
-            if (playerNumber === 0) {
-                handleSendDeckMessage('DECKS')
-                setEndAction(false);
-            }
-        }
-    }, [endAction]);
+
 
     //Accionar el final de partida
     useEffect(() => {
@@ -296,6 +289,13 @@ const WebSocketComponent = () => {
                 playedCard0: -1,
                 playedCard1: -1,
             }));
+        } else if (type === 'CHOOSE') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: 'CHOOSE',
+                playedCard0: playerNumber === 0 ? cardNumber : -1,
+                playedCard1: playerNumber === 1 ? cardNumber : -1,
+
+            }));
         }
     };
 
@@ -360,6 +360,27 @@ const WebSocketComponent = () => {
         });
     };
 
+
+    const handlePickCard = (chosenCard) => {
+        if (playerNumber === 0) {
+            setStatePlayer0(prevState => ({
+                ...prevState,
+                cards: [...prevState.cards, chosenCard]
+            }));
+        } else {
+            setStatePlayer1(prevState => ({
+                ...prevState,
+                cards: [...prevState.cards, chosenCard]
+            }));
+        }
+    };
+
+    const handleDiscardRemaining = (remainingCards) => {
+        setDeckOfCards(remainingCards);
+        setChooseCard(0);
+    };
+
+
     const handleMouseEnter = (imgSrc) => {
         setRightButtonImg(imgSrc);
     };
@@ -380,6 +401,7 @@ const WebSocketComponent = () => {
                 setShowCards={setShowCards}
                 setWaiting={setWaiting}
                 setStompClient={setStompClient}
+                setChooseCard={setChooseCard}
             />
             <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
             {playerNumber === 0 ?
@@ -421,6 +443,10 @@ const WebSocketComponent = () => {
                 handleDiscardConfirmed={handleDiscardConfirmed}
                 showEndModal={showEndModal}
                 handleGoToLobby={handleGoToLobby}
+                chooseCard={chooseCard}
+                deckOfCards={deckOfCards}
+                handlePickCard={handlePickCard}
+                handleDiscardRemaining={handleDiscardRemaining}
             />
         </div>
     );

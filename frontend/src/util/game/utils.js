@@ -66,7 +66,7 @@ export function steal(deck) {
 }
 
 
-export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, setEndAction, sendModal) => {
+export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal) => {
     const card0 = statePlayer0.cardPlayed;
     const card1 = statePlayer1.cardPlayed;
 
@@ -97,7 +97,6 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
         handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
     }
 
-    setEndAction(true);
 };
 
 const handleActionSingleCard = (card, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, deckOfCards, setDeckOfCards, sendModal) => {

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
 import DiscardCardsModalContent from '../modals/DiscardCardsModalContent';
+import ChooseCardModal from '../modals/ChosenCardModal';
 
 const GameModals = ({
     showConfirmationModal,
@@ -15,6 +16,10 @@ const GameModals = ({
     handleDiscardConfirmed,
     showEndModal,
     handleGoToLobby,
+    chooseCard,
+    deckOfCards,
+    handlePickCard,
+    handleDiscardRemaining
 }) => {
     return (
         <>
@@ -59,6 +64,13 @@ const GameModals = ({
                     <Button color="danger" onClick={handleGoToLobby}>Go to lobby</Button>
                 </ModalFooter>
             </Modal>
+            <ChooseCardModal
+                isOpen={chooseCard !== 0}
+                deckOfCards={deckOfCards}
+                chooseCard={chooseCard}
+                handlePickCard={handlePickCard}
+                handleDiscardRemaining={handleDiscardRemaining}
+            />
         </>
     );
 };

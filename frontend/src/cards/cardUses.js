@@ -21,6 +21,7 @@ async function disparo(precision) {
 //TODO
 export function executeCard51(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
   const numeroAleatorio = Math.random();
+
   if (numeroAleatorio < 0.5) {
     setStatePlayerMain(prevState => ({
       ...prevState,
@@ -33,7 +34,8 @@ export function executeCard51(deckOfCards, setDeckOfCards, statePlayerMain, stat
       bullets: limit(prevState.bullets + 1),
     }));
   }
-  sendModal = 'MiradaFijaDescarte'
+
+  sendModal('DISCARDANDSTEAL');
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
@@ -50,11 +52,7 @@ export function executeCard1(deckOfCards, setDeckOfCards, statePlayerMain, state
 
     setStatePlayerMain(prevState => ({
       ...prevState,
-      preventDamage: true
-    }));
-
-    setStatePlayerMain(prevState => ({
-      ...prevState,
+      preventDamage: true,
       bullets: limit(prevState.bullets - 2),
     }));
 
@@ -70,13 +68,33 @@ export function executeCard1(deckOfCards, setDeckOfCards, statePlayerMain, state
 
 //TODO
 export function executeCard2(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
+
   const precisionPlayerSecondary = statePlayerSecondary.precision;
 
-  setStatePlayerMain(prevState => ({
-    ...prevState,
-    precision: precisionPlayerSecondary
-  }));
+  const prob = Math.random();
 
+  if (prob < 0.5) {
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      precision: limit(prevState.precision + 2),
+    }));
+  } else {
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      precision: precisionPlayerSecondary,
+    }));
+
+    const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
+
+    const newCard = deckOfCards.pop();
+    setDeckOfCards(deckOfCards);
+
+    setStatePlayerMain(prevState => ({
+      ...prevState,
+      cards: [...updatedCards, newCard],
+    }));
+
+  }
 
   const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
 
@@ -91,7 +109,7 @@ export function executeCard2(deckOfCards, setDeckOfCards, statePlayerMain, state
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
-//TODO
+
 export function executeCard3(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
   setStatePlayerMain(prevState => ({
@@ -99,8 +117,15 @@ export function executeCard3(deckOfCards, setDeckOfCards, statePlayerMain, state
     precision: limit(prevState.precision + 2),
   }));
 
-  //sendModal sea un json setSendModal({Tipo:"MÁXIMA CONCENTRACIÓN",Discard:true,See3CardsAndSteal:true})
-  sendModal = null
+  const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
+
+  setStatePlayerMain(prevState => ({
+    ...prevState,
+    cards: updatedCards,
+  }));
+
+  sendModal('CHOOSE', 3);
+
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }
 
@@ -418,7 +443,7 @@ export function executeCard18(deckOfCards, setDeckOfCards, statePlayerMain, stat
 // ------------------------------------------- FUNCIONES CARTAS DISPARO (COMPROBAR BALAS EN TODAS Y SI FALLA) -------------------
 
 
-// TODO: VER CARTA ENTERA
+
 export function executeCard19(deckOfCards, setDeckOfCards, statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal) {
 
   const aciertoDisparo = disparo(statePlayerMain.precision);
@@ -687,7 +712,7 @@ export function executeCard26(deckOfCards, setDeckOfCards, statePlayerMain, stat
         health: limitHealth(prevState.health - 1),
       }));
     } else {
-      // DESCARTAR Y ROBAR (RIVAL)
+      sendModal('CHOOSE', 1);
     }
 
 
@@ -881,6 +906,7 @@ export function executeCard35(deckOfCards, setDeckOfCards, statePlayerMain, stat
       ...prevState,
       bullets: limit(prevState.bullets + 2),
     }));
+
     // DESCARTAR CARTA;
     // ROBAR CARTA;
   }
@@ -897,8 +923,14 @@ export function executeCard36(deckOfCards, setDeckOfCards, statePlayerMain, stat
     bullets: limit(prevState.bullets + 1),
   }));
 
-  // DESCARTAR CARTA;
-  // ROBAR CARTA DE ENTRE 3;
+  const updatedCards = statePlayerMain.cards.filter((card) => card !== statePlayerMain.cardPlayed);
+  setStatePlayerMain(prevState => ({
+    ...prevState,
+    cards: [updatedCards],
+  }));
+
+  sendModal('CHOOSE', 3);
+
 
   return { statePlayerMain, statePlayerSecondary, setStatePlayerMain, setStatePlayerSecondary, sendModal };
 }

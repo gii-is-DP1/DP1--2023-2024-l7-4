@@ -15,7 +15,8 @@ const WebSocketHandler = ({
     setReceived,
     setShowCards,
     setWaiting,
-    setStompClient
+    setStompClient,
+    setChooseCard,
 }) => {
 
     useEffect(() => {
@@ -94,6 +95,13 @@ const WebSocketHandler = ({
                             });
                             setShowCards(false);
                             setWaiting(true);
+                        }
+                        break;
+                    case 'CHOOSE':
+                        if (body.cardPlayed0 > 0 && playerNumber === 0) {
+                            setChooseCard(body.cardPlayed0);
+                        } else if (body.cardPlayed1 > 0 && playerNumber === 1) {
+                            setChooseCard(body.cardPlayed1);
                         }
                         break;
                     default:
