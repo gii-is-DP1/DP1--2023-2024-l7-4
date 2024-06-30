@@ -11,6 +11,8 @@ const ChooseCardModal = ({ isOpen, deckOfCards = [], chooseCard = 3, handleSendD
         if (readyToDiscard) {
             handleDiscardRemaining(remainingCards);
             setReadyToDiscard(false);
+            setRemainingCards([]);
+            
         }
     }, [readyToDiscard, remainingCards]);
 
