@@ -81,6 +81,8 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
         bulletsChange: true,
         intimidationCardInHand: prevState.cards.includes(45),
         failing: prevState.failing > 0 ? prevState.failing - 1 : prevState.failing,
+        winPrecision: prevState.winPrecision > 0 ? prevState.winPrecision - 1 : prevState.winPrecision,
+
     }));
 
     setStatePlayer1(prevState => ({
@@ -90,6 +92,8 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
         bulletsChange: true,
         intimidationCardInHand: prevState.cards.includes(45),
         failing: prevState.failing > 0 ? prevState.failing - 1 : prevState.failing,
+        winPrecision: prevState.winPrecision > 0 ? prevState.winPrecision - 1 : prevState.winPrecision,
+
     }));
 
     const executeActionsInOrder = (cardFirst, cardSecond, stateFirst, stateSecond, setStateFirst, setStateSecond) => {

@@ -37,6 +37,7 @@ const WebSocketComponent = () => {
         precision: 2,
         precisionBefore: null,
         precisionChange: true,
+        winPrecision: null,
         cards: [],
         cardPlayed: null,
         preventDamage: false,
