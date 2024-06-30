@@ -27,6 +27,8 @@ const WebSocketComponent = () => {
     const [showCards, setShowCards] = useState(false);
     const [showEndModal, setShowEndModal] = useState(false);
     const [chooseCard, setChooseCard] = useState(0);
+    const [tempCardPlayed, setTempCardPlayed] = useState(0);
+
 
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
@@ -183,18 +185,28 @@ const WebSocketComponent = () => {
         }
     }, [statePlayer0.cards, statePlayer1.cards, received, discardedCards, readyForDiscard]);
 
-    const handleActionConfirmed = () => {
+    const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
         setShowCards(false);
         if (waiting) {
             switch (playerNumber) {
                 case 0:
+                    await setStatePlayer0(prevState => ({
+                        ...prevState,
+                        cardPlayedBefore: prevState.cardPlayed,
+                        precisionBefore: prevState.precision,
+                    }));
                     setStatePlayer0(prevState => ({
                         ...prevState,
                         cardPlayed: -1,
                     }));
                     break;
                 case 1:
+                    await setStatePlayer1(prevState => ({
+                        ...prevState,
+                        cardPlayedBefore: prevState.cardPlayed,
+                        precisionBefore: prevState.precision,
+                    }));
                     setStatePlayer1(prevState => ({
                         ...prevState,
                         cardPlayed: -1,
@@ -204,9 +216,19 @@ const WebSocketComponent = () => {
                     break;
             }
         } else {
+            await setStatePlayer0(prevState => ({
+                ...prevState,
+                cardPlayedBefore: prevState.cardPlayed,
+                precisionBefore: prevState.precision,
+            }));
             setStatePlayer0(prevState => ({
                 ...prevState,
                 cardPlayed: -1,
+            }));
+            await setStatePlayer1(prevState => ({
+                ...prevState,
+                cardPlayedBefore: prevState.cardPlayed,
+                precisionBefore: prevState.precision,
             }));
             setStatePlayer1(prevState => ({
                 ...prevState,
@@ -237,6 +259,7 @@ const WebSocketComponent = () => {
             await setStatePlayer0((prevState) => ({
                 ...prevState,
                 cardPlayed: card,
+                precisionBefore: prevState.precision,
             }));
             handleSendDeckMessage('PLAYEDCARD', card);
             setPlayed(true);
@@ -246,6 +269,7 @@ const WebSocketComponent = () => {
             await setStatePlayer1((prevState) => ({
                 ...prevState,
                 cardPlayed: card,
+                precisionBefore: prevState.precision,
             }));
             handleSendDeckMessage('PLAYEDCARD', card);
             setPlayed(true);
@@ -402,6 +426,8 @@ const WebSocketComponent = () => {
                 setWaiting={setWaiting}
                 setStompClient={setStompClient}
                 setChooseCard={setChooseCard}
+                tempCardPlayed={tempCardPlayed}
+                setTempCardPlayed={setTempCardPlayed}
             />
             <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
             {playerNumber === 0 ?

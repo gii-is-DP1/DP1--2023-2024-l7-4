@@ -17,7 +17,35 @@ const WebSocketHandler = ({
     setWaiting,
     setStompClient,
     setChooseCard,
+    tempCardPlayed,
+    setTempCardPlayed
 }) => {
+
+
+
+
+useEffect(() => {
+    if (tempCardPlayed !== null) {
+        if (playerNumber === 0) {
+            setStatePlayer1(prevState => ({
+                ...prevState,
+                cardPlayedBefore: prevState.cardPlayed,
+                cardPlayed: tempCardPlayed,
+                precisionBefore: prevState.precision,
+            }));
+        } else {
+            setStatePlayer0(prevState => ({
+                ...prevState,
+                cardPlayedBefore: prevState.cardPlayed,
+                cardPlayed: tempCardPlayed,
+                precisionBefore: prevState.precision,
+            }));
+        }
+        setShowCards(false);
+        setWaiting(true);
+        setTempCardPlayed(null);
+    }
+}, [tempCardPlayed, playerNumber]);
 
     useEffect(() => {
         const handleAssignPlayers = async () => {
@@ -71,32 +99,14 @@ const WebSocketHandler = ({
                     case 'READY':
                         setReceived(true);
                         break;
-                    case 'PLAYEDCARD':
-                        if (playerNumber === 0 && body.playedCard1 !== -1) {
-                            setStatePlayer1(prevState => {
-                                return {
-                                    ...prevState,
-                                    cardPlayedBefore: prevState.cardPlayed,
-                                    cardPlayed: body.playedCard1,
-                                    precisionBefore: prevState.precision,
-                                };
-                            });
-                            setShowCards(false);
-                            setWaiting(true);
-                        }
-                        if (playerNumber === 1 && body.playedCard0 !== -1) {
-                            setStatePlayer0(prevState => {
-                                return {
-                                    ...prevState,
-                                    cardPlayedBefore: prevState.cardPlayed,
-                                    cardPlayed: body.playedCard0,
-                                    precisionBefore: prevState.precision,
-                                };
-                            });
-                            setShowCards(false);
-                            setWaiting(true);
-                        }
-                        break;
+                        case 'PLAYEDCARD':
+                            if (playerNumber === 0 && body.playedCard1 !== -1) {
+                                setTempCardPlayed(body.playedCard1);
+                            }
+                            if (playerNumber === 1 && body.playedCard0 !== -1) {
+                                setTempCardPlayed(body.playedCard0);
+                            }
+                            break;
                     case 'CHOOSE':
                         if (body.cardPlayed0 > 0 && playerNumber === 0) {
                             setChooseCard(body.cardPlayed0);

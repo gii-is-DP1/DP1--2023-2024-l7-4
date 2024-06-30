@@ -24,9 +24,8 @@ const GameModals = ({
     return (
         <>
             <Modal isOpen={showConfirmationModal}>
-                <ModalHeader>Acciones realizadas</ModalHeader>
+                <ModalHeader>Next turn</ModalHeader>
                 <ModalBody>
-                    Confirm move
                 </ModalBody>
                 <ModalFooter>
                     <Button color="danger" onClick={handleActionConfirmed}>Confirm</Button>

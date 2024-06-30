@@ -70,6 +70,10 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
     const card0 = statePlayer0.cardPlayed;
     const card1 = statePlayer1.cardPlayed;
 
+    console.log('cardPlayedbefore0', statePlayer0.cardPlayedBefore);
+    console.log('cardPlayed0', statePlayer0.cardPlayed);
+
+
     setStatePlayer0(prevState => ({
         ...prevState,
         recievex2damage: false,
@@ -92,6 +96,15 @@ export const handleActionCard = (statePlayer0, statePlayer1, setStatePlayer0, se
     if (statePlayer0.bullets > statePlayer1.bullets) {
         handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
         handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
+    } else if (statePlayer0.bullets === statePlayer1.bullets) {
+        const random = Math.random();
+        if (random < 0.5) {
+            handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
+            handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
+        } else {
+            handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
+            handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
+        }
     } else {
         handleActionSingleCard(card1, statePlayer1, statePlayer0, setStatePlayer1, setStatePlayer0, deckOfCards, setDeckOfCards, sendModal);
         handleActionSingleCard(card0, statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, sendModal);
