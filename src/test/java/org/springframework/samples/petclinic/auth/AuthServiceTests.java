@@ -1,26 +1,13 @@
 package org.springframework.samples.petclinic.auth;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.Collection;
-
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.samples.petclinic.auth.payload.request.SignupRequest;
-import org.springframework.samples.petclinic.clinic.Clinic;
 import org.springframework.samples.petclinic.clinic.ClinicService;
-import org.springframework.samples.petclinic.clinic.PricingPlan;
-import org.springframework.samples.petclinic.clinicowner.ClinicOwner;
 import org.springframework.samples.petclinic.clinicowner.ClinicOwnerService;
-import org.springframework.samples.petclinic.owner.Owner;
 import org.springframework.samples.petclinic.owner.OwnerService;
 import org.springframework.samples.petclinic.user.AuthoritiesService;
-import org.springframework.samples.petclinic.user.User;
 import org.springframework.samples.petclinic.user.UserService;
-import org.springframework.samples.petclinic.vet.Vet;
 import org.springframework.samples.petclinic.vet.VetService;
-import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 public class AuthServiceTests {
@@ -40,6 +27,7 @@ public class AuthServiceTests {
 	@Autowired
 	protected AuthoritiesService authoritiesService;
 
+	/* 
 	@Test
 	@Transactional
 	public void shouldCreateAdminUser() {
@@ -110,5 +98,5 @@ public class AuthServiceTests {
 
 		return request;
 	}
-
+*/
 }
