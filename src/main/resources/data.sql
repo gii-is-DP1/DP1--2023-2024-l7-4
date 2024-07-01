@@ -24,6 +24,18 @@ INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES
 INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
 (9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com');
 
+INSERT INTO matches (id, name, match_state, winner) VALUES (1, 'Match 1', 'IN_PROGRESS', null);
+INSERT INTO matches (id, name, match_state, winner) VALUES (2, 'Match 2', 'CLOSED', null);
+INSERT INTO matches (id, name, match_state, winner) VALUES (3, 'Match 3', 'OPEN', null);
+
+
+INSERT INTO joined_players (match_id, player) VALUES (1, 'Player1');
+INSERT INTO joined_players (match_id, player) VALUES (1, 'Player2');
+INSERT INTO joined_players (match_id, player) VALUES (2, 'Player1');
+INSERT INTO joined_players (match_id, player) VALUES (2, 'Player2');
+INSERT INTO joined_players (match_id, player) VALUES (3, 'Player1');
+INSERT INTO joined_players (match_id, player) VALUES (3, 'Player2');
+
 INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (1, 'POSE DEFENSIVA', 'Ganas un punto de precision, Puedes gastar 2 balas para prevenenir daño que se te fuera hacer este turno', 5, 'AIM', 2, 1, 'false');
 INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (2, 'MAL DE OJO', 'Elige una al final del turno: • Ganas 2 puntos de precisión. • Descarta esta carta y roba otra. Iguala tus puntos de precisión a los de tu rival.', 6, 'AIM', 0, 2, 'true');
 INSERT INTO cards(id,name, action,power,category,bullet,accuracy,discart) VALUES (3, 'MAXIMA CONCENTRACION', 'Ganas 2 puntos de precisión. Descarta esta carta y mira las 3 primeras cartas del mazo. Pon 1 en tu mano y descarta el resto.', 4, 'AIM', 0, 2, 'true');
