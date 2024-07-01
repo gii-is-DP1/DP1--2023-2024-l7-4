@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.match;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -12,6 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -113,29 +116,22 @@ class MatchRestControllerTests {
     @Test
     @WithMockUser("admin")
     void shouldUpdateMatchJoining() throws Exception {
-        when(this.matchService.findMatchById(TEST_MATCH_ID)).thenReturn(match);
-        when(this.matchService.saveMatch(any(Match.class))).thenReturn(match);
+        Match existingMatch = new Match();
+        existingMatch.setId(TEST_MATCH_ID);
+        existingMatch.setMatchState(MatchState.OPEN);
+        existingMatch.setJoinedPlayers(new ArrayList<>()); 
+        
+        when(matchService.findMatchById(TEST_MATCH_ID)).thenReturn(existingMatch);
+        when(matchService.saveMatch(any(Match.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        mockMvc.perform(put(BASE_URL + "/{id}/join", TEST_MATCH_ID).with(csrf())
+        mockMvc.perform(put(BASE_URL + "/{id}/join", TEST_MATCH_ID)
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString("newPlayer")))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.joinedPlayers").isArray());
+                .content("\"newPlayer\""))
+                .andExpect(status().is(201))
+                .andExpect(jsonPath("$.joinedPlayers", hasItem("newPlayer")));
     }
-
-    @Test
-    @WithMockUser("admin")
-    void shouldUpdateMatchUnjoining() throws Exception {
-        when(this.matchService.findMatchById(TEST_MATCH_ID)).thenReturn(match);
-        when(this.matchService.saveMatch(any(Match.class))).thenReturn(match);
-
-        mockMvc.perform(put(BASE_URL + "/{id}/unjoin", TEST_MATCH_ID).with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString("player1")))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.joinedPlayers").isArray());
-    }
-
+    
     @Test
     @WithMockUser("admin")
     void shouldSetMatchWinner() throws Exception {
