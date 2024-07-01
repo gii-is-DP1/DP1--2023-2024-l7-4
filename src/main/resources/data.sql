@@ -26,7 +26,7 @@ INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES
 
 INSERT INTO matches (id, name, match_state, winner) VALUES (1, 'Match 1', 'IN_PROGRESS', null);
 INSERT INTO matches (id, name, match_state, winner) VALUES (2, 'Match 2', 'CLOSED', null);
-INSERT INTO matches (id, name, match_state, winner) VALUES (3, 'Match 3', 'OPEN', null);
+INSERT INTO matches (id, name, match_state, winner) VALUES (3, 'DO_NOT_ENTRY', 'OPEN', null);
 
 
 INSERT INTO joined_players (match_id, player) VALUES (1, 'Player1');
