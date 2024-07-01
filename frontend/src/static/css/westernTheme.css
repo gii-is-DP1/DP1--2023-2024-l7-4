@@ -1,0 +1,125 @@
+body {
+    font-family: 'Cedarville Cursive', cursive;
+    background-color: #f8f4e3;  
+    color: #4d2e0a;
+}
+
+.hero-div {
+    background-color: rgba(210, 180, 140, 0.618);
+    border: 5px solid #8b4513;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.hero-div h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px #8b4513;
+}
+
+.hero-div h3 {
+    font-size: 1.5rem;
+    text-shadow: 1px 1px #8b4513;
+}
+
+
+.button-container {
+    background-color: #8b4513;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 10px 5px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.table-western {
+    background-color: #d2b48c; /* Color de fondo estilo western */
+    border: 5px solid #8b4513; /* Borde de la tabla */
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra */
+    margin-top: 20px; /* Margen superior */
+}
+
+/* Estilos para las celdas */
+.table-western th, .table-western td {
+    text-align: center; /* Alineación del texto */
+    padding: 10px; /* Espaciado interno */
+    border: none; /* Sin bordes en las celdas */
+}
+
+/* Estilos para los encabezados */
+.table-western th {
+    background-color: #8b4513; /* Color de fondo para los encabezados */
+    color: white; /* Color del texto */
+}
+
+.button-container:hover {
+    transform: scale(1.1); /* Ajusta el factor de escala según sea necesario */
+}
+
+.button-container a {
+    text-decoration: none;
+}
+
+.button-container .btn {
+    background-color: #8b4513;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 1rem;
+    margin: 10px 5px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.button-container .btn:hover {
+    background-color: #5c3317;
+    color: white;
+}
+
+
+.image-button {
+    background-size: cover;
+    background-position: center;
+    color: white; /* Cambia esto según sea necesario */
+    text-decoration: none;
+    border: none;
+    padding: 10px 20px; /* Ajusta el padding según sea necesario */
+    font-size: 16px; /* Ajusta el tamaño de la fuente según sea necesario */
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+}
+
+.image-button:hover {
+    opacity: 0.8; /* Efecto hover, ajusta según sea necesario */
+}
+
+.transparent-navbar {
+    background-color: transparent !important;
+  }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  
+.pagination Button {
+    margin: 0 5px;
+  }
