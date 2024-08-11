@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Form, Input, Label, FormGroup } from "reactstrap";
 import tokenService from "../../services/token.service";
@@ -14,14 +14,15 @@ const jwt = tokenService.getLocalAccessToken();
 export default function PlayerEditAdmin() {
   const emptyItem = {
     id: null,
-    nickname:"",
+    nickname: "",
     username: "",
     password: "",
-    authority: null,
+    authority: "PLAYER",
   };
   const id = getIdFromUrl(2);
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const [isSuccessful, setIsSuccessful] = useState(false);
   const [player, setPlayer] = useFetchState(
     emptyItem,
     `/api/v1/players/${id}`,
@@ -30,28 +31,34 @@ export default function PlayerEditAdmin() {
     setVisible,
     id
   );
-  const auths = useFetchData(`/api/v1/users/authorities`, jwt);
+
+
+
+  useEffect(() => {
+    if (!visible && isSuccessful) {
+      window.location.href = "/players";
+    }
+  }, [visible, isSuccessful]);
+
 
   function handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-    if (name === "authority") {
-      const auth = auths.find((a) => a.id === Number(value));
-      setPlayer({ ...player, authority: auth });
-    } else setPlayer({ ...player, [name]: value });
+    setPlayer({ ...player, [name]: value });
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    fetch("/api/v1/players" + (player.id ? "/" + player.id : ""), {
+    fetch(player.id ? "/api/v1/players/" + player.id : "/api/v1/auth/signup", {
       method: player.id ? "PUT" : "POST",
-      headers: {
+      headers: player.id ? {
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         "Content-Type": "application/json",
-      },
+      } : { "Content-Type": "application/json" }
+      ,
       body: JSON.stringify(player),
     })
       .then((response) => response.json())
@@ -59,92 +66,56 @@ export default function PlayerEditAdmin() {
         if (json.message) {
           setMessage(json.message);
           setVisible(true);
-        } else window.location.href = "/players";
+          setIsSuccessful(true);
+        } else {
+          window.location.href = "/players";
+        }
       })
       .catch((message) => alert(message));
   }
 
   const modal = getErrorModal(setVisible, visible, message);
-  const authOptions = auths.map((auth) => (
-    <option key={auth.id} value={auth.id}>
-      {auth.authority}
-    </option>
-  ));
 
   return (
     <div className="auth-page-container2">
       <div className="hero-div">
-      {<h2>{player.id ? "Edit Player" : "Add Player"}</h2>}
-      {modal}
-      <Form onSubmit={handleSubmit} className='auth-form-container2'>
-        <FormGroup>
-          <Label for="name">Name</Label>
-          <Input type="text" required name="name" id="name" value={player.name || ""}
-            onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="surname">Surname</Label>
-          <Input type="text" required name="surname" id="surname" value={player.surname || ""}
-            onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="avatar">Avatar</Label>
+        {<h2>{player.id ? "Edit Player" : "Add Player"}</h2>}
+        {modal}
+        <Form onSubmit={handleSubmit} className='auth-form-container2'>
+          <FormGroup>
+            <Label for="name">Name</Label>
+            <Input type="text" required name="name" id="name" value={player.name || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="surname">Surname</Label>
+            <Input type="text" required name="surname" id="surname" value={player.surname || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="avatar">Avatar</Label>
             <Input type="text" required name="avatar" id="avatar" value={player.avatar || ""}
               onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="nickname">Nickname</Label>
+          </FormGroup>
+          <FormGroup>
+            <Label for="nickname">Nickname</Label>
             <Input type="text" required name="nickname" id="nickname" value={player.nickname || ""}
               onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="email">Email</Label>
-          <Input type="text" required name="email" id="email" value={player.email || ""}
-            onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="username">Username</Label>
-          <Input type="text" required name="username" id="username" value={player.username || ""}
-            onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="password">Password</Label>
-          <Input type="password" required name="password" id="password" value={player.password || ""}
-            onChange={handleChange} />
-        </FormGroup>
-        <FormGroup>
-          <Label for="authority">
-            Authority
-          </Label>
-          <div className="custom-form-input">
-            {player.id ? (
-              <Input
-                type="select"
-                required
-                name="authority"
-                id="authority"
-                value={player.authority?.id || ""}
-                onChange={handleChange}
-                className="custom-input"
-              >
-                <option value="">None</option>
-                {authOptions}
-              </Input>
-            ) : (
-              <Input
-                type="select"
-                required
-                name="authority"
-                id="authority"
-                value={player.authority?.id || ""}
-                onChange={handleChange}
-                className="custom-input"
-              >
-                <option value="">None</option>
-                {authOptions}
-              </Input>
-            )}
-          </div>
+          </FormGroup>
+          <FormGroup>
+            <Label for="email">Email</Label>
+            <Input type="text" required name="email" id="email" value={player.email || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="username">Username</Label>
+            <Input type="text" required name="username" id="username" value={player.username || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="password">Password</Label>
+            <Input type="password" required name="password" id="password" value={player.password || ""}
+              onChange={handleChange} />
           </FormGroup>
           <div className="custom-button-row">
             <button className="auth-button">Save</button>
