@@ -274,8 +274,6 @@ const handleActionSingleCard = (card, statePlayerMain, statePlayerSecondary, set
 
     };
 
-    //modalAction('')
-
 
 
 
