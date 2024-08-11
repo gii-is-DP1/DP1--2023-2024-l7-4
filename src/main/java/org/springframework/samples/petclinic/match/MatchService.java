@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
+import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,11 +15,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class MatchService {
     
     private MatchRepository matchRepository;
+    private UserRepository userRepository;
 
     @Autowired
     public MatchService(MatchRepository matchRepository){
         this.matchRepository = matchRepository;
-
     }
 
 
@@ -65,5 +66,11 @@ public class MatchService {
 	public void deleteMatches(List<Match> matches) throws DataAccessException {
 		matchRepository.deleteAll(matches);
 	}
+
+    @Transactional(readOnly = true)
+    public Integer countGamesByUsername(Integer u) throws DataAccessException{
+    String username = userRepository.findById(u).get().getUsername();
+    return findMatchsByPlayer(username).size();
+    } 
 
 }
