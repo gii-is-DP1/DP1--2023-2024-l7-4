@@ -1,4 +1,4 @@
-package org.springframework.samples.petclinic.match;
+package org.springframework.samples.petclinic.match.messages;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

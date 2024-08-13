@@ -6,12 +6,16 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class GunfighterController {
-    
 
-    @MessageMapping("/gunfighter")
-    @SendTo("/topic/gunfighter")
-    public Gunfighter infoGunfighter(Gunfighter gunfighter){
-        return new Gunfighter(gunfighter.getHealth(), gunfighter.getPrecision(), gunfighter.getBullets(), gunfighter.getWinPrecision(), gunfighter.isPreventDamage(), gunfighter.getCards(), gunfighter.getCardPlayed());
-    }
-
+    /*
+     * @MessageMapping("/gunfighter")
+     * 
+     * @SendTo("/topic/gunfighter")
+     * public Gunfighter infoGunfighter(Gunfighter gunfighter){
+     * return new Gunfighter(gunfighter.getPlayerNumber(), gunfighter.getHealth(),
+     * gunfighter.getPrecision(), gunfighter.getBullets(),
+     * gunfighter.getWinPrecision(), gunfighter.isPreventDamage(),
+     * gunfighter.getCards(), gunfighter.getCardPlayed());
+     * }
+     */
 }
