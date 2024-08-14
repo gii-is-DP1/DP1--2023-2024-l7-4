@@ -11,7 +11,7 @@ public class Gunfighter {
     
     private Integer health;
     private Integer bullets;
-    private boolean bulletsChange;
+    private Boolean bulletsChange;
     private Integer precision;
     private Integer precisionBefore;
     private Boolean precisionChange;
@@ -19,7 +19,7 @@ public class Gunfighter {
     private List<Integer> cards;
     private Integer cardPlayed;
     private Integer cardPlayedBefore;
-    private boolean preventDamage;
+    private Boolean preventDamage;
     private Integer failing;
     private Boolean recievex2damage;
     private Boolean intimidationCardInHand;
