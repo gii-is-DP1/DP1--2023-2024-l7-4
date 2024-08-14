@@ -82,8 +82,8 @@ public class CardService {
                 // MANDAR ELEGIR 3 CARTAS
 
                 MatchDeckMessage message = new MatchDeckMessage(TypeMessage.CHOOSE, deckOfCards, List.of(), List.of(),
-                                statePlayerMain.getPlayerNumber() == 0 ? statePlayerMain.getCardPlayed() : -1,
-                                statePlayerMain.getPlayerNumber() == 1 ? statePlayerMain.getCardPlayed() : -1);
+                                statePlayerMain.getPlayerNumber() == 0 ? 3 : -1,
+                                statePlayerMain.getPlayerNumber() == 1 ? 3 : -1);
 
                 notificationService.sendMessage("topic/match/" + matchId + "/cards", message);
 
@@ -661,4 +661,205 @@ public class CardService {
         // ------------------------------------- CARTAS DE CINTURON DE ARMAS
         // -------------------------------------------
 
+        @Transactional
+        public void executeCard28(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
+                statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
+                                : CardUtils.limit(statePlayerMain.getPrecision() + 1));
+
+        }
+
+        @Transactional
+        public void executeCard29(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerSecondary.setPrecision(statePlayerSecondary.getPrecisionChange()
+                                ? CardUtils.limit(statePlayerSecondary.getPrecision() - 3)
+                                : statePlayerSecondary.getPrecision());
+                statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
+                                : CardUtils.limit(statePlayerMain.getPrecision() + 1));
+
+        }
+
+        @Transactional
+        public void executeCard30(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
+
+                statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
+                                : CardUtils.limit(statePlayerMain.getPrecision() + 1));
+
+                // TODO: MANDAR MODAL POR SI QUIERE DESCARTAR DOS CARTAS PARA PREVENIR EL DAÑO
+                // Versión preliminar que lo hace de forma aleatoria
+
+                Double random = Math.random();
+                if (random < 0.5) {
+
+                        // DESCARTAR Y ROBAR 2 CARTAS
+
+                        List<Integer> updatedCards;
+                        List<Integer> indicesAleatorios = new ArrayList<>();
+
+                        while (indicesAleatorios.size() < 2) {
+                                Double indiceAleatorio = Math
+                                                .floor(Math.random() * statePlayerSecondary.getCards().size()
+                                                                + 1);
+                                if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
+                                        indicesAleatorios.add(indiceAleatorio.intValue());
+                                }
+                        }
+
+                        updatedCards = statePlayerSecondary.getCards().stream()
+                                        .filter(card -> !indicesAleatorios.contains(
+                                                        statePlayerSecondary.getCards().indexOf(card)))
+                                        .collect(Collectors.toList());
+                        Integer newCard1 = deckOfCards.remove(deckOfCards.size() - 1);
+                        Integer newCard2 = deckOfCards.remove(deckOfCards.size() - 1);
+
+                        updatedCards.add(newCard1);
+                        updatedCards.add(newCard2);
+                        statePlayerSecondary.setCards(updatedCards);
+
+                        statePlayerMain.setCards(updatedCards);
+                        statePlayerMain.setPrecisionChange(false);
+                }
+
+        }
+
+        @Transactional
+        public void executeCard31(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 2));
+                statePlayerMain.setPrecision(CardUtils.limit(statePlayerMain.getPrecision() - 1));
+
+        }
+
+        @Transactional
+        public void executeCard32(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
+                                : CardUtils.limit(statePlayerMain.getPrecision() + 3));
+
+                // DESCARTAR Y ROBAR CARTA
+
+                List<Integer> updatedCards;
+
+                updatedCards = statePlayerMain.getCards().stream().filter(c -> c != statePlayerMain.getCardPlayed())
+                                .collect(Collectors.toList());
+                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                updatedCards.add(newCard);
+                statePlayerMain.setCards(updatedCards);
+
+        }
+
+        @Transactional
+        public void executeCard33(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerSecondary.setBullets(statePlayerSecondary.getBulletsChange()
+                                ? CardUtils.limit(statePlayerSecondary.getPrecision() - 2)
+                                : statePlayerSecondary.getBullets());
+
+                // DESCARTAR Y ROBAR CARTA
+
+                List<Integer> updatedCards;
+
+                updatedCards = statePlayerMain.getCards().stream().filter(c -> c != statePlayerMain.getCardPlayed())
+                                .collect(Collectors.toList());
+                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                updatedCards.add(newCard);
+                statePlayerMain.setCards(updatedCards);
+
+        }
+
+        @Transactional
+        public void executeCard34(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 2));
+
+                // DESCARTAR Y ROBAR CARTA
+
+                List<Integer> updatedCards;
+
+                updatedCards = statePlayerMain.getCards().stream().filter(c -> c != statePlayerMain.getCardPlayed())
+                                .collect(Collectors.toList());
+                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                updatedCards.add(newCard);
+                statePlayerMain.setCards(updatedCards);
+
+        }
+
+        @Transactional
+        public void executeCard35(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                if (statePlayerMain.getBullets() == 0) {
+
+                        statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 3));
+
+                        // DESCARTAR Y ROBAR CARTA
+
+                        List<Integer> updatedCards;
+
+                        updatedCards = statePlayerMain.getCards().stream()
+                                        .filter(c -> c != statePlayerMain.getCardPlayed())
+                                        .collect(Collectors.toList());
+                        Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                        updatedCards.add(newCard);
+                        statePlayerMain.setCards(updatedCards);
+
+                }
+        }
+
+        @Transactional
+        public void executeCard36(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+                statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
+
+                // DESCARTAR Y ROBAR CARTA
+
+                List<Integer> updatedCards;
+
+                updatedCards = statePlayerMain.getCards().stream()
+                                .filter(c -> c != statePlayerMain.getCardPlayed())
+                                .collect(Collectors.toList());
+                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                updatedCards.add(newCard);
+                statePlayerMain.setCards(updatedCards);
+
+                MatchDeckMessage message = new MatchDeckMessage(TypeMessage.CHOOSE, deckOfCards, List.of(), List.of(),
+                                statePlayerMain.getPlayerNumber() == 0 ? 3 : -1,
+                                statePlayerMain.getPlayerNumber() == 1 ? 3 : -1);
+
+                notificationService.sendMessage("topic/match/" + matchId + "/cards", message);
+
+        }
+
+        // ----------------------------------------- CARTAS DE INTIMIDACIÓN
+        // --------------------------------------
+
+
+
+        
 }
