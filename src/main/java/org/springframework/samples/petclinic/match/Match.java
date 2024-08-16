@@ -12,6 +12,8 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -34,6 +36,9 @@ public class Match extends BaseEntity {
     @Column(name = "matchState")
     @Enumerated(EnumType.STRING)
     private MatchState matchState;
+
+    @Column(name="deck")
+    private List<Integer> deck;
 
     @Column
     private String winner;

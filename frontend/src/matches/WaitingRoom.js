@@ -24,7 +24,7 @@ export default function WaitingRoom() {
 
 
 
-    
+
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
@@ -40,7 +40,7 @@ export default function WaitingRoom() {
                     handleUpdateMatch();
                 }
                 else if (body.type === "START") {
-                    window.location.href = (`/game/${id}`);
+                    window.location.href = `/game/${id}`
                 }
             });
             setStompClient(client);
@@ -80,8 +80,8 @@ export default function WaitingRoom() {
                 type: type,
                 message: 'Match Started'
             }));
+        }
     }
-}
 
     async function handleUpdateMatch() {
         try {
@@ -102,21 +102,23 @@ export default function WaitingRoom() {
     }
 
     const handleStartMatch = async () => {
-            try {
-                await fetch(`/api/v1/matches/${id}/start`, {
-                    method: 'PATCH',
-                    headers: {
-                        "Authorization": `Bearer ${jwt}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                }).then(
-               handleSendMessage('START').then(window.location.href = (`/game/${id}`)));
-            } catch (error) {
-                console.error('Error Starting:', error);
+        try {
+            await fetch(`/api/v1/matches/${id}/start`, {
+                method: 'PATCH',
+                headers: {
+                    "Authorization": `Bearer ${jwt}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(
+                handleSendMessage('START')
+            ).then(window.location.href = `/game/${id}`
+            );
+        } catch (error) {
+            console.error('Error Starting:', error);
         }
     }
-        
+
     const handleGoToLobby = async () => {
         if (match.joinedPlayers[0] === username) {
             try {
@@ -207,7 +209,7 @@ export default function WaitingRoom() {
                 </Button>
                 {match.joinedPlayers ? (match.joinedPlayers.length === 2 && match.joinedPlayers[0] === username ? (
                     <Button outline color="primary" onClick={handleStartMatch}>
-                            Start Match
+                        Start Match
                     </Button>
                 ) : waitingMessage) : "Loading.."}
             </div>

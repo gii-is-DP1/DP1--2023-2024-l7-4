@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.match.messages;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,5 +14,5 @@ public class MatchGunfighterMessage {
     private Integer bullets;
     private Integer precision;
     private Integer playerNumber;
-
+    private List<Integer> cards;
 }

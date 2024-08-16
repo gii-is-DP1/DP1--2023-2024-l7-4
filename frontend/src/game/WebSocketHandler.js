@@ -91,14 +91,19 @@ const WebSocketHandler = ({
                             ...prevState,
                             cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
                         }));
-                        if (playerNumber === 1 && body.player1Cards.length === 8) {
-                            setReadyForDiscard(true);
-                            setReceived(true);
-                        }
                         break;
                     case 'READY':
+                        setDeckOfCards(body.deckCards);
+                        setStatePlayer1(prevState => ({
+                            ...prevState,
+                            cards: body.player1Cards.length !== 0 ? body.player1Cards : prevState.cards,
+                        }));
+                        setStatePlayer0(prevState => ({
+                            ...prevState,
+                            cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
+                        }));
+                        setReadyForDiscard(true);
                         setReceived(true);
-                        break;
                     case 'PLAYEDCARD':
                         if (playerNumber === 0 && body.playedCard1 !== -1) {
                             setTempCardPlayed(body.playedCard1);
@@ -128,6 +133,7 @@ const WebSocketHandler = ({
                             health: body.health,
                             bullets: body.bullets,
                             precision: body.precision,
+                            cards: body.cards,
                         }));
                     }
                     if (body.playerNumber === 0) {
@@ -136,6 +142,8 @@ const WebSocketHandler = ({
                             health: body.health,
                             bullets: body.bullets,
                             precision: body.precision,
+                            cards: body.cards,
+
                         }));
                     }
                 }

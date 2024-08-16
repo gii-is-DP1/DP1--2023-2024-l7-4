@@ -82,49 +82,9 @@ const WebSocketComponent = () => {
 
     //UseEffect inicial para hacer reparto de cartas si jugador = 0 o para esperar a recibirlas si jugador = 1
     useEffect(() => {
-        let interval = null;
-        if (stompClient && playerNumber === 0 && received && deckOfCards.length === 50) {
-            console.log(deckOfCards);
-            const cards = initialDeal(deckOfCards);
-            setDeckOfCards(cards[0]);
-            setStatePlayer1(prevState => ({
-                ...prevState,
-                cards: cards[1]
-            }));
-            setStatePlayer0(prevState => ({
-                ...prevState,
-                cards: cards[2]
-            }));
-        }
-        if (playerNumber === 1 && !received && statePlayer1.cards.length === 0) {
-            interval = setInterval(() => {
-                handleSendDeckMessage('READY');
-            }, 1000);
-        }
-        return () => {
-            clearInterval(interval);
-        };
-    }, [playerNumber, stompClient, received, statePlayer1]);
-
-
-    //Mandar cartas cuando jugador 1 esta listo
-    useEffect(() => {
-        if (statePlayer0.cards.length > 0 && statePlayer1.cards.length > 0 && playerNumber === 0 && received) {
-            handleSendDeckMessage('DECKS');
-            setReadyForDiscard(true);
-            setReceived(false);
-        }
-
-        setStatePlayer0(prevState => ({
-            ...prevState,
-            intimidationCardInHand: prevState.cards.includes(45),
-        }));
-
-        setStatePlayer1(prevState => ({
-            ...prevState,
-            intimidationCardInHand: prevState.cards.includes(45),
-        }));
-    }, [statePlayer0.cards, statePlayer1.cards]);
+        if (!received)
+            handleSendDeckMessage('READY');
+    }, [playerNumber, stompClient, statePlayer1]);
 
 
     //Rebarajar las cartas
