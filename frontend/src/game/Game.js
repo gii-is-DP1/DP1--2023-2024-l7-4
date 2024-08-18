@@ -80,11 +80,11 @@ const WebSocketComponent = () => {
     const matchId = getIdFromUrl(2);
 
 
-    //UseEffect inicial para hacer reparto de cartas si jugador = 0 o para esperar a recibirlas si jugador = 1
+    //UseEffect inicial para recibir las cartas
     useEffect(() => {
         if (!received)
             handleSendDeckMessage('READY');
-    }, [playerNumber, stompClient, statePlayer1]);
+    }, [stompClient, received]);
 
 
     //Rebarajar las cartas
@@ -138,17 +138,15 @@ const WebSocketComponent = () => {
     }, [statePlayer0.health, statePlayer1.health])
 
 
-    //UseEffect para enviar las cartas una vez descartadas
     useEffect(() => {
-        if (!readyForDiscard && discardedCards.length === 0 && received) {
+        if (!readyForDiscard && discardedCards.length === 0 && (statePlayer0.cards.length === 6 || statePlayer1.cards.length === 6)) {
             if (playerNumber === 0) {
                 handleSendDeckMessage('CUSTOM', 0);
             } else {
                 handleSendDeckMessage('CUSTOM', 1);
-                setReceived(false);
             }
         }
-    }, [statePlayer0.cards, statePlayer1.cards, received, discardedCards, readyForDiscard]);
+    }, [readyForDiscard]);
 
     const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
@@ -312,6 +310,11 @@ const WebSocketComponent = () => {
         }
     };
 
+    const intimidationCardInHand = (cards) => {
+        if (cards.includes(45)){
+            return true;
+        }
+    }
 
     const handleSetMatchWinner = async () => {
         await fetch(`/api/v1/matches/${matchId}/winner`, {
@@ -376,9 +379,9 @@ const WebSocketComponent = () => {
             <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
             {playerNumber === 0 ?
 
-                (statePlayer1.intimidationCardInHand ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+                (intimidationCardInHand(statePlayer1.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
                 :
-                (statePlayer0.intimidationCardInHand ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+                (intimidationCardInHand(statePlayer0.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
 
             }
             <TopRow />

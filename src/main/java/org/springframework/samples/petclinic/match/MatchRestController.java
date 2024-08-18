@@ -46,7 +46,8 @@ public class MatchRestController {
     private GunfighterService gunfighterService;
 
     @Autowired
-    public MatchRestController(MatchService matchService, GunfighterService gunfighterService, PlayerService playerService) {
+    public MatchRestController(MatchService matchService, GunfighterService gunfighterService,
+            PlayerService playerService) {
         this.matchService = matchService;
         this.gunfighterService = gunfighterService;
         this.playerService = playerService;
@@ -182,14 +183,27 @@ public class MatchRestController {
         Match match = matchService.findMatchById(id);
         Gunfighter gunfighter0 = gunfighterService.findByMatchAndGunfighter(id, 0);
         Gunfighter gunfighter1 = gunfighterService.findByMatchAndGunfighter(id, 1);
+        if (deckMessage.getType() == TypeMessage.READY) {
+            return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
+                    gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
 
+        } else if (deckMessage.getType() == TypeMessage.DECKS) {
+            if (deckMessage.getPlayer1Cards().size() == 0) {
+                gunfighter0.setCards(deckMessage.getPlayer0Cards());
+                gunfighterService.save(gunfighter0);
+                return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
+                        List.of(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
+            } else {
+                gunfighter1.setCards(deckMessage.getPlayer1Cards());
+                gunfighterService.save(gunfighter1);
+                return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), List.of(),
+                        gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
+
+            }
+
+        }
         return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
                 gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
-        // return new MatchDeckMessage(deckMessage.getType(),
-        // deckMessage.getDeckCards(),
-        // deckMessage.getPlayer0Cards(), deckMessage.getPlayer1Cards(),
-        // deckMessage.getPlayedCard0(),
-        // deckMessage.getPlayedCard1());
 
     }
 
