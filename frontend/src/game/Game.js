@@ -33,18 +33,9 @@ const WebSocketComponent = () => {
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
         bullets: 2,
-        bulletsChange: true,
         precision: 2,
-        precisionBefore: null,
-        precisionChange: true,
-        winPrecision: null,
         cards: [],
         cardPlayed: null,
-        preventDamage: false,
-        cardPlayedBefore: null,
-        failing: 0,
-        recievex2damage: false,
-        intimidationCardInHand: false,
         playerNumber: 0,
         doubleCard: false,
     });
@@ -52,18 +43,9 @@ const WebSocketComponent = () => {
     const [statePlayer1, setStatePlayer1] = useState({
         health: 2,
         bullets: 2,
-        bulletsChange: true,
         precision: 2,
-        precisionBefore: null,
-        precisionChange: true,
-        winPrecision: null,
         cards: [],
         cardPlayed: null,
-        preventDamage: false,
-        cardPlayedBefore: null,
-        failing: 0,
-        recievex2damage: false,
-        intimidationCardInHand: false,
         playerNumber: 1,
         doubleCard: false,
     });
@@ -108,8 +90,7 @@ const WebSocketComponent = () => {
         }
     }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played, updatePlayers]);
 
-
-    //Mandar los cambios al jugador 1
+/*    //Mandar los cambios al jugador 1
     useEffect(() => {
         if (updatePlayers) {
             if (playerNumber === 0) {
@@ -127,7 +108,7 @@ const WebSocketComponent = () => {
         }
     }, [statePlayer0, statePlayer1]);
 
-
+*/
 
 
     //Accionar el final de partida

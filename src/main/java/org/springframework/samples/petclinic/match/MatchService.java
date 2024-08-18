@@ -113,4 +113,7 @@ public class MatchService {
         gunfighter1.setCards(deckPlayer1);
 
     }
+
+    public void actionCards(Match match, Gunfighter gunfighter0, Gunfighter gunfighter1) {
+    }
 }
