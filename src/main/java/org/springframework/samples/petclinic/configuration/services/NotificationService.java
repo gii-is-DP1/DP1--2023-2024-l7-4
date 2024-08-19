@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class NotificationService {
-
+    
     private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
@@ -14,7 +14,7 @@ public class NotificationService {
         this.messagingTemplate = messagingTemplate;
     }
 
-    public void sendMessage(String destination, Object message) {
-        messagingTemplate.convertAndSend(destination, message);
+    public void sendMessage(String destination, Object payload) {
+        messagingTemplate.convertAndSend(destination, payload);
     }
 }

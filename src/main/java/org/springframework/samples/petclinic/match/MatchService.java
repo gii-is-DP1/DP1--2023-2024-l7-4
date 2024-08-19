@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-
+import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
@@ -20,11 +20,13 @@ public class MatchService {
 
     private MatchRepository matchRepository;
     private GunfighterService gunfighterService;
+    private CardService cardService;
 
     @Autowired
-    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService) {
+    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService) {
         this.matchRepository = matchRepository;
         this.gunfighterService = gunfighterService;
+        this.cardService = cardService;
 
     }
 
@@ -114,6 +116,22 @@ public class MatchService {
 
     }
 
+    @Transactional
     public void actionCards(Match match, Gunfighter gunfighter0, Gunfighter gunfighter1) {
+        if (gunfighter0.getBullets() > gunfighter1.getBullets()) {
+            cardService.executeActionsInOrder(gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed(), gunfighter0,
+                    gunfighter1, match);
+        } else if (gunfighter0.getBullets() == gunfighter1.getBullets()) {
+            if (Math.random() < 0.5) {
+                cardService.executeActionsInOrder(gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed(), gunfighter0,
+                        gunfighter1, match);
+            } else {
+                cardService.executeActionsInOrder(gunfighter1.getCardPlayed(), gunfighter0.getCardPlayed(), gunfighter1,
+                        gunfighter0, match);
+            }
+        } else {
+            cardService.executeActionsInOrder(gunfighter1.getCardPlayed(), gunfighter0.getCardPlayed(), gunfighter1,
+                    gunfighter0, match);
+        }
     }
 }

@@ -52,7 +52,6 @@ const WebSocketComponent = () => {
 
     const [waiting, setWaiting] = useState(false);
     const [played, setPlayed] = useState(false);
-    const [updatePlayers, setUpdatePlayers] = useState(false);
     const [readyForDiscard, setReadyForDiscard] = useState(false);
     const [discardedCards, setDiscardedCards] = useState([]);
 
@@ -78,37 +77,33 @@ const WebSocketComponent = () => {
 
     //Acciones 
     useEffect(() => {
-        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played && !updatePlayers) {
+        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
             setShowCards(true);
-            if (playerNumber === 0) {
-                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, handleSendDeckMessage);
-            }
             setWaiting(false);
             setPlayed(false);
             setShowConfirmationModal(true);
-            setUpdatePlayers(true);
         }
-    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played, updatePlayers]);
+    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
-/*    //Mandar los cambios al jugador 1
-    useEffect(() => {
-        if (updatePlayers) {
-            if (playerNumber === 0) {
-                const timeout = setTimeout(() => {
-                    handleSendPlayerUpdate(0, statePlayer0);
-                    handleSendPlayerUpdate(1, statePlayer1);
-                    handleSendDeckMessage('DECKS')
+    /*    //Mandar los cambios al jugador 1
+        useEffect(() => {
+            if (updatePlayers) {
+                if (playerNumber === 0) {
+                    const timeout = setTimeout(() => {
+                        handleSendPlayerUpdate(0, statePlayer0);
+                        handleSendPlayerUpdate(1, statePlayer1);
+                        handleSendDeckMessage('DECKS')
+                        setUpdatePlayers(false);
+                    }, 0);
+    
+                    return () => clearTimeout(timeout);
+                } else {
                     setUpdatePlayers(false);
-                }, 0);
-
-                return () => clearTimeout(timeout);
-            } else {
-                setUpdatePlayers(false);
+                }
             }
-        }
-    }, [statePlayer0, statePlayer1]);
-
-*/
+        }, [statePlayer0, statePlayer1]);
+    
+    */
 
 
     //Accionar el final de partida
@@ -132,25 +127,16 @@ const WebSocketComponent = () => {
     const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
         setShowCards(false);
+        console.log(`${waiting}, ${playerNumber}`);
         if (waiting) {
             switch (playerNumber) {
                 case 0:
-                    await setStatePlayer0(prevState => ({
-                        ...prevState,
-                        cardPlayedBefore: prevState.cardPlayed,
-                        precisionBefore: prevState.precision,
-                    }));
                     setStatePlayer0(prevState => ({
                         ...prevState,
                         cardPlayed: -1,
                     }));
                     break;
                 case 1:
-                    await setStatePlayer1(prevState => ({
-                        ...prevState,
-                        cardPlayedBefore: prevState.cardPlayed,
-                        precisionBefore: prevState.precision,
-                    }));
                     setStatePlayer1(prevState => ({
                         ...prevState,
                         cardPlayed: -1,
@@ -160,19 +146,9 @@ const WebSocketComponent = () => {
                     break;
             }
         } else {
-            await setStatePlayer0(prevState => ({
-                ...prevState,
-                cardPlayedBefore: prevState.cardPlayed,
-                precisionBefore: prevState.precision,
-            }));
             setStatePlayer0(prevState => ({
                 ...prevState,
                 cardPlayed: -1,
-            }));
-            await setStatePlayer1(prevState => ({
-                ...prevState,
-                cardPlayedBefore: prevState.cardPlayed,
-                precisionBefore: prevState.precision,
             }));
             setStatePlayer1(prevState => ({
                 ...prevState,
@@ -267,16 +243,6 @@ const WebSocketComponent = () => {
         }
     };
 
-    const handleSendPlayerUpdate = (playerNumber, playerState) => {
-        stompClient.send(`/app/match/${matchId}/players`, {}, JSON.stringify({
-            type: 'PLAYERINFO',
-            health: playerState.health,
-            bullets: playerState.bullets,
-            precision: playerState.precision,
-            playerNumber: playerNumber,
-        }));
-    };
-
     const handleGoToLobby = () => {
         if (playerNumber === 0) {
             if (statePlayer0.health === 0)
@@ -292,7 +258,7 @@ const WebSocketComponent = () => {
     };
 
     const intimidationCardInHand = (cards) => {
-        if (cards.includes(45)){
+        if (cards.includes(45)) {
             return true;
         }
     }

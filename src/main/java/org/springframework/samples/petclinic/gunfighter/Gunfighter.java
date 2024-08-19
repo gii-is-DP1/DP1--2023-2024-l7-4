@@ -48,7 +48,7 @@ public class Gunfighter extends BaseEntity {
     private List<Integer> cards;
 
     @Column(name = "cardPlayed")
-    private Integer cardPlayed;
+    private Integer cardPlayed = -1;
 
     @Column(name = "cardPlayedBefore")
     private Integer cardPlayedBefore;

@@ -102,8 +102,14 @@ const WebSocketHandler = ({
                             ...prevState,
                             cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
                         }));
-                        setReadyForDiscard(true);
-                        setReceived(true);
+                        if (playerNumber == 0 && body.player0Cards.length === 8) {
+                            setReadyForDiscard(true);
+                            setReceived(true);
+                        }
+                        else if (playerNumber == 1 && body.player1Cards.length === 8) {
+                            setReadyForDiscard(true);
+                            setReceived(true);
+                        }
                     case 'PLAYEDCARD':
                         if (playerNumber === 0 && body.playedCard1 !== -1) {
                             setTempCardPlayed(body.playedCard1);
@@ -119,6 +125,9 @@ const WebSocketHandler = ({
                             setChooseCard(body.playedCard1);
                         }
                         break;
+                    case 'PLAYERINFO':
+                        setDeckOfCards(body.deckCards);
+                        updatePlayers();
                     default:
                         break;
                 }
@@ -160,6 +169,35 @@ const WebSocketHandler = ({
     }, [matchId, playerNumber]);
 
     return null;
+};
+
+
+const updatePlayers = async () => {
+        await fetch(`/api/v1/gunfighters/${matchId}/0`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(player0 => {
+                setStatePlayer0({
+                    ...prevState,
+                    health: player0.health,
+                    bullets: player0.bullets,
+                    precision:player0.precision,
+                })
+            })
+            .catch(error => {
+                console.error('Error fetching match:', error);
+            });
 };
 
 export default WebSocketHandler;

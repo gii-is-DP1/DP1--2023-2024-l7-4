@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
+import org.springframework.samples.petclinic.match.Match;
 import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,179 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard1(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        public void executeActionsInOrder(Integer cardFirst, Integer cardSecond, Gunfighter gunfighterFirst,
+                        Gunfighter gunfighterSecond, Match match) {
+                executeSingleCard(cardFirst, gunfighterFirst, gunfighterSecond, match.getDeck(), match.getId());
+                executeSingleCard(cardSecond, gunfighterSecond, gunfighterFirst, match.getDeck(), match.getId());
+        }
+
+        @Transactional
+        private void executeSingleCard(Integer card, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+                        List<Integer> deck, Integer matchId) {
+                switch (card) {
+                        default:
+                                break;
+                        case 1:
+                                executeCard1(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 2:
+                                executeCard2(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 3:
+                                executeCard3(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 4:
+                                executeCard4(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 5:
+                                executeCard5(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 6:
+                                executeCard6(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 7:
+                                executeCard7(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 8:
+                                executeCard8(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 9:
+                                executeCard9(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 10:
+                                executeCard10(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 11:
+                                executeCard11(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 12:
+                                executeCard12(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 13:
+                                executeCard13(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 14:
+                                executeCard14(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 15:
+                                executeCard15(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 16:
+                                executeCard16(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 17:
+                                executeCard17(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 18:
+                                executeCard18(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 19:
+                                executeCard19(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 20:
+                                executeCard20(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 21:
+                                executeCard21(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 22:
+                                executeCard22(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 23:
+                                executeCard23(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 24:
+                                executeCard24(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 25:
+                                executeCard25(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 26:
+                                executeCard26(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 27:
+                                executeCard27(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 28:
+                                executeCard28(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 29:
+                                executeCard29(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 30:
+                                executeCard30(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 31:
+                                executeCard31(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 32:
+                                executeCard32(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 33:
+                                executeCard33(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 34:
+                                executeCard34(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 35:
+                                executeCard35(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 36:
+                                executeCard36(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 37:
+                                executeCard37(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 38:
+                                executeCard38(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 39:
+                                executeCard39(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 40:
+                                executeCard40(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 41:
+                                executeCard41(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 42:
+                                executeCard42(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 43:
+                                executeCard43(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 44:
+                                executeCard44(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 45:
+                                executeCard45(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 46:
+                                executeCard46(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 47:
+                                executeCard47(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 48:
+                                executeCard48(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 49:
+                                executeCard49(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 50:
+                                executeCard50(deck, statePlayerMain, statePlayerSecondary, matchId);
+                                break;
+                        case 51:
+                                executeCard51(deck, statePlayerMain, statePlayerSecondary, matchId);
+
+                }
+                ;
+
+        }
+
+        @Transactional
+        private void executeCard1(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
                 statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
@@ -39,7 +212,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard2(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard2(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
                 if (Math.random() < 0.5) {
@@ -65,7 +239,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard3(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard3(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
                 statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
@@ -90,7 +265,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard4(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard4(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
                 if (statePlayerMain.getBullets() >= 1) {
 
@@ -106,7 +282,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard5(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard5(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
                 statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
@@ -125,7 +302,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard6(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard6(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
                 if (statePlayerMain.getPrecision() > statePlayerMain.getPrecisionBefore())
@@ -136,7 +314,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard7(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard7(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
                 if (statePlayerSecondary.getPrecision() >= 4)
                         statePlayerMain.setPrecision(
@@ -146,7 +325,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard8(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard8(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
                 if (statePlayerSecondary.getHealth() > statePlayerMain.getHealth())
                         statePlayerMain.setPrecision(
@@ -156,7 +336,8 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard9(List<Integer> deckOfCards, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        private void executeCard9(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
                         Integer matchId) {
                 if ((statePlayerSecondary.getCardPlayed() >= 19
                                 && statePlayerSecondary.getCardPlayed() <= 27)
@@ -169,7 +350,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard10(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard10(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
                 statePlayerSecondary.setFailing(1);
@@ -192,7 +373,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard11(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard11(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary, Integer matchId) {
                 if (statePlayerMain.getBullets() >= 1) {
 
@@ -208,7 +389,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard12(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard12(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -233,7 +414,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard13(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard13(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -250,7 +431,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard14(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard14(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -269,7 +450,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard15(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard15(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -292,7 +473,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard16(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard16(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -311,7 +492,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard17(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard17(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -331,7 +512,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard18(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard18(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -351,7 +532,7 @@ public class CardService {
         // ----------------------------------------
 
         @Transactional
-        public void executeCard19(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard19(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -374,7 +555,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard20(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard20(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -405,7 +586,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard21(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard21(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -441,7 +622,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard22(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard22(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -472,7 +653,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard23(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard23(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -525,7 +706,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard24(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard24(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -556,7 +737,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard25(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard25(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -588,7 +769,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard26(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard26(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -626,7 +807,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard27(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard27(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -662,7 +843,7 @@ public class CardService {
         // -------------------------------------------
 
         @Transactional
-        public void executeCard28(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard28(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -673,7 +854,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard29(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard29(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -686,7 +867,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard30(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard30(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -733,7 +914,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard31(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard31(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -743,7 +924,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard32(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard32(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -764,7 +945,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard33(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard33(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -786,7 +967,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard34(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard34(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -806,7 +987,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard35(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard35(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -830,7 +1011,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard36(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard36(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -860,7 +1041,7 @@ public class CardService {
         // --------------------------------------
 
         @Transactional
-        public void executeCard37(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard37(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -882,7 +1063,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard38(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard38(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -900,7 +1081,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard39(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard39(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -918,7 +1099,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard40(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard40(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -950,7 +1131,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard41(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard41(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -970,7 +1151,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard42(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard42(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -992,7 +1173,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard43(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard43(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1008,7 +1189,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard44(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard44(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1032,9 +1213,15 @@ public class CardService {
         }
 
         // TODO: Funcion carta 45
+        @Transactional
+        private void executeCard45(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+
+        }
 
         @Transactional
-        public void executeCard46(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard46(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1059,7 +1246,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard47(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard47(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1090,7 +1277,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard48(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard48(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1127,7 +1314,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard49(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard49(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1151,7 +1338,7 @@ public class CardService {
         }
 
         @Transactional
-        public void executeCard50(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+        private void executeCard50(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
@@ -1186,4 +1373,34 @@ public class CardService {
                 }
         }
 
+        @Transactional
+        private void executeCard51(List<Integer> deckOfCards, Gunfighter statePlayerMain,
+                        Gunfighter statePlayerSecondary,
+                        Integer matchId) {
+                Double randomNumber = Math.random();
+
+                if (randomNumber < 0.5) {
+                        Double random = Math.random();
+                        if (random < 0.5) {
+                                statePlayerMain.setPrecision(
+                                                statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
+                                                                : CardUtils.limit(statePlayerMain.getPrecision() + 2));
+
+                        } else {
+                                statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
+
+                        }
+                } else {
+                        Double randomCardIndex = Math.random() * (statePlayerMain.getCards().size() + 1);
+                        List<Integer> updatedCards = statePlayerMain.getCards();
+                        updatedCards.remove(randomCardIndex.intValue());
+
+                        Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                        updatedCards.add(newCard);
+                        statePlayerMain.setCards(updatedCards);
+
+                }
+
+        }
 }

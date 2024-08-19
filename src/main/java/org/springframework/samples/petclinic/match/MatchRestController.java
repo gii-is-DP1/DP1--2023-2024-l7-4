@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.samples.petclinic.configuration.services.NotificationService;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
 import org.springframework.samples.petclinic.match.messages.MatchActionsPlayersMessage;
@@ -44,13 +45,15 @@ public class MatchRestController {
     private MatchService matchService;
     private PlayerService playerService;
     private GunfighterService gunfighterService;
+    private NotificationService notificationService;
 
     @Autowired
     public MatchRestController(MatchService matchService, GunfighterService gunfighterService,
-            PlayerService playerService) {
+            PlayerService playerService, NotificationService notificationService) {
         this.matchService = matchService;
         this.gunfighterService = gunfighterService;
         this.playerService = playerService;
+        this.notificationService = notificationService;
 
     }
 
@@ -173,7 +176,7 @@ public class MatchRestController {
 
     @MessageMapping("/match/{id}/game")
     @SendTo("/topic/match/{id}/game")
-    public MatchMessage particularGameMessage(@DestinationVariable int id, MatchMessage message) {
+    public MatchMessage particularInfoGameMessage(@DestinationVariable int id, MatchMessage message) {
         return new MatchMessage(message.getType(), message.getMessage());
     }
 
@@ -201,20 +204,34 @@ public class MatchRestController {
                 return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), List.of(),
                         gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
             }
-        } 
+        }
         if (deckMessage.getType() == TypeMessage.PLAYEDCARD) {
-            gunfighter0.setCardPlayed(deckMessage.getPlayedCard0() == -1 ? null : deckMessage.getPlayedCard0());
-            gunfighter1.setCardPlayed(deckMessage.getPlayedCard1() == -1 ? null : deckMessage.getPlayedCard1());
 
-            if (gunfighter0.getCardPlayed() != null && gunfighter1.getCardPlayed() != null) {
-                matchService.actionCards(match, gunfighter0, gunfighter1);
+            if (deckMessage.getPlayedCard0() != -1) {
+                gunfighter0.setCardPlayed(deckMessage.getPlayedCard0());
                 gunfighterService.save(gunfighter0);
-                gunfighterService.save(gunfighter1);
-                 return new MatchDeckMessage(deckMessage.getType(), null, null, null, deckMessage.getPlayedCard0(),
-                        deckMessage.getPlayedCard1());
             } else {
-                return new MatchDeckMessage(deckMessage.getType(), null, null, null, deckMessage.getPlayedCard0(),
-                        deckMessage.getPlayedCard1());
+                gunfighter1.setCardPlayed(deckMessage.getPlayedCard1());
+                gunfighterService.save(gunfighter1);
+            }
+
+            MatchDeckMessage message = new MatchDeckMessage(TypeMessage.PLAYEDCARD, List.of(), List.of(), List.of(),
+            deckMessage.getPlayedCard0(), deckMessage.getPlayedCard1());
+
+            notificationService.sendMessage("/topic/match/" + id + "/cards", message);
+
+            if (gunfighter0.getCardPlayed() != -1 && gunfighter1.getCardPlayed() != -1) {
+
+                matchService.actionCards(match, gunfighter0, gunfighter1);
+                matchService.saveMatch(match);
+                gunfighterService.resetState(gunfighter0);
+                gunfighterService.resetState(gunfighter1);
+        
+                
+                return new MatchDeckMessage(TypeMessage.PLAYERINFO, match.getDeck(), List.of(), List.of(), -1,
+                        -1);
+            } else {
+                return null;
             }
         }
         return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
