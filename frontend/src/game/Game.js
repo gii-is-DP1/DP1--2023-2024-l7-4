@@ -33,18 +33,9 @@ const WebSocketComponent = () => {
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
         bullets: 2,
-        bulletsChange: true,
         precision: 2,
-        precisionBefore: null,
-        precisionChange: true,
-        winPrecision: null,
         cards: [],
         cardPlayed: null,
-        preventDamage: false,
-        cardPlayedBefore: null,
-        failing: 0,
-        recievex2damage: false,
-        intimidationCardInHand: false,
         playerNumber: 0,
         doubleCard: false,
     });
@@ -52,24 +43,15 @@ const WebSocketComponent = () => {
     const [statePlayer1, setStatePlayer1] = useState({
         health: 2,
         bullets: 2,
-        bulletsChange: true,
         precision: 2,
-        precisionBefore: null,
-        precisionChange: true,
         cards: [],
         cardPlayed: null,
-        preventDamage: false,
-        cardPlayedBefore: null,
-        failing: 0,
-        recievex2damage: false,
-        intimidationCardInHand: false,
         playerNumber: 1,
         doubleCard: false,
     });
 
     const [waiting, setWaiting] = useState(false);
     const [played, setPlayed] = useState(false);
-    const [updatePlayers, setUpdatePlayers] = useState(false);
     const [readyForDiscard, setReadyForDiscard] = useState(false);
     const [discardedCards, setDiscardedCards] = useState([]);
 
@@ -79,51 +61,11 @@ const WebSocketComponent = () => {
     const matchId = getIdFromUrl(2);
 
 
-    //UseEffect inicial para hacer reparto de cartas si jugador = 0 o para esperar a recibirlas si jugador = 1
+    //UseEffect inicial para recibir las cartas
     useEffect(() => {
-        let interval = null;
-        if (stompClient && playerNumber === 0 && received && deckOfCards.length === 50) {
-            console.log(deckOfCards);
-            const cards = initialDeal(deckOfCards);
-            setDeckOfCards(cards[0]);
-            setStatePlayer1(prevState => ({
-                ...prevState,
-                cards: cards[1]
-            }));
-            setStatePlayer0(prevState => ({
-                ...prevState,
-                cards: cards[2]
-            }));
-        }
-        if (playerNumber === 1 && !received && statePlayer1.cards.length === 0) {
-            interval = setInterval(() => {
-                handleSendDeckMessage('READY');
-            }, 1000);
-        }
-        return () => {
-            clearInterval(interval);
-        };
-    }, [playerNumber, stompClient, received, statePlayer1]);
-
-
-    //Mandar cartas cuando jugador 1 esta listo
-    useEffect(() => {
-        if (statePlayer0.cards.length > 0 && statePlayer1.cards.length > 0 && playerNumber === 0 && received) {
-            handleSendDeckMessage('DECKS');
-            setReadyForDiscard(true);
-            setReceived(false);
-        }
-
-        setStatePlayer0(prevState => ({
-            ...prevState,
-            intimidationCardInHand: prevState.cards.includes(45),
-        }));
-
-        setStatePlayer1(prevState => ({
-            ...prevState,
-            intimidationCardInHand: prevState.cards.includes(45),
-        }));
-    }, [statePlayer0.cards, statePlayer1.cards]);
+        if (!received)
+            handleSendDeckMessage('READY');
+    }, [stompClient, received]);
 
 
     //Rebarajar las cartas
@@ -135,39 +77,12 @@ const WebSocketComponent = () => {
 
     //Acciones 
     useEffect(() => {
-        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played && !updatePlayers) {
+        if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
             setShowCards(true);
-            if (playerNumber === 0) {
-                handleActionCard(statePlayer0, statePlayer1, setStatePlayer0, setStatePlayer1, deckOfCards, setDeckOfCards, handleSendDeckMessage);
-            }
             setWaiting(false);
             setPlayed(false);
-            setShowConfirmationModal(true);
-            setUpdatePlayers(true);
         }
-    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played, updatePlayers]);
-
-
-    //Mandar los cambios al jugador 1
-    useEffect(() => {
-        if (updatePlayers) {
-            if (playerNumber === 0) {
-                const timeout = setTimeout(() => {
-                    handleSendPlayerUpdate(0, statePlayer0);
-                    handleSendPlayerUpdate(1, statePlayer1);
-                    handleSendDeckMessage('DECKS')
-                    setUpdatePlayers(false);
-                }, 0);
-
-                return () => clearTimeout(timeout);
-            } else {
-                setUpdatePlayers(false);
-            }
-        }
-    }, [statePlayer0, statePlayer1]);
-
-
-
+    }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
     //Accionar el final de partida
     useEffect(() => {
@@ -177,40 +92,29 @@ const WebSocketComponent = () => {
     }, [statePlayer0.health, statePlayer1.health])
 
 
-    //UseEffect para enviar las cartas una vez descartadas
     useEffect(() => {
-        if (!readyForDiscard && discardedCards.length === 0 && received) {
+        if (!readyForDiscard && discardedCards.length === 0 && (statePlayer0.cards.length === 6 || statePlayer1.cards.length === 6)) {
             if (playerNumber === 0) {
                 handleSendDeckMessage('CUSTOM', 0);
             } else {
                 handleSendDeckMessage('CUSTOM', 1);
-                setReceived(false);
             }
         }
-    }, [statePlayer0.cards, statePlayer1.cards, received, discardedCards, readyForDiscard]);
+    }, [readyForDiscard]);
 
     const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
         setShowCards(false);
+        console.log(`${waiting}, ${playerNumber}`);
         if (waiting) {
             switch (playerNumber) {
                 case 0:
-                    await setStatePlayer0(prevState => ({
-                        ...prevState,
-                        cardPlayedBefore: prevState.cardPlayed,
-                        precisionBefore: prevState.precision,
-                    }));
                     setStatePlayer0(prevState => ({
                         ...prevState,
                         cardPlayed: -1,
                     }));
                     break;
                 case 1:
-                    await setStatePlayer1(prevState => ({
-                        ...prevState,
-                        cardPlayedBefore: prevState.cardPlayed,
-                        precisionBefore: prevState.precision,
-                    }));
                     setStatePlayer1(prevState => ({
                         ...prevState,
                         cardPlayed: -1,
@@ -220,19 +124,9 @@ const WebSocketComponent = () => {
                     break;
             }
         } else {
-            await setStatePlayer0(prevState => ({
-                ...prevState,
-                cardPlayedBefore: prevState.cardPlayed,
-                precisionBefore: prevState.precision,
-            }));
             setStatePlayer0(prevState => ({
                 ...prevState,
                 cardPlayed: -1,
-            }));
-            await setStatePlayer1(prevState => ({
-                ...prevState,
-                cardPlayedBefore: prevState.cardPlayed,
-                precisionBefore: prevState.precision,
             }));
             setStatePlayer1(prevState => ({
                 ...prevState,
@@ -312,8 +206,8 @@ const WebSocketComponent = () => {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'DECKS',
                 deckCards: deckOfCards,
-                player0Cards: cardNumber === 0 ? statePlayer0.cards : Array.of(),
-                player1Cards: cardNumber === 1 ? statePlayer1.cards : Array.of(),
+                player0Cards: playerNumber === 0 ? statePlayer0.cards : Array.of(),
+                player1Cards: playerNumber === 1 ? statePlayer1.cards : Array.of(),
                 playedCard0: -1,
                 playedCard1: -1,
             }));
@@ -325,16 +219,6 @@ const WebSocketComponent = () => {
 
             }));
         }
-    };
-
-    const handleSendPlayerUpdate = (playerNumber, playerState) => {
-        stompClient.send(`/app/match/${matchId}/players`, {}, JSON.stringify({
-            type: 'PLAYERINFO',
-            health: playerState.health,
-            bullets: playerState.bullets,
-            precision: playerState.precision,
-            playerNumber: playerNumber,
-        }));
     };
 
     const handleGoToLobby = () => {
@@ -351,6 +235,11 @@ const WebSocketComponent = () => {
         }
     };
 
+    const intimidationCardInHand = (cards) => {
+        if (cards.includes(45)) {
+            return true;
+        }
+    }
 
     const handleSetMatchWinner = async () => {
         await fetch(`/api/v1/matches/${matchId}/winner`, {
@@ -409,15 +298,16 @@ const WebSocketComponent = () => {
                 setWaiting={setWaiting}
                 setStompClient={setStompClient}
                 setChooseCard={setChooseCard}
+                setShowConfirmationModal={setShowConfirmationModal}
                 tempCardPlayed={tempCardPlayed}
                 setTempCardPlayed={setTempCardPlayed}
             />
             <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
             {playerNumber === 0 ?
 
-                (statePlayer1.intimidationCardInHand ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+                (intimidationCardInHand(statePlayer1.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
                 :
-                (statePlayer0.intimidationCardInHand ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+                (intimidationCardInHand(statePlayer0.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
 
             }
             <TopRow />

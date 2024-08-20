@@ -7,6 +7,9 @@ import Stomp from 'stompjs';
 
 const jwt = tokenService.getLocalAccessToken();
 
+
+// !!!!!!NOT USING
+
 export default function CardGame() {
   const [message, setMessage] = useState(null);
   const [stompClient, setStompClient] = useState(null);

@@ -13,8 +13,6 @@ import tokenService from "./services/token.service";
 import MyProfile from "./player/myProfile";
 import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
-import OwnerListAdmin from "./admin/owners/OwnerListAdmin";
-import OwnerEditAdmin from "./admin/owners/OwnerEditAdmin";
 import SwaggerDocs from "./public/swagger";
 import PlayerEdit from "./player";
 import WaitingRoom from "./matches/WaitingRoom";
@@ -66,7 +64,6 @@ function App() {
           <Route path="/allMatches" exact={true} element={<PrivateRoute><MyMatchesAdmin /></PrivateRoute>} />
           <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
           <Route path="/players/:playerId" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
-          <Route path="/players/edit/:username" exact={true} element={<PrivateRoute><PlayerEdit/></PrivateRoute>} />
         </>)
     }
     if (role === "PLAYER") {

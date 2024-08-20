@@ -13,7 +13,6 @@ import org.springframework.context.annotation.FilterType;
 //import org.springframework.samples.petclinic.auth.payload.request.SignupRequest;
 import org.springframework.samples.petclinic.configuration.jwt.JwtUtils;
 //import org.springframework.samples.petclinic.configuration.services.UserDetailsImpl;
-import org.springframework.samples.petclinic.owner.OwnerRestController;
 //import org.springframework.samples.petclinic.user.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
