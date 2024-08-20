@@ -81,30 +81,8 @@ const WebSocketComponent = () => {
             setShowCards(true);
             setWaiting(false);
             setPlayed(false);
-            setShowConfirmationModal(true);
         }
     }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
-
-    /*    //Mandar los cambios al jugador 1
-        useEffect(() => {
-            if (updatePlayers) {
-                if (playerNumber === 0) {
-                    const timeout = setTimeout(() => {
-                        handleSendPlayerUpdate(0, statePlayer0);
-                        handleSendPlayerUpdate(1, statePlayer1);
-                        handleSendDeckMessage('DECKS')
-                        setUpdatePlayers(false);
-                    }, 0);
-    
-                    return () => clearTimeout(timeout);
-                } else {
-                    setUpdatePlayers(false);
-                }
-            }
-        }, [statePlayer0, statePlayer1]);
-    
-    */
-
 
     //Accionar el final de partida
     useEffect(() => {
@@ -228,8 +206,8 @@ const WebSocketComponent = () => {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'DECKS',
                 deckCards: deckOfCards,
-                player0Cards: cardNumber === 0 ? statePlayer0.cards : Array.of(),
-                player1Cards: cardNumber === 1 ? statePlayer1.cards : Array.of(),
+                player0Cards: playerNumber === 0 ? statePlayer0.cards : Array.of(),
+                player1Cards: playerNumber === 1 ? statePlayer1.cards : Array.of(),
                 playedCard0: -1,
                 playedCard1: -1,
             }));
@@ -320,6 +298,7 @@ const WebSocketComponent = () => {
                 setWaiting={setWaiting}
                 setStompClient={setStompClient}
                 setChooseCard={setChooseCard}
+                setShowConfirmationModal={setShowConfirmationModal}
                 tempCardPlayed={tempCardPlayed}
                 setTempCardPlayed={setTempCardPlayed}
             />

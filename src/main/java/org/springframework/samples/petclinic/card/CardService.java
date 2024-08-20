@@ -260,7 +260,7 @@ public class CardService {
                                 statePlayerMain.getPlayerNumber() == 0 ? 3 : -1,
                                 statePlayerMain.getPlayerNumber() == 1 ? 3 : -1);
 
-                notificationService.sendMessage("topic/match/" + matchId + "/cards", message);
+                notificationService.sendMessage("/topic/match/" + matchId + "/cards", message);
 
         }
 
@@ -551,6 +551,18 @@ public class CardService {
                                                                                                         - 2)
                                                                         : statePlayerSecondary.getHealth() - 1)
                                                         : statePlayerSecondary.getHealth());
+
+                // DESCARTAR Y ROBAR CARTA
+
+                List<Integer> updatedCards;
+
+                updatedCards = statePlayerMain.getCards().stream()
+                                .filter(c -> c != statePlayerMain.getCardPlayed())
+                                .collect(Collectors.toList());
+                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                updatedCards.add(newCard);
+                statePlayerMain.setCards(updatedCards);
 
         }
 
@@ -921,6 +933,7 @@ public class CardService {
                 statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 2));
                 statePlayerMain.setPrecision(CardUtils.limit(statePlayerMain.getPrecision() - 1));
 
+                statePlayerMain.setWinPrecision(2);
         }
 
         @Transactional
@@ -1033,7 +1046,7 @@ public class CardService {
                                 statePlayerMain.getPlayerNumber() == 0 ? 3 : -1,
                                 statePlayerMain.getPlayerNumber() == 1 ? 3 : -1);
 
-                notificationService.sendMessage("topic/match/" + matchId + "/cards", message);
+                notificationService.sendMessage("/topic/match/" + matchId + "/cards", message);
 
         }
 

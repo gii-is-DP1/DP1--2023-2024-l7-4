@@ -193,6 +193,9 @@ public class MatchRestController {
         }
         if (deckMessage.getType() == TypeMessage.DECKS) {
 
+            match.setDeck(deckMessage.getDeckCards());
+            matchService.saveMatch(match);
+
             if (deckMessage.getPlayer1Cards().size() == 0) {
                 gunfighter0.setCards(deckMessage.getPlayer0Cards());
                 gunfighterService.save(gunfighter0);
@@ -204,6 +207,7 @@ public class MatchRestController {
                 return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), List.of(),
                         gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
             }
+
         }
         if (deckMessage.getType() == TypeMessage.PLAYEDCARD) {
 
@@ -216,7 +220,7 @@ public class MatchRestController {
             }
 
             MatchDeckMessage message = new MatchDeckMessage(TypeMessage.PLAYEDCARD, List.of(), List.of(), List.of(),
-            deckMessage.getPlayedCard0(), deckMessage.getPlayedCard1());
+                    deckMessage.getPlayedCard0(), deckMessage.getPlayedCard1());
 
             notificationService.sendMessage("/topic/match/" + id + "/cards", message);
 
@@ -226,8 +230,7 @@ public class MatchRestController {
                 matchService.saveMatch(match);
                 gunfighterService.resetState(gunfighter0);
                 gunfighterService.resetState(gunfighter1);
-        
-                
+
                 return new MatchDeckMessage(TypeMessage.PLAYERINFO, match.getDeck(), List.of(), List.of(), -1,
                         -1);
             } else {
