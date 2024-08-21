@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Card } from 'reactstrap';
 import DiscardCardsModalContent from '../modals/DiscardCardsModalContent';
 import ChooseCardModal from '../modals/ChosenCardModal';
 
@@ -23,7 +23,19 @@ const GameModals = ({
     deckOfCards,
     setDeckOfCards,
     handleSendDeckMessage,
+    showConfirmationDiscardToPrevent,
+    setShowConfirmationDiscardToPrevent
 }) => {
+
+    const handleCancelActionCard30 = () => {
+        handleSendDeckMessage('PLAYEDCARD', 30)
+        setShowConfirmationDiscardToPrevent(false);
+    };
+
+    const handleConfirmActionCard30 = () => {
+        handleSendDeckMessage('PLAYEDCARD30', 30)
+        setShowConfirmationDiscardToPrevent(false);
+    };
     return (
         <>
             <Modal isOpen={showConfirmationModal && chooseCard === 0}>
@@ -55,6 +67,14 @@ const GameModals = ({
                 </ModalBody>
                 <ModalFooter>
                     {discardedCards.length === 2 && (<Button color="danger" onClick={handleDiscardConfirmed}>Discard</Button>)}
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={showConfirmationDiscardToPrevent}>
+                <ModalHeader> DISCARD CONFIRMATION </ModalHeader>
+                <ModalBody> DO YOU WANT TO DISCARD 2 CARDS TO PREVENT THE DAMAGE? </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleCancelActionCard30}> NO </Button>
+                    <Button color="danger" onClick={handleConfirmActionCard30}> YES </Button>
                 </ModalFooter>
             </Modal>
             <Modal isOpen={showEndModal}>
