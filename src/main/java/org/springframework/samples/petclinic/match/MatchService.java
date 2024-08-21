@@ -25,11 +25,11 @@ public class MatchService {
     private UserRepository userRepository;
 
     @Autowired
-    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService) {
+    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService, UserRepository userRepository) {
         this.matchRepository = matchRepository;
         this.gunfighterService = gunfighterService;
         this.cardService = cardService;
-        this.userRepository= userRepository;
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
