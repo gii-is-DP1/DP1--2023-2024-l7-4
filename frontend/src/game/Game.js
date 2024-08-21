@@ -28,6 +28,7 @@ const WebSocketComponent = () => {
     const [showEndModal, setShowEndModal] = useState(false);
     const [chooseCard, setChooseCard] = useState(0);
     const [tempCardPlayed, setTempCardPlayed] = useState(0);
+    const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
 
 
     const [statePlayer0, setStatePlayer0] = useState({
@@ -86,7 +87,7 @@ const WebSocketComponent = () => {
 
     //Accionar el final de partida
     useEffect(() => {
-        if (statePlayer0.health === 0 || statePlayer1.health === 0)
+        if (statePlayer0.health < 1 || statePlayer1.health < 1)
             setShowEndModal(true);
 
     }, [statePlayer0.health, statePlayer1.health])
@@ -159,7 +160,12 @@ const WebSocketComponent = () => {
                 cardPlayed: card,
                 precisionBefore: prevState.precision,
             }));
-            handleSendDeckMessage('PLAYEDCARD', card);
+            if (card === 30) {
+                setShowConfirmationDiscardToPrevent(true);
+            }
+            else {
+                handleSendDeckMessage('PLAYEDCARD', card);
+            }
             setPlayed(true);
         }
         if (player === 1 && !played && !readyForDiscard) {
@@ -169,12 +175,17 @@ const WebSocketComponent = () => {
                 cardPlayed: card,
                 precisionBefore: prevState.precision,
             }));
-            handleSendDeckMessage('PLAYEDCARD', card);
+            if (card === 30) {
+                setShowConfirmationDiscardToPrevent(true);
+            }
+            else {
+                handleSendDeckMessage('PLAYEDCARD', card);
+            }
             setPlayed(true);
         }
     };
 
-    const handleSendDeckMessage = (type, cardNumber = -1, player) => {
+    const handleSendDeckMessage = (type, cardNumber = -1) => {
         if (!stompClient) {
             console.error('stompClient is not initialized');
             return;
@@ -202,6 +213,15 @@ const WebSocketComponent = () => {
                 playedCard0: playerNumber === 0 ? cardNumber : -1,
                 playedCard1: playerNumber === 1 ? cardNumber : -1,
             }));
+        } else if (type === 'PLAYEDCARD30') {
+            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
+                type: 'PLAYEDCARD',
+                deckCards: [],
+                player0Cards: playerNumber === 0 ? [-1, -1] : [],
+                player1Cards: playerNumber === 1 ? [-1, -1] : [],
+                playedCard0: playerNumber === 0 ? cardNumber : -1,
+                playedCard1: playerNumber === 1 ? cardNumber : -1,
+            }));
         } else if (type === 'CUSTOM') {
             stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
                 type: 'DECKS',
@@ -211,24 +231,17 @@ const WebSocketComponent = () => {
                 playedCard0: -1,
                 playedCard1: -1,
             }));
-        } else if (type === 'CHOOSE') {
-            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
-                type: 'CHOOSE',
-                playedCard0: player === 0 ? cardNumber : -1,
-                playedCard1: player === 1 ? cardNumber : -1,
-
-            }));
         }
     };
 
     const handleGoToLobby = () => {
         if (playerNumber === 0) {
-            if (statePlayer0.health === 0)
+            if (statePlayer0.health < 1)
                 window.location.href = ('/');
             else
                 handleSetMatchWinner();
         } else {
-            if (statePlayer1.health === 0)
+            if (statePlayer1.health < 1)
                 window.location.href = ('/');
             else
                 handleSetMatchWinner();
@@ -349,6 +362,8 @@ const WebSocketComponent = () => {
                 deckOfCards={deckOfCards}
                 setDeckOfCards={setDeckOfCards}
                 handleSendDeckMessage={handleSendDeckMessage}
+                showConfirmationDiscardToPrevent={showConfirmationDiscardToPrevent}
+                setShowConfirmationDiscardToPrevent={setShowConfirmationDiscardToPrevent}
             />
         </div>
     );

@@ -212,9 +212,15 @@ public class MatchRestController {
         if (deckMessage.getType() == TypeMessage.PLAYEDCARD) {
 
             if (deckMessage.getPlayedCard0() != -1) {
+                if (deckMessage.getPlayedCard0() == 30 && deckMessage.getPlayer0Cards().size() > 0) {
+                    gunfighter0.setPreventDamage(true);
+                }
                 gunfighter0.setCardPlayed(deckMessage.getPlayedCard0());
                 gunfighterService.save(gunfighter0);
             } else {
+                if (deckMessage.getPlayedCard1() == 30 && deckMessage.getPlayer1Cards().size() > 0) {
+                    gunfighter1.setPreventDamage(true);
+                }
                 gunfighter1.setCardPlayed(deckMessage.getPlayedCard1());
                 gunfighterService.save(gunfighter1);
             }
@@ -242,21 +248,32 @@ public class MatchRestController {
 
     }
 
-    @MessageMapping("/match/{id}/players")
-    @SendTo("/topic/match/{id}/players")
-    public MatchGunfighterMessage particularGamePlayerMessage(@DestinationVariable int id,
-            Integer playerNumber) {
-        Gunfighter gunfighter = gunfighterService.findByMatchAndGunfighter(id, playerNumber);
-        return new MatchGunfighterMessage(TypeMessage.PLAYERINFO, gunfighter.getHealth(),
-                gunfighter.getBullets(),
-                gunfighter.getPrecision(), gunfighter.getPlayerNumber(), gunfighter.getCards());
-    }
-
-    @MessageMapping("/match/{id}/actions")
-    @SendTo("/topic/match/{id}/actions")
-    public MatchActionsPlayersMessage particularGameActionMessage(@DestinationVariable int id,
-            MatchActionsPlayersMessage actionMessage) {
-        return new MatchActionsPlayersMessage(actionMessage.getAction(), actionMessage.getPlayerNumber());
-    }
+    /*
+     * @MessageMapping("/match/{id}/players")
+     * 
+     * @SendTo("/topic/match/{id}/players")
+     * public MatchGunfighterMessage
+     * particularGamePlayerMessage(@DestinationVariable int id,
+     * Integer playerNumber) {
+     * Gunfighter gunfighter = gunfighterService.findByMatchAndGunfighter(id,
+     * playerNumber);
+     * return new MatchGunfighterMessage(TypeMessage.PLAYERINFO,
+     * gunfighter.getHealth(),
+     * gunfighter.getBullets(),
+     * gunfighter.getPrecision(), gunfighter.getPlayerNumber(),
+     * gunfighter.getCards());
+     * }
+     * 
+     * @MessageMapping("/match/{id}/actions")
+     * 
+     * @SendTo("/topic/match/{id}/actions")
+     * public MatchActionsPlayersMessage
+     * particularGameActionMessage(@DestinationVariable int id,
+     * MatchActionsPlayersMessage actionMessage) {
+     * return new MatchActionsPlayersMessage(actionMessage.getAction(),
+     * actionMessage.getPlayerNumber());
+     * }
+     * 
+     */
 
 }

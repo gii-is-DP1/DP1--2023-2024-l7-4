@@ -339,9 +339,9 @@ public class CardService {
         private void executeCard9(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
-                if ((statePlayerSecondary.getCardPlayed() >= 19
-                                && statePlayerSecondary.getCardPlayed() <= 27)
-                                || List.of(47, 50).contains(statePlayerSecondary.getCardPlayed())) {
+                if ((statePlayerSecondary.getCardPlayedBefore() >= 19
+                                && statePlayerSecondary.getCardPlayedBefore() <= 27)
+                                || List.of(47, 50).contains(statePlayerSecondary.getCardPlayedBefore())) {
                         statePlayerMain.setPrecision(
                                         statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
                                                         : CardUtils.limit(statePlayerMain.getPrecision() + 3));
@@ -873,8 +873,18 @@ public class CardService {
                 statePlayerSecondary.setPrecision(statePlayerSecondary.getPrecisionChange()
                                 ? CardUtils.limit(statePlayerSecondary.getPrecision() - 3)
                                 : statePlayerSecondary.getPrecision());
-                statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
-                                : CardUtils.limit(statePlayerMain.getPrecision() + 1));
+
+                // DESCARTAR Y ROBAR CARTA
+
+                List<Integer> updatedCards;
+
+                updatedCards = statePlayerMain.getCards().stream()
+                                .filter(c -> c != statePlayerMain.getCardPlayed())
+                                .collect(Collectors.toList());
+                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
+
+                updatedCards.add(newCard);
+                statePlayerMain.setCards(updatedCards);
 
         }
 
@@ -885,42 +895,31 @@ public class CardService {
 
                 statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
 
-                statePlayerMain.setPrecision(statePlayerMain.getWinPrecision() == 1 ? statePlayerMain.getPrecision()
-                                : CardUtils.limit(statePlayerMain.getPrecision() + 1));
-
                 // TODO: MANDAR MODAL POR SI QUIERE DESCARTAR DOS CARTAS PARA PREVENIR EL DAÑO
                 // Versión preliminar que lo hace de forma aleatoria
 
-                Double random = Math.random();
-                if (random < 0.5) {
+                if (statePlayerMain.getPreventDamage() == true) {
 
-                        // DESCARTAR Y ROBAR 2 CARTAS
+                        // DESCARTAR 2 CARTAS
 
                         List<Integer> updatedCards;
                         List<Integer> indicesAleatorios = new ArrayList<>();
 
                         while (indicesAleatorios.size() < 2) {
                                 Double indiceAleatorio = Math
-                                                .floor(Math.random() * statePlayerSecondary.getCards().size()
+                                                .floor(Math.random() * statePlayerMain.getCards().size()
                                                                 + 1);
                                 if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                         indicesAleatorios.add(indiceAleatorio.intValue());
                                 }
                         }
 
-                        updatedCards = statePlayerSecondary.getCards().stream()
+                        updatedCards = statePlayerMain.getCards().stream()
                                         .filter(card -> !indicesAleatorios.contains(
-                                                        statePlayerSecondary.getCards().indexOf(card)))
+                                                        statePlayerMain.getCards().indexOf(card)))
                                         .collect(Collectors.toList());
-                        Integer newCard1 = deckOfCards.remove(deckOfCards.size() - 1);
-                        Integer newCard2 = deckOfCards.remove(deckOfCards.size() - 1);
-
-                        updatedCards.add(newCard1);
-                        updatedCards.add(newCard2);
-                        statePlayerSecondary.setCards(updatedCards);
 
                         statePlayerMain.setCards(updatedCards);
-                        statePlayerMain.setPrecisionChange(false);
                 }
 
         }
@@ -1030,16 +1029,14 @@ public class CardService {
 
                 statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
 
-                // DESCARTAR Y ROBAR CARTA
+                // DESCARTAR CARTA
 
                 List<Integer> updatedCards;
 
                 updatedCards = statePlayerMain.getCards().stream()
                                 .filter(c -> c != statePlayerMain.getCardPlayed())
                                 .collect(Collectors.toList());
-                Integer newCard = deckOfCards.remove(deckOfCards.size() - 1);
 
-                updatedCards.add(newCard);
                 statePlayerMain.setCards(updatedCards);
 
                 MatchDeckMessage message = new MatchDeckMessage(TypeMessage.CHOOSE, deckOfCards, List.of(), List.of(),
@@ -1132,9 +1129,9 @@ public class CardService {
                                 ? CardUtils.limit(statePlayerSecondary.getPrecision() - 1)
                                 : statePlayerSecondary.getPrecision());
 
-                if ((statePlayerSecondary.getCardPlayedBefore() >= 10
-                                && statePlayerSecondary.getCardPlayedBefore() <= 18)
-                                || statePlayerSecondary.getCardPlayedBefore() == 48) {
+                if ((statePlayerSecondary.getCardPlayed() >= 10
+                                && statePlayerSecondary.getCardPlayed() <= 18)
+                                || statePlayerSecondary.getCardPlayed() == 48) {
 
                         statePlayerSecondary.setBullets(statePlayerSecondary.getBulletsChange()
                                         ? CardUtils.limit(statePlayerSecondary.getBullets() - 2)
