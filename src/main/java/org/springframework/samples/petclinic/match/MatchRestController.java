@@ -258,5 +258,9 @@ public class MatchRestController {
             MatchActionsPlayersMessage actionMessage) {
         return new MatchActionsPlayersMessage(actionMessage.getAction(), actionMessage.getPlayerNumber());
     }
-
+//LOGROS 
+    @GetMapping("/juegaTuPrimeraPartida/{id}")
+    public Boolean juegaTuPrimeraPartida(@PathVariable("id") Integer id) {
+        return matchService.juegaTuPrimeraPartida(id);
+    }
 }

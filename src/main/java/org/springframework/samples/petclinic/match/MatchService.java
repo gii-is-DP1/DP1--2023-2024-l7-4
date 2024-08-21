@@ -12,6 +12,7 @@ import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
+import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +22,14 @@ public class MatchService {
     private MatchRepository matchRepository;
     private GunfighterService gunfighterService;
     private CardService cardService;
+    private UserRepository userRepository;
 
     @Autowired
     public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService) {
         this.matchRepository = matchRepository;
         this.gunfighterService = gunfighterService;
         this.cardService = cardService;
-
+        this.userRepository= userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -134,4 +136,15 @@ public class MatchService {
                     gunfighter0, match);
         }
     }
+
+//FUNCIONES PARA LOS LOGROS:
+    @Transactional(readOnly = true)
+    public Boolean juegaTuPrimeraPartida(Integer u) throws DataAccessException {
+    String userName= userRepository.findById(u).get().getUsername();
+    List<Match> matches= findMatchsByPlayer(userName);
+        if(matches.size()==0){
+            return false;
+    }
+    return true;
+}
 }
