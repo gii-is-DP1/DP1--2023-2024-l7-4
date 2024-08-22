@@ -10,7 +10,7 @@ export default function Register() {
 
   function handleSubmit({ values }) {
 
-    if(!registerFormRef.current.validate()) return;
+    if (!registerFormRef.current.validate()) return;
 
     const request = values;
     let state = "";
@@ -60,13 +60,14 @@ export default function Register() {
   }
 
   useEffect(() => {
-      });
+  });
 
-   return (
+  return (
     <div className="auth-page-container">
-      <h1>Register</h1>
-      <div className="auth-form-container">
-        <FormGenerator
+      <div className="hero-div">
+        <h1 className="text-center">Register</h1>
+        <div className="western-form-container2">
+          <FormGenerator
             ref={registerFormRef}
             inputs={
               registerFormPlayerInputs
@@ -75,10 +76,11 @@ export default function Register() {
             numberOfColumns={1}
             listenEnterKey
             buttonText="Save"
-            buttonClassName="auth-button"
+            buttonClassName="button-container"
           />
         </div>
       </div>
-    );
-  
-  }
+    </div>
+  );
+
+}

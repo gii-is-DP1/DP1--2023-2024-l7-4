@@ -30,29 +30,77 @@ body {
 }
 
 .button-container {
-    background-color: #8b4513;
-    border: none;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 1rem;
-    margin: 10px 5px;
-    transition-duration: 0.2s;
-    cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    background-color: #8b4513 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block!important;
+    font-size: 1rem !important;
+    margin: 10px 5px !important;
+    transition-duration: 0.2s !important;
+    cursor: pointer !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
+    font-family: 'Almendra SC', serif !important;
+}
+
+.button-container:hover {
+    transform: scale(1.05) !important;
+    background-color: #391d0b !important;
+}
+
+.button-container a {
+    text-decoration: none !important;
+}
+
+.button-container-bad {
+    background-color: #484644 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 1rem !important;
+    margin: 10px 5px !important;
+    transition-duration: 0.2s !important;
+    cursor: pointer !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
+    font-family: 'Almendra SC', serif !important;
+}
+
+.button-container-bad:hover {
+    transform: scale(1.05) !important;
+    background-color: #19120d !important;
+}
+
+.button-container-bad a {
+    text-decoration: none !important;
+}
+
+.western-message {
     font-family: 'Almendra SC', serif;
+    color: #000000;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px #000;
+    margin-top: 15px;
+    display: block;
 }
 
 .table-western {
     .table-western {
-        background-color: transparent; /* Asegúrate de que el fondo sea transparente */
-        border-collapse: collapse; /* Elimina los espacios entre celdas si es necesario */
-      }      
+        background-color: transparent;
+        /* Asegúrate de que el fondo sea transparente */
+        border-collapse: collapse;
+        /* Elimina los espacios entre celdas si es necesario */
+    }
+
     margin-top: 20px;
-    font-family: 'Almendra SC', serif;
+    font-family: 'Almendra SC',
+    serif;
 }
 
 /* Estilos para las celdas */
@@ -76,14 +124,6 @@ body {
     /* Color del texto */
 }
 
-.button-container:hover {
-    transform: scale(1.05);
-    /* Ajusta el factor de escala según sea necesario */
-}
-
-.button-container a {
-    text-decoration: none;
-}
 
 .button-container .btn {
     background-color: #8b4513;
@@ -125,7 +165,8 @@ body {
 
 .image-button:hover {
     opacity: 0.8;
-    /* Efecto hover, ajusta según sea necesario */
+    transform: scale(1.10);
+    transition-duration: 300ms;
 }
 
 .transparent-navbar {
@@ -186,4 +227,40 @@ body {
     text-transform: uppercase;
     display: flex;
     align-items: center;
+}
+
+.western-form-container2 {
+    font-family: 'Almendra SC', serif;
+    color: #4d2e0a;
+    /* Un color marrón oscuro para el texto */
+}
+
+.western-form-container2 label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #4d2e0a;
+    text-shadow: 1px 1px 2px #000;
+    font-family: 'Almendra SC', serif;
+}
+
+.western-form-container2 input {
+    font-family: 'Almendra SC', serif;
+    font-size: 1rem;
+    padding: 8px;
+    border: 2px solid #8b4513;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    background-color: #fdfdfd;
+}
+
+.western-form-container2 .options-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.western-button {
+    font-family: 'Almendra SC', serif;
 }

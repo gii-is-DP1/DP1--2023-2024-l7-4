@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Form, FormGroup, Input, Label } from 'reactstrap';
-import "../static/css/auth/authButton.css";
-import "../static/css/auth/authPage.css";
 import '../static/css/westernTheme.css';
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
@@ -73,12 +71,12 @@ class PlayerEdit extends Component {
 
     render() {
         const { item } = this.state;
-        const title = <h2> Edit Player</h2>;
+        const title = <h1 className='text-center'> Edit Player</h1>;
 
-        return <div className='auth-page-container'>
+        return <div className='admin-page-container'>
             <div className="hero-div">
                 {title}
-                <Form onSubmit={this.handleSubmit} className='auth-form-container2'>
+                <Form onSubmit={this.handleSubmit} className='western-form-container2'>
                     <FormGroup>
                         <Label for="name">Name</Label>
                         <Input type="text" required name="name" id="name" value={item.name}
@@ -106,10 +104,10 @@ class PlayerEdit extends Component {
                     </FormGroup>
                     <FormGroup>
                         <div className="options-row">
-                            <button className="auth-button" type="submit">Save</button>
-                            <Link className="auth-button" to={`/myProfile/${this.username}`} style={{ textDecoration: "none" }}>
+                            <button className="button-container" type="submit">Save</button>
+                            <Link className="button-container-bad" to={`/myProfile/${this.username}`}>
                                 Cancel
-                            </Link>                        
+                            </Link>
                             </div>
                     </FormGroup>
                 </Form>

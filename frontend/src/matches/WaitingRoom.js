@@ -3,7 +3,6 @@ import '../App.css';
 import '../static/css/westernTheme.css';
 import tokenService from '../services/token.service';
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from "reactstrap";
 import getIdFromUrl from "../util/getIdFromUrl";
 import jwtDecode from 'jwt-decode';
@@ -23,6 +22,13 @@ export default function WaitingRoom() {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
 
+    useEffect(() => {
+        if (joinedPlayers) {
+            if (joinedPlayers[0] === username) {
+                setWaitingMessage("Waiting for the oponent...")
+            }
+        }
+    }, [match])
 
 
     useEffect(() => {
@@ -172,13 +178,13 @@ export default function WaitingRoom() {
     return (
         <div className="admin-page-container">
             <Modal isOpen={showConfirmationModal}>
-                <ModalHeader toggle={handleCancelLeave}>Confirmación</ModalHeader>
-                <ModalBody>
-                    ¿Estás seguro de que quieres salir de esta página?
+                <ModalHeader toggle={handleCancelLeave} style={{ fontFamily: "Almendra SC" }}></ModalHeader>
+                <ModalBody style={{ fontFamily: "Almendra SC" }}>
+                    Are you sure you want to leave?
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={handleConfirmGoToLobby}>Sí, salir</Button>
-                    <Button color="secondary" onClick={handleCancelLeave}>Cancelar</Button>
+                    <Button color="danger" style={{ fontFamily: "Almendra SC" }} onClick={handleConfirmGoToLobby}>Yes, leave</Button>
+                    <Button color="secondary" style={{ fontFamily: "Almendra SC" }} onClick={handleCancelLeave}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             <div>
@@ -200,18 +206,20 @@ export default function WaitingRoom() {
                             </tbody>
                         </Table>
                     </div>
+                    {joinedPlayers && (joinedPlayers.length == 2 && username === joinedPlayers[0] ? <span></span> 
+                    : <span className='western-message'>{waitingMessage}</span>)}
                 </div>
             </div>
 
             <div style={{ textAlign: 'center' }}>
-                <Button className="button-container btn" onClick={handleConfirmLeave}>
+                <Button className='button-container-bad' onClick={handleConfirmLeave}>
                     Go to Lobby
                 </Button>
                 {match.joinedPlayers ? (match.joinedPlayers.length === 2 && match.joinedPlayers[0] === username ? (
-                    <Button outline color="primary" onClick={handleStartMatch}>
+                    <Button className='button-container' onClick={handleStartMatch}>
                         Start Match
                     </Button>
-                ) : waitingMessage) : "Loading.."}
+                ) : <span></span>) : <span>Loading...</span>}
             </div>
         </div>
     );

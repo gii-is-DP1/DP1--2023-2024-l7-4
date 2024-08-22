@@ -63,7 +63,7 @@ export default function MyProfile() {
               </tbody>
             </Table>
             <Link to={`/players/edit/${username}`}>
-              <button className="auth-button">Edit Profile</button>
+              <button className="button-container">Edit Profile</button>
             </Link>
 
           </div>
