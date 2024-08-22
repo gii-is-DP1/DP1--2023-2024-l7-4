@@ -259,6 +259,15 @@ public class MatchRestController {
         public Boolean juega5partidas(@PathVariable("id") Integer id){
             return matchService.juega5partidas(id);
         }
+    @GetMapping("/ganaPrimeraPartida/{id}")
+        public Boolean ganaPrimeraPartida(@PathVariable("id") Integer id) {
+            return matchService.ganaPrimeraPartida(id);
+}
+
+    @GetMapping("/gana5partidas/{id}")
+        public Boolean gana5partidas(@PathVariable("id") Integer id) {
+         return matchService.gana5partidas(id);
+}
 
     /*
      * @MessageMapping("/match/{id}/players")

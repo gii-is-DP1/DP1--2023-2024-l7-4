@@ -156,4 +156,36 @@ public Boolean juega5partidas(Integer u) throws DataAccessException {
     }
     return true;
 }
+@Transactional(readOnly = true)
+public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
+    String userName= userRepository.findById(u).get().getUsername();
+    List<Match> matches= findMatchsByPlayer(userName);
+    if(matches.size()==0){
+        return false;
+    }
+    for (Match match : matches) {
+        if(match.getWinner()==userName){
+            return true;
+        }
+    }
+    return false;
+}
+@Transactional(readOnly = true)
+    public Boolean gana5partidas(Integer u) throws DataAccessException {
+        String userName= userRepository.findById(u).get().getUsername();
+        List<Match> matches= findMatchsByPlayer(userName);
+        if(matches.size()<5){
+            return false;
+        }
+        Integer numVic =0 ;
+        for(Match m:matches){
+            if(m.getWinner() == userName){
+                numVic++;
+            }
+        }
+        if(numVic<5){
+            return false;
+        }
+        return true;
+    }
 }
