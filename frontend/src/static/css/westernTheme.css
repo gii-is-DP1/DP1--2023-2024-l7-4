@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Almendra+SC&display=swap');
+
 body {
-    font-family: 'Cedarville Cursive', cursive;
-    background-color: #f8f4e3;  
+    font-family: 'Almendra SC', cursive;
+    background-color: #f8f4e3;
     color: #4d2e0a;
 }
 
@@ -11,19 +13,21 @@ body {
     text-align: center;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    font-family: 'Almendra SC', serif;
 }
 
 .hero-div h1 {
+    font-family: 'Almendra SC', serif;
     font-size: 3rem;
     margin-bottom: 10px;
     text-shadow: 2px 2px #8b4513;
 }
 
 .hero-div h3 {
+    font-family: 'Almendra SC', serif;
     font-size: 1.5rem;
     text-shadow: 1px 1px #8b4513;
 }
-
 
 .button-container {
     background-color: #8b4513;
@@ -35,35 +39,46 @@ body {
     display: inline-block;
     font-size: 1rem;
     margin: 10px 5px;
-    transition-duration: 0.4s;
+    transition-duration: 0.2s;
     cursor: pointer;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    font-family: 'Almendra SC', serif;
 }
 
 .table-western {
-    background-color: #d2b48c; /* Color de fondo estilo western */
-    border: 5px solid #8b4513; /* Borde de la tabla */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Sombra */
-    margin-top: 20px; /* Margen superior */
+    .table-western {
+        background-color: transparent; /* Asegúrate de que el fondo sea transparente */
+        border-collapse: collapse; /* Elimina los espacios entre celdas si es necesario */
+      }      
+    margin-top: 20px;
+    font-family: 'Almendra SC', serif;
 }
 
 /* Estilos para las celdas */
-.table-western th, .table-western td {
-    text-align: center; /* Alineación del texto */
-    padding: 10px; /* Espaciado interno */
-    border: none; /* Sin bordes en las celdas */
+.table-western th,
+.table-western td {
+    text-align: center;
+    background-color: transparent;
+    /* Alineación del texto */
+    padding: 10px;
+    /* Espaciado interno */
+    border: none;
+    /* Sin bordes en las celdas */
+    font-family: 'Almendra SC', serif;
 }
 
 /* Estilos para los encabezados */
 .table-western th {
-    background-color: #8b4513; /* Color de fondo para los encabezados */
-    color: white; /* Color del texto */
+    background-color: #8b4513;
+    /* Color de fondo para los encabezados */
+    color: rgb(255, 255, 255);
+    /* Color del texto */
 }
 
 .button-container:hover {
-    transform: scale(1.1); /* Ajusta el factor de escala según sea necesario */
+    transform: scale(1.05);
+    /* Ajusta el factor de escala según sea necesario */
 }
 
 .button-container a {
@@ -84,42 +99,91 @@ body {
     cursor: pointer;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    font-family: 'Almendra SC', serif;
 }
 
 .button-container .btn:hover {
     background-color: #5c3317;
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
-
 .image-button {
-    background-size: cover;
+    background-size: contain;
     background-position: center;
-    color: white; /* Cambia esto según sea necesario */
+    background-image: url('../../../public/revolver.png');
+    background-repeat: no-repeat;
+    color: white;
     text-decoration: none;
     border: none;
-    padding: 10px 20px; /* Ajusta el padding según sea necesario */
-    font-size: 16px; /* Ajusta el tamaño de la fuente según sea necesario */
+    padding: 15px 30px;
+    font-size: 16px;
     cursor: pointer;
     display: inline-block;
     text-align: center;
+    font-family: 'Almendra SC', serif;
 }
 
 .image-button:hover {
-    opacity: 0.8; /* Efecto hover, ajusta según sea necesario */
+    opacity: 0.8;
+    /* Efecto hover, ajusta según sea necesario */
 }
 
 .transparent-navbar {
     background-color: transparent !important;
-  }
+    font-family: 'Almendra SC', serif;
+}
 
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px;
-  }
-  
+    font-family: 'Almendra SC', serif;
+}
+
 .pagination Button {
     margin: 0 5px;
-  }
+    font-family: 'Almendra SC', serif;
+}
+
+.western-navbar {
+    background-color: #4d3a2c;
+    /* Marrón oscuro */
+    border-bottom: 4px solid #4B2E00;
+    /* Borde inferior oscuro */
+    padding: 10px 20px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.5);
+}
+
+.western-navbar-brand {
+    font-family: 'Almendra SC', serif;
+    font-size: 2rem;
+    color: #FFD700;
+    text-shadow: 2px 2px 2px #000;
+}
+
+.western-navlink {
+    font-family: 'Almendra SC', serif;
+    font-size: 1.2rem;
+    color: #FFD700;
+    text-transform: uppercase;
+    margin-right: 15px;
+    transition: color 0.3s ease;
+}
+
+.western-navlink:hover {
+    color: #FFA500;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.western-navbar-text {
+    font-family: 'Almendra SC', serif;
+    font-size: 1.2rem;
+    color: #FFD700;
+    text-shadow: 1px 1px 2px #000;
+    margin-left: auto;
+    padding-right: 15px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}

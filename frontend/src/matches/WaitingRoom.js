@@ -185,16 +185,16 @@ export default function WaitingRoom() {
                 <div className="hero-div">
                     <h1 className="text-center">JOINED PLAYERS</h1>
                     <div>
-                        <Table aria-label="achievements" className="mt-4">
+                        <Table aria-label="achievements" className="table-western">
                             <thead>
                                 <tr>
-                                    <th className="text-center">PLAYERS</th>
+                                    <th className="table-western th">PLAYERS</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {joinedPlayers.map((player, index) => (
                                     <tr key={index}>
-                                        <td className="text-center">{player}</td>
+                                        <td className="table-western td">{player}</td>
                                     </tr>
                                 ))}
                             </tbody>
