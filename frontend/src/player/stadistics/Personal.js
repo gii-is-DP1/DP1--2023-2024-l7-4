@@ -67,7 +67,7 @@ export default function PlayerStadisticPersonal(){
           size="md"
           color= "warning"
           tag={Link}
-          to={`/stadistics/personal`}
+          to={`/statistics/personal`}
           >
             Estadísticas Personales
           </Button> 
@@ -76,7 +76,7 @@ export default function PlayerStadisticPersonal(){
           size="md"
           color= "warning"
           tag={Link}
-          to={`/stadistics/logros`}
+          to={`/statistics/achievements`}
           >
             Logros
           </Button> 
@@ -91,7 +91,7 @@ export default function PlayerStadisticPersonal(){
         <KhakiBox>
                   <thead>
                       <tr>
-                          <th width="20%">Número de partidas jugadas = {matchesList.size} </th>
+                          <th width="20%">Número de partidas jugadas = {matchesList?matchesList.length:0} </th>
                       </tr>
                   </thead>
                   <tbody>

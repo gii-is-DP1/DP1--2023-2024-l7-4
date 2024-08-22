@@ -124,7 +124,7 @@ export default function PlayerStadisticLogros(){
             size="md"
             color="warning"
             tag={Link}
-            to={`/stadistics/personal`}
+            to={`/statistics/personal`}
           >
             Estadísticas Personales
           </Button>
@@ -132,7 +132,7 @@ export default function PlayerStadisticLogros(){
             size="md"
             color="warning"
             tag={Link}
-            to={`/stadistics/logros`}
+            to={`/statistics/achievements`}
           >
             Logros
           </Button>

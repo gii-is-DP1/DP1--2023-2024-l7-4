@@ -47,7 +47,7 @@ function AppNavbar() {
                         <NavLink className='western-navlink' tag={Link} to="/myMatches">My matches</NavLink>
                     </NavItem>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/stadistics">Stadistics</NavLink>
+                        <NavLink className='western-navlink' tag={Link} to="/statistics">Statistics</NavLink>
 
                     </NavItem>
                 </>

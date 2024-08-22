@@ -72,10 +72,10 @@ function App() {
       ownerRoutes = (
         <>
     {/* aqui se meten todas las rutas que voy a usar */}
-      <Route path="/stadistics" exact={true} element={<PrivateRoute><Stadistics /></PrivateRoute>} />
+      <Route path="/statistics" exact={true} element={<PrivateRoute><Stadistics /></PrivateRoute>} />
           <Route path="/myProfile/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
-          <Route path="/stadistics/personal" exact={true} element={<PrivateRoute><Personal /></PrivateRoute>} />
-          <Route path= "/stadistics/logros" exact={true} element={<PrivateRoute><Logros /></PrivateRoute>} />
+          <Route path="/statistics/personal" exact={true} element={<PrivateRoute><Personal /></PrivateRoute>} />
+          <Route path= "/statistics/achievements" exact={true} element={<PrivateRoute><Logros /></PrivateRoute>} />
           <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
           <Route path="/game" element={<PrivateRoute><Game/></PrivateRoute>} />
           <Route path="/match/:id/waitingRoom" element={<PrivateRoute><WaitingRoom/></PrivateRoute>} />
