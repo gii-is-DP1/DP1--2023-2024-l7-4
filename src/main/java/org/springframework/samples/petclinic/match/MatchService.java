@@ -12,6 +12,7 @@ import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
+import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +22,14 @@ public class MatchService {
     private MatchRepository matchRepository;
     private GunfighterService gunfighterService;
     private CardService cardService;
+    private UserRepository userRepository;
 
     @Autowired
-    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService) {
+    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService, UserRepository userRepository) {
         this.matchRepository = matchRepository;
         this.gunfighterService = gunfighterService;
         this.cardService = cardService;
-
+        this.userRepository = userRepository;
     }
 
     @Transactional(readOnly = true)
@@ -133,5 +135,57 @@ public class MatchService {
             cardService.executeActionsInOrder(gunfighter1.getCardPlayed(), gunfighter0.getCardPlayed(), gunfighter1,
                     gunfighter0, match);
         }
+    }
+
+//FUNCIONES PARA LOS LOGROS:
+    @Transactional(readOnly = true)
+    public Boolean juegaTuPrimeraPartida(Integer u) throws DataAccessException {
+    String userName= userRepository.findById(u).get().getUsername();
+    List<Match> matches= findMatchsByPlayer(userName);
+        if(matches.size()==0){
+            return false;
+    }
+    return true;
+}
+@Transactional(readOnly = true)
+public Boolean juega5partidas(Integer u) throws DataAccessException {
+    String userName= userRepository.findById(u).get().getUsername();
+    List<Match> matches = findMatchsByPlayer(userName);
+    if(matches.size()<5){
+        return false;
+    }
+    return true;
+}
+@Transactional(readOnly = true)
+public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
+    String userName= userRepository.findById(u).get().getUsername();
+    List<Match> matches= findMatchsByPlayer(userName);
+    if(matches.size()==0){
+        return false;
+    }
+    for (Match match : matches) {
+        if(match.getWinner()==userName){
+            return true;
+        }
+    }
+    return false;
+}
+@Transactional(readOnly = true)
+    public Boolean gana5partidas(Integer u) throws DataAccessException {
+        String userName= userRepository.findById(u).get().getUsername();
+        List<Match> matches= findMatchsByPlayer(userName);
+        if(matches.size()<5){
+            return false;
+        }
+        Integer numVic =0 ;
+        for(Match m:matches){
+            if(m.getWinner() == userName){
+                numVic++;
+            }
+        }
+        if(numVic<5){
+            return false;
+        }
+        return true;
     }
 }
