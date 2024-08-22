@@ -147,4 +147,13 @@ public class MatchService {
     }
     return true;
 }
+@Transactional(readOnly = true)
+public Boolean juega5partidas(Integer u) throws DataAccessException {
+    String userName= userRepository.findById(u).get().getUsername();
+    List<Match> matches = findMatchsByPlayer(userName);
+    if(matches.size()<5){
+        return false;
+    }
+    return true;
+}
 }

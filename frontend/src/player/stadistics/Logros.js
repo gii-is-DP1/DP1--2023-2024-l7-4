@@ -1,25 +1,24 @@
 import {
-    Button,
-    ButtonGroup,
-    Col,
-    Container,
-    Input,
-    Row,
-    Table,
-  } from "reactstrap";
-  import { Link } from "react-router-dom";
-  import { useEffect, useState } from "react";
-  import tokenService from '../../services/token.service';
+  Button,
+  Container,
+  Row,
+  Col,
+} from "reactstrap";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import tokenService from '../../services/token.service';
 
-  const user = tokenService.getUser();
+const user = tokenService.getUser();
+
 export default function PlayerStadisticLogros(){
 
   const jwt = tokenService.getLocalAccessToken();
   const userId = user.id;
-  const [logro1,set1] = useState(null);
+  const [logro1, set1] = useState(null);
+  const [logro2, set2] = useState(null);
 
   useEffect(() => {
-    const logro1 = async () => {
+    const fetchLogro1 = async () => {
       try {
         const response = await fetch(`/api/v1/matches/juegaTuPrimeraPartida/${userId}`, {
           headers: {
@@ -35,57 +34,85 @@ export default function PlayerStadisticLogros(){
         console.error(error.message);
       }
     };
-    logro1();
-  }, [jwt,userId]);
+    fetchLogro1();
+  }, [jwt, userId]);
 
+  useEffect(() => {
+    const fetchLogro2 = async () => {
+      try {
+        const response = await fetch(`/api/v1/matches/juega5partidas/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });        
+        if (!response.ok) {
+          throw new Error(`Error `);
+        }
+        const result = await response.json();
+        set2(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchLogro2();
+  }, [jwt, userId]);
 
-  const KhakiBox = ({ children }) => (
-    <div style={{ backgroundColor: "khaki", padding: "15px", borderRadius: "8px", width: "50%", margin: "0 auto" }}>
+  const LogroBox = ({ children }) => (
+    <div style={{
+      backgroundColor: "khaki",
+      padding: "20px",
+      borderRadius: "8px",
+      textAlign: "center",
+      marginBottom: "20px",
+      minHeight: "100px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center"
+    }}>
       {children}
     </div>
-);
+  );
 
-    return(
-        <div className="auth-page-purple ">
-            <Container style={{ marginTop: "15px" }} fluid>
-      <h1 className="text-center">Estadísticas</h1>
-      <div className="auth-page-yellow">
-        <Button
-          size="md"
-          color= "warning"
-          tag={Link}
-          to={`/stadistics/personal`}
+  return (
+    <div className="auth-page-purple">
+      <Container style={{ marginTop: "15px" }} fluid>
+        <h1 className="text-center">Estadísticas</h1>
+        <div className="auth-page-yellow">
+          <Button
+            size="md"
+            color="warning"
+            tag={Link}
+            to={`/stadistics/personal`}
           >
             Estadísticas Personales
-          </Button> 
+          </Button>
           <Button
-          size="md"
-          color= "warning"
-          tag={Link}
-          to={`/stadistics/logros`}
+            size="md"
+            color="warning"
+            tag={Link}
+            to={`/stadistics/logros`}
           >
             Logros
-          </Button> 
-          </div>      
-        </Container>
-        <Container style={{ marginTop: "5px" }} fluid>
-            <h1 className="text-center">Logros</h1>
-        </Container>
-        <KhakiBox>
-
-
-                  <thead>
-                      <tr>
-                          <th align="center" >Juega Tu Primera Partida</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td align="center">{logro1 ?  "✔️" : "❌"}</td>                      
-                      </tr>
-                  </tbody>
-                  </KhakiBox>
-
-  </div>
-);
+          </Button>
+        </div>
+      </Container>
+      <Container style={{ marginTop: "5px" }} fluid>
+        <h1 className="text-center">Logros</h1>
+        <Row>
+          <Col sm="6">
+            <LogroBox>
+              <p>Juega Tu Primera Partida: </p>
+              <p>{logro1 ? "✔️" : "❌"}</p>
+            </LogroBox>
+          </Col>
+          <Col sm="6">
+            <LogroBox>
+              <p>Juega 5 Partidas: </p>
+              <p>{logro2 ? "✔️" : "❌"}</p>
+            </LogroBox>
+          </Col>
+        </Row>
+      </Container>
+    </div>
+  );
 }

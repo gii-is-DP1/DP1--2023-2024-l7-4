@@ -247,10 +247,18 @@ public class MatchRestController {
                 gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
 
     }
+
+    //LOGROS
+
     @GetMapping("/juegaTuPrimeraPartida/{id}")
         public Boolean juegaTuPrimeraPartida(@PathVariable("id") Integer id) {
          return matchService.juegaTuPrimeraPartida(id);
 }
+
+    @GetMapping("/juega5partidas/{id}")
+        public Boolean juega5partidas(@PathVariable("id") Integer id){
+            return matchService.juega5partidas(id);
+        }
 
     /*
      * @MessageMapping("/match/{id}/players")
