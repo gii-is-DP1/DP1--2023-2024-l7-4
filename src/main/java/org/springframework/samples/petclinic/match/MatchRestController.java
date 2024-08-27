@@ -123,6 +123,8 @@ public class MatchRestController {
         m.setWinner(username);
         if (m.getMatchState() == MatchState.IN_PROGRESS)
             m.setMatchState(MatchState.CLOSED);
+            m.setFinishDateTime(LocalDateTime.now());
+            m.setStartDate(m.getStartDate());
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
@@ -135,6 +137,8 @@ public class MatchRestController {
         }
         if (m.getMatchState() == MatchState.OPEN) {
             m.setMatchState(MatchState.IN_PROGRESS);
+            m.setStartDate(LocalDateTime.now());
+            m.setFinishDateTime(null);
  
             Gunfighter gunfighter0 = new Gunfighter();
             gunfighter0.setPlayerNumber(0);
@@ -275,6 +279,11 @@ public class MatchRestController {
     @GetMapping("/winMatches/{id}")
     public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
      return matchService.findWinMatchsByPlayer(id);
+    }
+
+    @GetMapping("/timePlayed/{id}")
+    public Double timePlayedByUserName(@PathVariable("id") Integer id) {
+    return matchService.timePlayedByUserName(id);
     }
 
     /*

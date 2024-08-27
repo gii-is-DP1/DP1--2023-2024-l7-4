@@ -23,12 +23,10 @@ export default function PlayerStadisticPersonal(){
 
   const [matchesList, setMatches] = useState(null);
   const [winMatchesList, setWinMatches] = useState(null);
+  const [minutesPlayed, setMinutesPlayed] = useState(null);
   const [playerList, setPlayers] = useState(null);
 
 
-  
-
-  //Mostrar Lista de partidas
   useEffect(() => {
     const listMatches = async () => {
       try {
@@ -59,7 +57,7 @@ export default function PlayerStadisticPersonal(){
           },
         });
         if (!response.ok) {
-          throw new Error(`Error   ${username}`);
+          throw new Error(`Error   ${userId}`);
         }
         const result = await response.json();
         setWinMatches(result);
@@ -68,8 +66,27 @@ export default function PlayerStadisticPersonal(){
       }
     };  
     listWinMatches();
-  }, [jwt, username]);
+  }, [jwt, userId]);
   
+  useEffect(() => {
+    const listMinutes = async () => {
+      try {
+        const response = await fetch(`/api/v1/matches/timePlayed/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error   ${userId}`);
+        }
+        const result = await response.json();
+        setMinutesPlayed(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };  
+    listMinutes();
+  }, [jwt, userId]);
 
 
 
@@ -116,6 +133,7 @@ export default function PlayerStadisticPersonal(){
                       <tr>
                           <th width="20%">Número de partidas jugadas = {matchesList?matchesList.length:0} </th>
                           <th width="20%">Número de partidas ganadas = {winMatchesList?winMatchesList:0} </th>
+                          <th width="20%">Minutos jugados = {minutesPlayed?minutesPlayed:0} </th>
                       </tr>
                   </thead>
                   <tbody>

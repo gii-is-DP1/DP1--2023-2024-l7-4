@@ -44,4 +44,12 @@ public class Match extends BaseEntity {
 
     @Column
     private String winner;
+
+    @Column(name = "start_date")
+	@DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
+    private LocalDateTime startDate;
+
+    @Column(name = "finish_date")
+	@DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
+    private LocalDateTime finishDateTime;
 }

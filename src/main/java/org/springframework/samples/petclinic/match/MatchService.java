@@ -1,5 +1,6 @@
 package org.springframework.samples.petclinic.match;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -201,4 +202,17 @@ public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
         }
         return count;
     }
+
+    @Transactional(readOnly = true)
+     public Double timePlayedByUserName(Integer u) throws DataAccessException {
+        String userName= userRepository.findById(u).get().getUsername();
+        List<Double> timePlayedForGamesByPlayer= new ArrayList<>();
+        List<Match> matches = findMatchsByPlayer(userName);
+        for (Match m : matches) {
+            Double tiempo= ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime())+0.;
+            timePlayedForGamesByPlayer.add(tiempo);
+        }
+        Double res= timePlayedForGamesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
+        return res;
+     }  
 }
