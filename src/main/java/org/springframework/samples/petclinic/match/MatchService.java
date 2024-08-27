@@ -177,7 +177,7 @@ public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
         if(matches.size()<5){
             return false;
         }
-        Integer numVic =0 ;
+        Integer numVic = 0 ;
         for(Match m:matches){
             if(m.getWinner() == userName){
                 numVic++;
@@ -187,5 +187,18 @@ public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
             return false;
         }
         return true;
+    }
+
+    @Transactional(readOnly = true)
+    public Integer findWinMatchsByPlayer(Integer u) throws DataAccessException {
+        Integer count = 0;
+        String userName = userRepository.findById(u).get().getUsername();
+        List<Match> matches= findMatchsByPlayer(userName);
+        for(Match m:matches){
+            if (m.getWinner() == userName) {
+                count++;
+            }
+        }
+        return count;
     }
 }

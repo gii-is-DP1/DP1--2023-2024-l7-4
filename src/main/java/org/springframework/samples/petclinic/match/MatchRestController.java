@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.match;
 
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -134,7 +135,7 @@ public class MatchRestController {
         }
         if (m.getMatchState() == MatchState.OPEN) {
             m.setMatchState(MatchState.IN_PROGRESS);
-
+ 
             Gunfighter gunfighter0 = new Gunfighter();
             gunfighter0.setPlayerNumber(0);
             gunfighter0.setPlayer(playerService.findByUsername(m.getJoinedPlayers().get(0)));
@@ -268,6 +269,13 @@ public class MatchRestController {
         public Boolean gana5partidas(@PathVariable("id") Integer id) {
          return matchService.gana5partidas(id);
 }
+
+    //PERSONAL
+
+    @GetMapping("/winMatches/{id}")
+    public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
+     return matchService.findWinMatchsByPlayer(id);
+    }
 
     /*
      * @MessageMapping("/match/{id}/players")

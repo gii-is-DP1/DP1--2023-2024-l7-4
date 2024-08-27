@@ -18,9 +18,11 @@ import {
 export default function PlayerStadisticPersonal(){
   const jwt = tokenService.getLocalAccessToken();
   const username = user.username;
+  const userId = user.id;
 
 
   const [matchesList, setMatches] = useState(null);
+  const [winMatchesList, setWinMatches] = useState(null);
   const [playerList, setPlayers] = useState(null);
 
 
@@ -45,6 +47,27 @@ export default function PlayerStadisticPersonal(){
       }
     };  
     listMatches();
+  }, [jwt, username]);
+
+
+  useEffect(() => {
+    const listWinMatches = async () => {
+      try {
+        const response = await fetch(`/api/v1/matches/winMatches/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error   ${username}`);
+        }
+        const result = await response.json();
+        setWinMatches(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };  
+    listWinMatches();
   }, [jwt, username]);
   
 
@@ -92,6 +115,7 @@ export default function PlayerStadisticPersonal(){
                   <thead>
                       <tr>
                           <th width="20%">Número de partidas jugadas = {matchesList?matchesList.length:0} </th>
+                          <th width="20%">Número de partidas ganadas = {winMatchesList?winMatchesList:0} </th>
                       </tr>
                   </thead>
                   <tbody>
