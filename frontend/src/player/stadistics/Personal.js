@@ -24,6 +24,9 @@ export default function PlayerStadisticPersonal(){
   const [matchesList, setMatches] = useState(null);
   const [winMatchesList, setWinMatches] = useState(null);
   const [minutesPlayed, setMinutesPlayed] = useState(null);
+  const [maxMinutesPlayed, setMaxMinutesPlayed] = useState(null);
+  const [minMinutesPlayed, setMinMinutesPlayed] = useState(null);
+  const [avgMinutesPlayed, setAvgMinutesPlayed] = useState(null);
   const [playerList, setPlayers] = useState(null);
 
 
@@ -88,7 +91,65 @@ export default function PlayerStadisticPersonal(){
     listMinutes();
   }, [jwt, userId]);
 
+  useEffect(() => {
+    const maxMinutes = async () => {
+      try {
+        const response = await fetch(`/api/v1/matches/maxTimePlayed/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error   ${userId}`);
+        }
+        const result = await response.json();
+        setMaxMinutesPlayed(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };  
+    maxMinutes();
+  }, [jwt, userId]);
 
+  useEffect(() => {
+    const minMinutes = async () => {
+      try {
+        const response = await fetch(`/api/v1/matches/minTimePlayed/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error   ${userId}`);
+        }
+        const result = await response.json();
+        setMinMinutesPlayed(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };  
+    minMinutes();
+  }, [jwt, userId]);
+
+  useEffect(() => {
+    const avgMinutes = async () => {
+      try {
+        const response = await fetch(`/api/v1/matches/avgTimePlayed/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error(`Error   ${userId}`);
+        }
+        const result = await response.json();
+        setAvgMinutesPlayed(result);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };  
+    avgMinutes();
+  }, [jwt, userId]);
 
 
 
@@ -134,6 +195,9 @@ export default function PlayerStadisticPersonal(){
                           <th width="20%">Número de partidas jugadas = {matchesList?matchesList.length:0} </th>
                           <th width="20%">Número de partidas ganadas = {winMatchesList?winMatchesList:0} </th>
                           <th width="20%">Minutos jugados = {minutesPlayed?minutesPlayed:0} </th>
+                          <th width="20%">Máximo minutos jugados = {maxMinutesPlayed?maxMinutesPlayed:0} </th>
+                          <th width="20%">Mínimo minutos jugados = {minMinutesPlayed?minMinutesPlayed:0} </th>
+                          <th width="20%">Media de minutos jugados por partida = {avgMinutesPlayed?avgMinutesPlayed:0} </th>
                       </tr>
                   </thead>
                   <tbody>

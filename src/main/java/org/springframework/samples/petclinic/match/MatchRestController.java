@@ -277,14 +277,31 @@ public class MatchRestController {
     //PERSONAL
 
     @GetMapping("/winMatches/{id}")
-    public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
-     return matchService.findWinMatchsByPlayer(id);
+        public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
+            return matchService.findWinMatchsByPlayer(id);
     }
 
     @GetMapping("/timePlayed/{id}")
-    public Double timePlayedByUserName(@PathVariable("id") Integer id) {
-    return matchService.timePlayedByUserName(id);
+        public Double timePlayedByUserName(@PathVariable("id") Integer id) {
+            return matchService.timePlayedByUserName(id);
     }
+    
+    
+    @GetMapping("/maxTimePlayed/{username}")
+        public Double maxTimePlayedByUserName(@PathVariable("username") Integer username) {
+            return matchService.maxTimePlayedByUserName(username);
+    }
+
+    @GetMapping("/minTimePlayed/{username}")
+        public Double minTimePlayedByUserName(@PathVariable("username") Integer username) {
+            return matchService.minTimePlayedByUserName(username);
+    }
+
+@GetMapping("/avgTimePlayed/{username}")
+        public Double averageTimePlayedByUserName(@PathVariable("username") Integer username) {
+            return matchService.averageTimePlayedByUserName(username);
+    }
+    
 
     /*
      * @MessageMapping("/match/{id}/players")
