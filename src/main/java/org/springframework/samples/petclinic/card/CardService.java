@@ -1,8 +1,11 @@
 package org.springframework.samples.petclinic.card;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.match.Match;
 import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
@@ -25,11 +28,26 @@ public class CardService {
                 this.notificationService = notificationService;
         }
 
+        private List<Integer> reshuffleDeck(List<Integer> cards0, List<Integer> cards1) {
+                List<Integer> deck = new ArrayList<>();
+                IntStream.rangeClosed(0, 50).forEach(deck::add);
+
+                deck.stream().filter(card -> !cards0.contains(card) || !cards1.contains(card)).toList();
+                Collections.shuffle(deck);
+                return deck;
+        }
+
         @Transactional
         public void executeActionsInOrder(Integer cardFirst, Integer cardSecond, Gunfighter gunfighterFirst,
                         Gunfighter gunfighterSecond, Match match) {
                 executeSingleCard(cardFirst, gunfighterFirst, gunfighterSecond, match.getDeck(), match.getId());
+                if (match.getDeck().isEmpty()) {
+                        match.setDeck(reshuffleDeck(gunfighterFirst.getCards(), gunfighterSecond.getCards()));
+                }
                 executeSingleCard(cardSecond, gunfighterSecond, gunfighterFirst, match.getDeck(), match.getId());
+                if (match.getDeck().isEmpty()) {
+                        match.setDeck(reshuffleDeck(gunfighterFirst.getCards(), gunfighterSecond.getCards()));
+                }
         }
 
         @Transactional
@@ -1328,7 +1346,7 @@ public class CardService {
                         Gunfighter statePlayerSecondary,
                         Integer matchId) {
 
-                List<Integer> indicesAleatorios = List.of(statePlayerMain.getCardPlayed());
+                List<Integer> indicesAleatorios = new ArrayList<>();
                 while (indicesAleatorios.size() < 3) {
                         Double indiceAleatorio = Math
                                         .floor(Math.random() * statePlayerMain.getCards().size()

@@ -12,7 +12,7 @@ const ButtonWithSound = ({ buttonText, onClick }) => {
     };
 
     const playSoundAndClick = (event) => {
-        event.preventDefault(); // Asegúrate de que el evento no se propague si es necesario
+        event.preventDefault();
 
         if (clickAudioRef.current) {
             clickAudioRef.current.currentTime = 0;

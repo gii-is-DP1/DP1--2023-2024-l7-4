@@ -33,13 +33,9 @@ public class UserService {
 
 	private UserRepository userRepository;
 
-//	private OwnerService ownerService;
-//
-
 	@Autowired
 	public UserService(UserRepository userRepository) {
 		this.userRepository = userRepository;
-//		this.ownerService = ownerService;
 	}
 
 	@Transactional
@@ -94,8 +90,6 @@ public class UserService {
 	@Transactional
 	public void deleteUser(Integer id) {
 		User toDelete = findUser(id);
-//		this.userRepository.deleteOwnerRelation(id);
-//		this.userRepository.deleteVetRelation(id);
 		this.userRepository.delete(toDelete);
 	}
 

@@ -21,14 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class MatchService {
 
     private MatchRepository matchRepository;
-    private GunfighterService gunfighterService;
     private CardService cardService;
     private UserRepository userRepository;
 
     @Autowired
-    public MatchService(MatchRepository matchRepository, GunfighterService gunfighterService, CardService cardService, UserRepository userRepository) {
+    public MatchService(MatchRepository matchRepository, CardService cardService, UserRepository userRepository) {
         this.matchRepository = matchRepository;
-        this.gunfighterService = gunfighterService;
         this.cardService = cardService;
         this.userRepository = userRepository;
     }

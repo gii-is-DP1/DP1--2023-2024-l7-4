@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -88,8 +89,8 @@ public class MatchRestController {
     // FUNCION PARA JOIN
 
     @PutMapping("/{id}/join")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) throws NotFoundException{
         Match m = matchService.findMatchById(id);
         List<String> joinedPlayers = m.getJoinedPlayers();
         username = username.replace("\"", "");
