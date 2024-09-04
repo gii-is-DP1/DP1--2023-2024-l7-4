@@ -1,12 +1,20 @@
 package org.springframework.samples.petclinic.player;
 
+import java.util.Set;
+
 import org.springframework.samples.petclinic.user.User;
+import org.springframework.samples.petclinic.request.Request;
+
+import java.util.Set;
+import java.util.HashSet;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -35,11 +43,19 @@ public class Player extends User {
     @Column(name = "nickname")
     @NotEmpty
     @Size(max=30)
+    
     String nickname;
 
     @Column(name = "email", unique = true)
     @NotEmpty
     @Email
     String email;
+
+   
+
+   
+
+
+  
     
 }
