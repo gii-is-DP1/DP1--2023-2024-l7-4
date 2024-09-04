@@ -32,18 +32,53 @@ function AppNavbar() {
             adminLinks = (
                 <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/users">Users</NavLink>
+                        <NavLink className='western-navlink' tag={Link} to="/players">Players</NavLink>
+                    </NavItem >
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/allMatches">Matches</NavLink>
                     </NavItem>
                 </>
             )
         }
-        if (role === "OWNER") {
+        if (role === "PLAYER") {
             ownerLinks = (
                 <>
                     <NavItem>
-                        <NavLink style={{ color: "white" }} tag={Link} to="/game">Game</NavLink>
+                        <NavLink className='western-navlink' tag={Link} to="/myMatches">My matches</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/statistics">Statistics</NavLink>
 
+                    </NavItem>
+                </>
+            )
+        }
+        if (role === "VET") {
+            ownerLinks = (
+                <>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/consultations">Consultations</NavLink>
+                    </NavItem>
+                </>
+            )
+        }
+
+        if (role === "CLINIC_OWNER") {
+            ownerLinks = (
+                <>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/clinics">Clinics</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/owners">Owners</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/consultations">Consultations</NavLink>
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/vets">Vets</NavLink>
+                        <NavLink className='western-navlink' tag={Link} to="/myMatches">My matches</NavLink>
+                    </NavItem>
                 </>
             )
         }
@@ -53,10 +88,10 @@ function AppNavbar() {
         publicLinks = (
             <>
                 <NavItem>
-                    <NavLink style={{ color: "white" }} id="register" tag={Link} to="/register">Register</NavLink>
+                    <NavLink className='western-navlink' id="register" tag={Link} to="/register">Register</NavLink>
                 </NavItem>
                 <NavItem>
-                    <NavLink style={{ color: "white" }} id="login" tag={Link} to="/login">Login</NavLink>
+                    <NavLink className='western-navlink' id="login" tag={Link} to="/login">Login</NavLink>
                 </NavItem>
             </>
         )
@@ -66,9 +101,15 @@ function AppNavbar() {
         )
         userLogout = (
             <>
-                <NavbarText style={{ color: "white" }} className="justify-content-end">{username}</NavbarText>
+                {!roles.includes('ADMIN') ?
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to={`/myProfile/${username}`}>{username}</NavLink>
+                    </NavItem>
+                    :
+                    <NavbarText className='western-navbar-text'>{username}</NavbarText>
+                }
                 <NavItem className="d-flex">
-                    <NavLink style={{ color: "white" }} id="logout" tag={Link} to="/logout">Logout</NavLink>
+                    <NavLink className='western-navlink' id="logout" tag={Link} to="/logout">Logout</NavLink>
                 </NavItem>
             </>
         )
@@ -77,7 +118,7 @@ function AppNavbar() {
 
     return (
         <div>
-            <Navbar expand="md" dark color='black'>
+            <Navbar expand="md" dark className='western-navbar'>
                 <NavbarBrand href="/">
                     <img alt="logo" src="/logo-gunfighter.png" style={{ height: 40, width: 200 }} />
                 </NavbarBrand>

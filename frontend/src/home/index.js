@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../App.css';
 import '../static/css/westernTheme.css';
 import tokenService from '../services/token.service';
 import { Link } from "react-router-dom";
@@ -84,7 +83,7 @@ export default function Home() {
                 <div className="hero-div">
                     <h1>Gunfighter</h1>
                     <h3>---</h3>
-                    <h3>¿PREPARADO?</h3>
+                    <h3>READY?</h3>
                 </div>
             </div>
         );
@@ -92,29 +91,33 @@ export default function Home() {
         const matchesList = matches.map((m) => {
             return (
                 <tr key={m.id}>
-                    <td className='table-western'>{m.name}</td>
-                    <td className='table-western'>{m.matchState}</td>
-                    <td className='table-western'>
+                    <td className='table-western td'>{m.name}</td>
+                    <td className='table-western td'>{m.matchState}</td>
+                    <td className='table-western td'>
                         {m.matchState === "OPEN" && (
-                            <Button outline color="success" size='sm' onClick={() => {
-                                fetch('/api/v1/matches/' + m.id + "/join", {
-                                    method: 'PUT',
-                                    headers: {
-                                        "Authorization": `Bearer ${jwt}`,
-                                        'Accept': 'application/json',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify(username),
-                                }).then(handleJoinGame(m.id));
-                            }}>
-                                <Link to={`/match/${m.id}/waitingRoom`} className="btn btn-sm" style={{ textDecoration: "none" }}>ACCEPT</Link>
-                            </Button>
+                            <Link
+                                to={`/match/${m.id}/waitingRoom`}
+                                className='image-button'
+                                style={{ textDecoration: 'none' }}
+                                onClick={() => {
+                                    fetch('/api/v1/matches/' + m.id + "/join", {
+                                        method: 'PUT',
+                                        headers: {
+                                            "Authorization": `Bearer ${jwt}`,
+                                            'Accept': 'application/json',
+                                            'Content-Type': 'application/json'
+                                        },
+                                        body: JSON.stringify(username),
+                                    }).then(handleJoinGame(m.id));
+                                }}
+                            >
+                            </Link>
                         )}
                     </td>
                 </tr>
             );
         });
-    
+
         return (
             <div>
                 <div className="admin-page-container">
@@ -124,9 +127,9 @@ export default function Home() {
                             <Table aria-label="onlineGames" className="table-western">
                                 <thead>
                                     <tr>
-                                        <th className="table-western">NAME</th>
-                                        <th className="table-western">STATE</th>
-                                        <th className="table-western">PLAY</th>
+                                        <th className="table-western th">NAME</th>
+                                        <th className="table-western th">STATE</th>
+                                        <th className="table-western th">PLAY</th>
                                     </tr>
                                 </thead>
                                 <tbody>{matchesList}</tbody>

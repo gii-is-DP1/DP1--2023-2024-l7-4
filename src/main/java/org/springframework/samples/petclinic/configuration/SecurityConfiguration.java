@@ -73,8 +73,14 @@ public class SecurityConfiguration {
 			.requestMatchers(HttpMethod.GET, "/api/v1/vets/stats").hasAuthority(ADMIN)
 			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/vets/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/vets/**")).hasAnyAuthority(ADMIN, "VET", CLINIC_OWNER) 
+			.requestMatchers(AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/api/v1/matches/**")).authenticated()
 			.requestMatchers(AntPathRequestMatcher.antMatcher("/h2-console/**")).permitAll()
-			.anyRequest().permitAll())					
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/app/match/**")).hasAnyAuthority("PLAYER", ADMIN)
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/api/v1/players/**")).hasAnyAuthority("PLAYER", ADMIN)
+			.requestMatchers(AntPathRequestMatcher.antMatcher("/ws/**")).permitAll() 
+			.requestMatchers(HttpMethod.GET, "/api/v1/matches/**").hasAuthority("PLAYER")
+			.requestMatchers(HttpMethod.GET, "/api/v1/matches/**").permitAll()
+			.anyRequest().authenticated())					
 			
 			.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);		
 		return http.build();

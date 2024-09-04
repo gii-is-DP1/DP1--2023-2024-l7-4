@@ -1,4 +1,5 @@
 import "./css/formGenerator.css";
+import "../../static/css/westernTheme.css";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
@@ -117,9 +118,9 @@ const FormGenerator = forwardRef((props, ref) => {
   }, []);
 
   return (
-    <div className="class-profile-form">
+    <div className="western-form-container2">
       <form
-        className="class-form"
+        className="western-form-container2"
         ref={formElement}
         style={
           props.numberOfColumns > 1

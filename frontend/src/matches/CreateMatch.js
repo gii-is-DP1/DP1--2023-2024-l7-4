@@ -1,6 +1,6 @@
 import "../static/css/auth/authButton.css";
 import "../static/css/auth/authPage.css";
-import FormGenerator from "../components/formGenerator/formGenerator";
+import '../static/css/westernTheme.css';
 import { useEffect, useRef, useState } from "react";
 import { registerFormMatchInputs } from "./RegisterFormMatchInputs";
 import tokenService from "../services/token.service";
@@ -94,7 +94,7 @@ export default function CreateMatch() {
     <div className="auth-page-container">
       <div className="hero-div">
         <h1>START DUEL</h1>
-        <div className="auth-form-container2">
+        <div className="western-form-container2">
           <FormWithSoundButtonGenerator
             ref={creationFormRef}
             inputs={

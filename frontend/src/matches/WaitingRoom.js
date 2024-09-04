@@ -3,7 +3,6 @@ import '../App.css';
 import '../static/css/westernTheme.css';
 import tokenService from '../services/token.service';
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Table } from "reactstrap";
 import getIdFromUrl from "../util/getIdFromUrl";
 import jwtDecode from 'jwt-decode';
@@ -23,8 +22,15 @@ export default function WaitingRoom() {
     const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
 
+    useEffect(() => {
+        if (joinedPlayers) {
+            if (joinedPlayers[0] === username) {
+                setWaitingMessage("Waiting for the oponent...")
+            }
+        }
+    }, [match])
 
-    
+
     useEffect(() => {
         const socket = new SockJS('http://localhost:8080/ws');
         const client = Stomp.over(socket);
@@ -40,7 +46,7 @@ export default function WaitingRoom() {
                     handleUpdateMatch();
                 }
                 else if (body.type === "START") {
-                    window.location.href = (`/game/${id}`);
+                    window.location.href = `/game/${id}`
                 }
             });
             setStompClient(client);
@@ -80,8 +86,8 @@ export default function WaitingRoom() {
                 type: type,
                 message: 'Match Started'
             }));
+        }
     }
-}
 
     async function handleUpdateMatch() {
         try {
@@ -102,21 +108,23 @@ export default function WaitingRoom() {
     }
 
     const handleStartMatch = async () => {
-            try {
-                await fetch(`/api/v1/matches/${id}/start`, {
-                    method: 'PATCH',
-                    headers: {
-                        "Authorization": `Bearer ${jwt}`,
-                        'Accept': 'application/json',
-                        'Content-Type': 'application/json'
-                    }
-                }).then(
-               handleSendMessage('START').then(window.location.href = (`/game/${id}`)));
-            } catch (error) {
-                console.error('Error Starting:', error);
+        try {
+            await fetch(`/api/v1/matches/${id}/start`, {
+                method: 'PATCH',
+                headers: {
+                    "Authorization": `Bearer ${jwt}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            }).then(
+                handleSendMessage('START')
+            ).then(window.location.href = `/game/${id}`
+            );
+        } catch (error) {
+            console.error('Error Starting:', error);
         }
     }
-        
+
     const handleGoToLobby = async () => {
         if (match.joinedPlayers[0] === username) {
             try {
@@ -169,47 +177,49 @@ export default function WaitingRoom() {
 
     return (
         <div className="admin-page-container">
-            <Modal isOpen={showConfirmationModal} toggle={handleCancelLeave}>
-                <ModalHeader toggle={handleCancelLeave}>Confirmación</ModalHeader>
-                <ModalBody>
-                    ¿Estás seguro de que quieres salir de esta página?
+            <Modal isOpen={showConfirmationModal}>
+                <ModalHeader toggle={handleCancelLeave} style={{ fontFamily: "Almendra SC" }}></ModalHeader>
+                <ModalBody style={{ fontFamily: "Almendra SC" }}>
+                    Are you sure you want to leave?
                 </ModalBody>
                 <ModalFooter>
-                    <Button color="danger" onClick={handleConfirmGoToLobby}>Sí, salir</Button>
-                    <Button color="secondary" onClick={handleCancelLeave}>Cancelar</Button>
+                    <Button color="danger" style={{ fontFamily: "Almendra SC" }} onClick={handleConfirmGoToLobby}>Yes, leave</Button>
+                    <Button color="secondary" style={{ fontFamily: "Almendra SC" }} onClick={handleCancelLeave}>Cancel</Button>
                 </ModalFooter>
             </Modal>
             <div>
                 <div className="hero-div">
                     <h1 className="text-center">JOINED PLAYERS</h1>
                     <div>
-                        <Table aria-label="achievements" className="mt-4">
+                        <Table aria-label="achievements" className="table-western">
                             <thead>
                                 <tr>
-                                    <th className="text-center">PLAYERS</th>
+                                    <th className="table-western th">PLAYERS</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {joinedPlayers.map((player, index) => (
                                     <tr key={index}>
-                                        <td className="text-center">{player}</td>
+                                        <td className="table-western td">{player}</td>
                                     </tr>
                                 ))}
                             </tbody>
                         </Table>
                     </div>
+                    {joinedPlayers && (joinedPlayers.length == 2 && username === joinedPlayers[0] ? <span></span> 
+                    : <span className='western-message'>{waitingMessage}</span>)}
                 </div>
             </div>
 
             <div style={{ textAlign: 'center' }}>
-                <Button className="button-container btn" onClick={handleConfirmLeave}>
+                <Button className='button-container-bad' onClick={handleConfirmLeave}>
                     Go to Lobby
                 </Button>
                 {match.joinedPlayers ? (match.joinedPlayers.length === 2 && match.joinedPlayers[0] === username ? (
-                    <Button outline color="primary" onClick={handleStartMatch}>
-                            Start Match
+                    <Button className='button-container' onClick={handleStartMatch}>
+                        Start Match
                     </Button>
-                ) : waitingMessage) : "Loading.."}
+                ) : <span></span>) : <span>Loading...</span>}
             </div>
         </div>
     );

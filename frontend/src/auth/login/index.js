@@ -3,12 +3,13 @@ import { Alert } from "reactstrap";
 import FormGenerator from "../../components/formGenerator/formGenerator";
 import tokenService from "../../services/token.service";
 import "../../static/css/auth/authButton.css";
+import "../../static/css/westernTheme.css";
 import { loginFormInputs } from "./form/loginFormInputs";
 
 export default function Login() {
   const [message, setMessage] = useState(null)
-  const loginFormRef = React.createRef();      
-  
+  const loginFormRef = React.createRef();
+
 
   async function handleSubmit({ values }) {
 
@@ -28,33 +29,34 @@ export default function Login() {
         tokenService.updateLocalAccessToken(data.token);
         window.location.href = "/";
       })
-      .catch((error) => {         
+      .catch((error) => {
         setMessage(error);
-      });            
+      });
   }
 
-  
-    return (
-      <div className="auth-page-container">
+
+  return (
+    <div className="auth-page-container">
+      <div className="hero-div">
         {message ? (
           <Alert color="primary">{message}</Alert>
         ) : (
           <></>
         )}
-
-        <h1>Login</h1>
-
-        <div className="auth-form-container">
+        <h1 className="text-center">Login</h1>
+        <div className="western-form-container2">
           <FormGenerator
+            className="western-form-container2"
             ref={loginFormRef}
             inputs={loginFormInputs}
             onSubmit={handleSubmit}
             numberOfColumns={1}
             listenEnterKey
             buttonText="Login"
-            buttonClassName="auth-button"
+            buttonClassName="button-container"
           />
         </div>
       </div>
-    );  
+    </div>
+  );
 }
