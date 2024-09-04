@@ -28,7 +28,7 @@ import Logros from "./player/stadistics/Logros";
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import Personal from "./player/stadistics/Personal";
-
+import MyFriends from "./friends/myFriends";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -82,6 +82,7 @@ function App() {
           <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
           <Route path="/game/:matchId" exact={true} element={<PrivateRoute><Game /></PrivateRoute>} />
           <Route path="/myMatches" exact={true} element={<PrivateRoute><MyMatches /></PrivateRoute>} />
+          <Route path="/myFriends" exact={true} element={<PrivateRoute><MyFriends /></PrivateRoute>} />
         </>)
     }
   })

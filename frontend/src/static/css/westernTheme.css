@@ -235,6 +235,7 @@ body {
     /* Un color marrón oscuro para el texto */
 }
 
+
 .western-form-container2 label {
     font-size: 1.2rem;
     margin-bottom: 5px;
@@ -263,4 +264,15 @@ body {
 
 .western-button {
     font-family: 'Almendra SC', serif;
+}
+
+thead.entrada-tabla {
+    position: absolute; /* Para que esté en la parte superior */
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around; /* Distribuye los elementos de manera uniforme */
+    background-color: transparent; /* Asegura que el fondo sea transparente */
+    margin-top: 10px; /* Espacio adicional en la parte superior */
+    padding: 10px 0; /* Espaciado interno */
 }
