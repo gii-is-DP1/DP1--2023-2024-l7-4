@@ -33,6 +33,11 @@ private RequestRepository requestRepository;
     }
 
     @Transactional
+    public Request saveRequest(Request request) throws DataAccessException{
+        return requestRepository.save(request);
+    }
+
+    @Transactional
     public Request acceptRequest(Request request) throws DataAccessException{
         request.setStatus(RequestState.ACCEPTED);
         return requestRepository.save(request);
