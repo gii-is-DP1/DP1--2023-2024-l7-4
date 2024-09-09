@@ -1,41 +1,45 @@
-import {
-  Button,
-  ButtonGroup,
-  Col,
-  Container,
-  Input,
-  Row,
-  Table,
-} from "reactstrap";
+import {Button,Container,Row,Col} from "reactstrap";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-export default function PlayerStadisticList(){
-  const [message, setMessage] = useState(null);
+export default function PlayerStadisticList() {
   const [, set] = useState([]);
-  return(
-    <div className="auth-page-purple ">
+
+  return (
+    <div className="auth-page-purple">
     <Container style={{ marginTop: "15px" }} fluid>
       <h1 className="text-center">Estadísticas</h1>
-      <div className="auth-page-yellow">
+      <div className="auth-page-yellow d-flex justify-content-center">
         <Button
           size="md"
-          color= "warning"
+          color="warning"
           tag={Link}
           to={`/statistics/personal`}
-          >
-            Estadísticas Personales
-          </Button> 
-          <Button
+          className="mx-2"
+        >
+          Estadísticas Personales
+        </Button>
+        <Button
           size="md"
-          color= "warning"
+          color="warning"
           tag={Link}
           to={`/statistics/achievements`}
+          className="mx-2"
+        >
+          Logros
+        </Button>
+        <Button
+            size="md"
+            color="warning"
+            tag={Link}
+            to={`/statistics/ranking`}
+            className="mx-2"
           >
-            Logros
-          </Button> 
-          </div>      
+            Ranking
+          </Button>
+      </div>
     </Container>
-  </div>
+
+    </div>
   );
 }

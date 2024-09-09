@@ -29,6 +29,7 @@ import Logros from "./player/stadistics/Logros";
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import Personal from "./player/stadistics/Personal";
+import Ranking from "./player/stadistics/Ranking"
 
 
 function ErrorFallback({ error, resetErrorBoundary }) {
@@ -77,6 +78,7 @@ function App() {
           <Route path="/myProfile/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
           <Route path="/statistics/personal" exact={true} element={<PrivateRoute><Personal /></PrivateRoute>} />
           <Route path= "/statistics/achievements" exact={true} element={<PrivateRoute><Logros /></PrivateRoute>} />
+          <Route path= "/statistics/ranking" exact={true} element={<PrivateRoute><Ranking /></PrivateRoute>} />
           <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
           <Route path="/players/edit2/:username" element={<PrivateRoute><PublicProfileEdit /></PrivateRoute>} />
           <Route path="/game" element={<PrivateRoute><Game/></PrivateRoute>} />
