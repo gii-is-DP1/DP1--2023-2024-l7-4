@@ -15,6 +15,7 @@ import UserListAdmin from "./admin/users/UserListAdmin";
 import UserEditAdmin from "./admin/users/UserEditAdmin";
 import SwaggerDocs from "./public/swagger";
 import PlayerEdit from "./player";
+import PublicProfileEdit from "./player/public";
 import WaitingRoom from "./matches/WaitingRoom";
 import CreateMatch from "./matches/CreateMatch";
 import Game from "./game/Game";
@@ -77,6 +78,7 @@ function App() {
           <Route path="/statistics/personal" exact={true} element={<PrivateRoute><Personal /></PrivateRoute>} />
           <Route path= "/statistics/achievements" exact={true} element={<PrivateRoute><Logros /></PrivateRoute>} />
           <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
+          <Route path="/players/edit2/:username" element={<PrivateRoute><PublicProfileEdit /></PrivateRoute>} />
           <Route path="/game" element={<PrivateRoute><Game/></PrivateRoute>} />
           <Route path="/match/:id/waitingRoom" element={<PrivateRoute><WaitingRoom/></PrivateRoute>} />
           <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
