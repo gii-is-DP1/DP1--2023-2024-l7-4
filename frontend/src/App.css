@@ -42,5 +42,74 @@
   margin-left: 20px;
 }
 
+.container {
+  display: flex;
+  justify-content: space-around; /* Distribuir los componentes con espacio entre ellos */
+  align-items: flex-start;       /* Alinear los elementos al principio del contenedor */
+  width: 100%;                   /* Para que ocupe todo el ancho de la pantalla */
+  height: 100vh;                 /* Ocupa toda la altura de la ventana */
+  padding: 20px;
+  box-sizing: border-box;        /* Incluir padding y borde dentro de las dimensiones */
+}
 
+.friends-list, .pending-requests, .search-friends {
+  flex: 1;                       /* Cada uno de estos elementos ocupará el mismo espacio */
+  background-color: #f0f0f0;     /* Fondo gris claro para las cajas */
+  padding: 20px;
+  margin: 0 20px;                /* Espaciado entre las secciones */
+  border-radius: 10px;           /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle más estilo */
+}
 
+.friends-header, .requests-header, .search-header {
+  font-size: 24px;               /* Aumentar el tamaño de la cabecera */
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;            /* Centrar el texto del encabezado */
+}
+
+.friends-list ul, .pending-requests ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.friends-list li, .pending-requests li {
+  padding: 10px;
+  font-size: 18px;               /* Aumentar el tamaño de letra de los ítems */
+}
+
+.online {
+  color: green;
+}
+
+.offline {
+  color: gray;
+}
+
+.search-friends {
+  display: flex;
+  flex-direction: column;        /* Mantener los elementos de búsqueda en columna */
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.search-button {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}

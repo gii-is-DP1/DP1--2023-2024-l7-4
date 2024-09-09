@@ -44,8 +44,9 @@ public class RequestRestController {
 	}
 
     @GetMapping(value = "{username}")
-    public ResponseEntity<List<Request>> findRecievedRequest(@PathVariable("username") String username) {
-        return new ResponseEntity<>((List<Request>) this.requestService.findRecievedRequest(username), HttpStatus.OK);
+    public ResponseEntity<List<Request>> findReceivedRequest(@PathVariable("username") String username) {
+        List<Request> pendingRequests = requestService.findRecievedRequest(username);
+        return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
     }
 
     @PostMapping()

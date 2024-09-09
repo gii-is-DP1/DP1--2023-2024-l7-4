@@ -18,10 +18,10 @@ public class Request extends BaseEntity {
     @Column(name= "state")
     public RequestState status;
 
-    @ManyToOne()
+    @ManyToOne(optional=false)
     Player playerOne;
 
-    @ManyToOne()
+    @ManyToOne(optional=false)
     Player playerTwo;
 
 

@@ -1,12 +1,18 @@
 package org.springframework.samples.petclinic.player;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
+import org.springframework.samples.petclinic.request.RequestRepository;
+import org.springframework.samples.petclinic.request.Request;
+import org.springframework.samples.petclinic.request.RequestService;
+import org.springframework.samples.petclinic.request.RequestState;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,10 +21,12 @@ public class PlayerService {
     
 
     private PlayerRepository playerRepository;
+    
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository){
+    public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
+
     }
 
     @Transactional(readOnly = true)
@@ -64,5 +72,7 @@ public class PlayerService {
     public Boolean existsPlayer(String username) throws DataAccessException {
         return !playerRepository.existsPlayer(username).isEmpty();
     }
+
+    
 
 }

@@ -1,16 +1,20 @@
 package org.springframework.samples.petclinic.request;
 
+
 import java.util.List;
 import org.springframework.dao.DataAccessException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.Set;
+import java.util.HashSet;
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 public class RequestService{
+    
 private RequestRepository requestRepository;
 
 @Autowired
@@ -48,5 +52,19 @@ private RequestRepository requestRepository;
          requestRepository.delete(request);
     }
 
-    
+    @Transactional
+    public Set<Player> getFriends(Integer id) throws DataAccessException{
+        List<Request> allRequests = findAll();
+        Set<Player> friends = new HashSet<>();
+        for(Request r : allRequests){
+            if(r.getPlayerOne().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)){
+                friends.add(r.getPlayerTwo());
+            }
+            else if(r.getPlayerTwo().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)){
+                friends.add(r.getPlayerOne());
+            }
+        }
+        return friends;
+    }
+
 }

@@ -1,29 +1,109 @@
 import React, { useState, useEffect } from 'react';
 import '../App.css';
 import { Form, Table, FormGroup, Label, Input, Button } from 'reactstrap';
+import axios from 'axios';
+
+export default function MyFriends({ playerId }){
+
+    
+    const [friends, setFriends ]= useState([]);
+
+    const [pendingRequests,setPendingRequests] = useState([]);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(true); // Para gestionar el estado de carga
+
+    const [loadingFriends, setLoadingFriends] = useState(true);
+    const [loadingRequests, setLoadingRequests] = useState(true);
+
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchFriends = async () => {
+            try {
+                const response = await axios.get(`/api/players/${playerId}/friends`); // Llamada al backend
+                setFriends(response.data); // Guardamos los amigos en el estado
+                setLoading(false); // Desactivamos el estado de carga
+            } catch (err) {
+                setError(err); // Guardamos el error en caso de que haya uno
+                setLoading(false); // Desactivamos el estado de carga incluso si hay error
+            }
+        };
+
+        fetchFriends();
+    }, [playerId]);
+
+    // Usamos useEffect para hacer la solicitud de solicitudes pendientes
+    useEffect(() => {
+        const fetchPendingRequests = async () => {
+            try {
+                const response = await axios.get(`/api/requests/${playerId}`); // Llamada al backend para obtener solicitudes pendientes
+                setPendingRequests(response.data);
+                setLoadingRequests(false);
+            } catch (err) {
+                setError(err);
+                setLoadingRequests(false);
+            }
+        };
+
+        fetchPendingRequests();
+    }, [playerId]);
 
 
-export default function MyFriends(){
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    // Filtrar amigos por nombre usando el término de búsqueda
+    const filteredFriends = friends.filter(friend =>
+        friend.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (loading) {
+        return <div>Loading friends...</div>; // Muestra un mensaje mientras se cargan los amigos
+    }
+
+    if (error) {
+        return <div>Error loading friends: {error.message}</div>; // Muestra un mensaje si hay error
+    }
+
 
     return (
-        <div className="admin-page-container">
-          
-            <div>
-                        <Table aria-label="onlineGames" className="table-western">
-                            <thead >
-                                <tr className='entrada-tabla'>
-                                    <th className="table-western">Friends</th>
-                                    <th className="table-western">Pending requests</th>
-                                    <th className="table-western" >Search new friends</th>
+        <div className="container">
+            
+            <div className="friends-list">
+                <div className="friends-header">Online Friends</div>
+                <ul>
+                    {filteredFriends.map((friend, index) => (
+                        <li key={index} className={friend}>
+                            {friend.name}
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
-                                </tr>
-                            </thead>
-                            <tbody>
-                               
-                            
-                            </tbody>
-                        </Table>
-        </div>
+            <div className="pending-requests">
+                <div className="requests-header">Pending Requests</div>
+                <ul>
+                    {pendingRequests.map((request, index) => (
+                        <li key={index}>
+                            {request.sender} {/* Ajusta esto según el formato de la solicitud */}
+                        </li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="search-friends">
+                <div className="search-header">Search friends</div>
+                <input
+                    type="text"
+                    placeholder="Escribe un nombre..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    className="search-input"
+                />
+            </div>
+
         </div>
     );
 }
