@@ -4,7 +4,7 @@ import tokenService from '../services/token.service';
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
 import jwtDecode from 'jwt-decode';
-import { Form, Table, FormGroup, Label, Input, Button } from 'reactstrap';
+import { Table } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ImageButton from '../components/buttons/imageButton';
@@ -66,7 +66,7 @@ export default function Home() {
                 }
             };
         }
-    }, []);
+    }, [jwt]);
 
 
 
@@ -137,8 +137,8 @@ export default function Home() {
                             <div style={{ textAlign: 'center' }}>
                                 <ImageButton
                                     to='/match/create'
-                                    imgSrc={`${process.env.PUBLIC_URL}/scope.png`} // Cambia esto a la ruta de tu imagen
-                                    style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según tus necesidades
+                                    imgSrc={`${process.env.PUBLIC_URL}/scope.png`}
+                                    style={{ width: "50px", height: "50px" }}
                                 />
                             </div>
                         </div>

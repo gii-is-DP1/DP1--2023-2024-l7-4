@@ -69,13 +69,6 @@ const WebSocketComponent = () => {
     }, [stompClient, received]);
 
 
-    //Rebarajar las cartas
-    useEffect(() => {
-        if (deckOfCards.length < 1 && statePlayer0.cards.length !== 0 && statePlayer1.cards.length !== 0)
-            setDeckOfCards(generateNewRandomNumbers(statePlayer0.cards, statePlayer1.cards));
-    }, [deckOfCards]);
-
-
     //Acciones 
     useEffect(() => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
@@ -106,7 +99,6 @@ const WebSocketComponent = () => {
     const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
         setShowCards(false);
-        console.log(`${waiting}, ${playerNumber}`);
         if (waiting) {
             switch (playerNumber) {
                 case 0:

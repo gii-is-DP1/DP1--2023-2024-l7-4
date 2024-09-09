@@ -50,7 +50,7 @@ public class Gunfighter extends BaseEntity {
     private Integer cardPlayed = -1;
 
     @Column(name = "cardPlayedBefore")
-    private Integer cardPlayedBefore;
+    private Integer cardPlayedBefore = -1;
 
     @Column(name = "preventDamage")
     private Boolean preventDamage = false;
@@ -63,6 +63,9 @@ public class Gunfighter extends BaseEntity {
 
     @Column(name = "intimidationCardInHand")
     private Boolean intimidationCardInHand = false;
+
+    @Column
+    private Integer insidious = 0;
 
     @Column(name = "playerNumber")
     private Integer playerNumber;
