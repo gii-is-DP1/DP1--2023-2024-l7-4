@@ -307,7 +307,11 @@ public class MatchRestController {
     public ResponseEntity<Map<String, String>> maxPlayerPlayed(@PathVariable("username") Integer username) {
         return new ResponseEntity<>(matchService.maxPlayerPlayedByUserName(username),HttpStatus.OK);
     }
-
+    //RANKING
+    @GetMapping("/winners")
+    public ResponseEntity<Map<String, Integer>> maxWinnerPlayer() {
+        return new ResponseEntity<>(matchService.maxWinnerPlayer(),HttpStatus.OK);
+    }
     /*
      * @MessageMapping("/match/{id}/players")
      * 

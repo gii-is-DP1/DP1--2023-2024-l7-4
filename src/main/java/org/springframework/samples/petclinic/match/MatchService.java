@@ -282,4 +282,18 @@ public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
 
     return response;
     }
+    @Transactional(readOnly = true)
+        public Map<String, Integer> maxWinnerPlayer() throws DataAccessException {
+            Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+            Map<String, Integer> winnerCountMap = new HashMap<>();
+            for (Match match : closedMatches) {
+                 String winner = match.getWinner();
+                 if (winner != null) {
+                    winnerCountMap.put(winner, winnerCountMap.getOrDefault(winner, 0) + 1);
+                }
+        }
+    
+
+    return winnerCountMap;
+    }
 }

@@ -201,7 +201,6 @@ return (
       <div><strong>Máximo minutos jugados:</strong> {maxMinutesPlayed ? maxMinutesPlayed : 0}</div>
       <div><strong>Mínimo minutos jugados:</strong> {minMinutesPlayed ? minMinutesPlayed : 0}</div>
       <div><strong>Media de minutos jugados por partida:</strong> {avgMinutesPlayed ? avgMinutesPlayed : 0}</div>
-      <div><strong>Porcentaje de victoria:</strong> {avgMinutesPlayed ? avgMinutesPlayed : 0}</div>
       <div><strong>Tu rival favorito:</strong> {maxPlayerPlayed ? maxPlayerPlayed : 0}</div>
 
     </KhakiBox>
