@@ -1,12 +1,14 @@
-import {
-    Button,
-    Container,
-    Table
-  } from "reactstrap";
+import {Button,Container,Table} from "reactstrap";
   import { Link } from "react-router-dom";
   import { useEffect, useState } from "react";
-  
+  import tokenService from '../../services/token.service';
+
   export default function PlayerStadisticList() {
+    const jwt = tokenService.getLocalAccessToken();
+    const user = tokenService.getUser();
+    const username = user.username;
+    const userId = user.id;
+    
     const [rankingData, setRankingData] = useState([
       { name: "Jugador 1", matchesPlayed: 10, matchesWon: 7, timePlayed: "3:25" },
       { name: "Jugador 2", matchesPlayed: 15, matchesWon: 10, timePlayed: "5:10" },
@@ -51,7 +53,7 @@ import {
     return (
       <div className="auth-page-purple">
         <Container style={{ marginTop: "15px" }} fluid>
-          <h1 className="text-center">Estadísticas</h1>
+          <h1 className="text-center">Statistics</h1>
           <div className="auth-page-yellow d-flex justify-content-center">
             <Button
               size="md"
@@ -60,7 +62,7 @@ import {
               to={`/statistics/personal`}
               className="mx-2"
             >
-              Estadísticas Personales
+              Personal statistics
             </Button>
             <Button
               size="md"
@@ -69,7 +71,7 @@ import {
               to={`/statistics/achievements`}
               className="mx-2"
             >
-              Logros
+              Achievements
             </Button>
             <Button
               size="md"

@@ -2,8 +2,11 @@ package org.springframework.samples.petclinic.match;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -13,6 +16,7 @@ import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -253,4 +257,29 @@ public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
          Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
          return res/matches.size();
      }
+     @Transactional(readOnly = true)
+     public Map<String, String> maxPlayerPlayedByUserName(Integer u) throws DataAccessException {
+         String userName= userRepository.findById(u).get().getUsername();
+         Collection<Match> closedMatches=matchRepository.findMatchsClosedByPlayer(userName);
+         Map<String, Integer> rivalMatchCount = new HashMap<>();
+         for (Match match : closedMatches) {
+            List<String> players = match.getJoinedPlayers();
+            for (String player : players) {
+                if (!player.equals(userName)) {
+                    rivalMatchCount.put(player, rivalMatchCount.getOrDefault(player, 0) + 1);
+                }
+
+        
+            }
+        }
+        String maxPlayer= rivalMatchCount.entrySet()
+                          .stream()
+                          .max(Map.Entry.comparingByValue())
+                          .orElse(null)
+                          .getKey();
+    Map<String, String> response = new HashMap<>();
+    response.put("maxPlayer", maxPlayer);
+
+    return response;
+    }
 }

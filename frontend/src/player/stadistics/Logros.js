@@ -1,9 +1,4 @@
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-} from "reactstrap";
+import {Button,Container,Row,Col} from "reactstrap";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import tokenService from '../../services/token.service';
@@ -11,6 +6,7 @@ import tokenService from '../../services/token.service';
 const user = tokenService.getUser();
 
 export default function PlayerStadisticLogros(){
+  
 
   const jwt = tokenService.getLocalAccessToken();
   const userId = user.id;
@@ -117,38 +113,38 @@ export default function PlayerStadisticLogros(){
 
   return (
     <div className="auth-page-purple">
-    <Container style={{ marginTop: "15px" }} fluid>
-      <h1 className="text-center">Estadísticas</h1>
-      <div className="auth-page-yellow d-flex justify-content-center">
-        <Button
-          size="md"
-          color="warning"
-          tag={Link}
-          to={`/statistics/personal`}
-          className="mx-2"
-        >
-          Estadísticas Personales
-        </Button>
-        <Button
-          size="md"
-          color="warning"
-          tag={Link}
-          to={`/statistics/achievements`}
-          className="mx-2"
-        >
-          Logros
-        </Button>
-        <Button
-            size="md"
-            color="warning"
-            tag={Link}
-            to={`/statistics/ranking`}
-            className="mx-2"
-          >
-            Ranking
-          </Button>
-      </div>
-    </Container>
+     <Container style={{ marginTop: "15px" }} fluid>
+          <h1 className="text-center">Statistics</h1>
+          <div className="auth-page-yellow d-flex justify-content-center">
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/personal`}
+              className="mx-2"
+            >
+              Personal statistics
+            </Button>
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/achievements`}
+              className="mx-2"
+            >
+              Achievements
+            </Button>
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/ranking`}
+              className="mx-2"
+            >
+              Ranking
+            </Button>
+          </div>
+        </Container>
       <Container style={{ marginTop: "5px" }} fluid>
         <h1 className="text-center">Logros</h1>
         <Row>

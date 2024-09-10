@@ -20,6 +20,7 @@ export default function PlayerStadisticPersonal(){
   const [minMinutesPlayed, setMinMinutesPlayed] = useState(null);
   const [avgMinutesPlayed, setAvgMinutesPlayed] = useState(null);
   const [playerList, setPlayers] = useState(null);
+  const [maxPlayerPlayed, setMaxPlayerPlayed] = useState(null);
 
   const listMatches = async () => {
     try {
@@ -117,12 +118,29 @@ export default function PlayerStadisticPersonal(){
       console.error(error.message);
     }
   };  
+  const maxPlayer = async () => {
+    try {
+      const response = await fetch(`/api/v1/matches/maxPlayerPlayed/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error   ${userId}`);
+      }
+      const result = await response.json();
+      setMaxPlayerPlayed(result.maxPlayer);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };  
   useEffect(() => {
     avgMinutes();
     minMinutes();
     maxMinutes();
     listMinutes();
     listWinMatches();
+    maxPlayer();
   }, [jwt, userId]);
 
   useEffect(() => {
@@ -139,38 +157,38 @@ export default function PlayerStadisticPersonal(){
 
 return (
   <div className="auth-page-purple">
-    <Container style={{ marginTop: "15px" }} fluid>
-      <h1 className="text-center">Estadísticas</h1>
-      <div className="auth-page-yellow d-flex justify-content-center">
-        <Button
-          size="md"
-          color="warning"
-          tag={Link}
-          to={`/statistics/personal`}
-          className="mx-2"
-        >
-          Estadísticas Personales
-        </Button>
-        <Button
-          size="md"
-          color="warning"
-          tag={Link}
-          to={`/statistics/achievements`}
-          className="mx-2"
-        >
-          Logros
-        </Button>
-        <Button
-            size="md"
-            color="warning"
-            tag={Link}
-            to={`/statistics/ranking`}
-            className="mx-2"
-          >
-            Ranking
-          </Button>
-      </div>
-    </Container>
+      <Container style={{ marginTop: "15px" }} fluid>
+          <h1 className="text-center">Statistics</h1>
+          <div className="auth-page-yellow d-flex justify-content-center">
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/personal`}
+              className="mx-2"
+            >
+              Personal statistics
+            </Button>
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/achievements`}
+              className="mx-2"
+            >
+              Achievements
+            </Button>
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/ranking`}
+              className="mx-2"
+            >
+              Ranking
+            </Button>
+          </div>
+        </Container>
 
     <Container style={{ marginTop: "5px" }} fluid>
       <h1 className="text-center">Estadísticas Personales</h1>
@@ -184,7 +202,7 @@ return (
       <div><strong>Mínimo minutos jugados:</strong> {minMinutesPlayed ? minMinutesPlayed : 0}</div>
       <div><strong>Media de minutos jugados por partida:</strong> {avgMinutesPlayed ? avgMinutesPlayed : 0}</div>
       <div><strong>Porcentaje de victoria:</strong> {avgMinutesPlayed ? avgMinutesPlayed : 0}</div>
-      <div><strong>Tu rival favorito:</strong> {avgMinutesPlayed ? avgMinutesPlayed : 0}</div>
+      <div><strong>Tu rival favorito:</strong> {maxPlayerPlayed ? maxPlayerPlayed : 0}</div>
 
     </KhakiBox>
   </div>

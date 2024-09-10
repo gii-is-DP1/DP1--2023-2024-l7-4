@@ -3,6 +3,7 @@ package org.springframework.samples.petclinic.match;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -298,11 +299,14 @@ public class MatchRestController {
             return matchService.minTimePlayedByUserName(username);
     }
 
-@GetMapping("/avgTimePlayed/{username}")
+    @GetMapping("/avgTimePlayed/{username}")
         public Double averageTimePlayedByUserName(@PathVariable("username") Integer username) {
             return matchService.averageTimePlayedByUserName(username);
     }
-    
+    @GetMapping("/maxPlayerPlayed/{username}")
+    public ResponseEntity<Map<String, String>> maxPlayerPlayed(@PathVariable("username") Integer username) {
+        return new ResponseEntity<>(matchService.maxPlayerPlayedByUserName(username),HttpStatus.OK);
+    }
 
     /*
      * @MessageMapping("/match/{id}/players")
