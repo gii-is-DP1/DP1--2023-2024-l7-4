@@ -24,20 +24,17 @@ const WebSocketHandler = ({
 
 
 
-
     useEffect(() => {
         if (tempCardPlayed !== null) {
             if (playerNumber === 0) {
                 setStatePlayer1(prevState => ({
                     ...prevState,
-                    cardPlayedBefore: prevState.cardPlayed,
                     cardPlayed: tempCardPlayed,
                     precisionBefore: prevState.precision,
                 }));
             } else {
                 setStatePlayer0(prevState => ({
                     ...prevState,
-                    cardPlayedBefore: prevState.cardPlayed,
                     cardPlayed: tempCardPlayed,
                     precisionBefore: prevState.precision,
                 }));
@@ -172,6 +169,7 @@ const WebSocketHandler = ({
                     }));
                 if (playerNumber === 0 && player0.cardPlayed === -1) {
                     setShowConfirmationModal(true);
+
                 }
             })
             .catch(error => {

@@ -38,7 +38,6 @@ const WebSocketComponent = () => {
         cards: [],
         cardPlayed: null,
         playerNumber: 0,
-        doubleCard: false,
     });
 
     const [statePlayer1, setStatePlayer1] = useState({
@@ -48,7 +47,6 @@ const WebSocketComponent = () => {
         cards: [],
         cardPlayed: null,
         playerNumber: 1,
-        doubleCard: false,
     });
 
     const [waiting, setWaiting] = useState(false);
@@ -69,12 +67,17 @@ const WebSocketComponent = () => {
     }, [stompClient, received]);
 
 
+    useEffect(()=> {
+        if (waiting)
+            setShowCards(false);
+    }, [waiting])
+
+
     //Acciones 
     useEffect(() => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
             setShowCards(true);
             setWaiting(false);
-            setPlayed(false);
         }
     }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
@@ -83,7 +86,7 @@ const WebSocketComponent = () => {
         if (statePlayer0.health < 1 || statePlayer1.health < 1)
             setShowEndModal(true);
 
-    }, [statePlayer0.health, statePlayer1.health])
+    }, [statePlayer0.health, statePlayer1.health]);
 
 
     useEffect(() => {
@@ -99,6 +102,7 @@ const WebSocketComponent = () => {
     const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
         setShowCards(false);
+        setPlayed(false);
         if (waiting) {
             switch (playerNumber) {
                 case 0:
@@ -300,6 +304,7 @@ const WebSocketComponent = () => {
                 setReadyForDiscard={setReadyForDiscard}
                 setReceived={setReceived}
                 setShowCards={setShowCards}
+                setPlayed={setPlayed}
                 setWaiting={setWaiting}
                 setStompClient={setStompClient}
                 setChooseCard={setChooseCard}
