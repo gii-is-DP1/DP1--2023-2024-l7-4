@@ -117,6 +117,11 @@ export default function PlayerEditAdmin() {
             <Input type="password" required name="password" id="password" value={player.password || ""}
               onChange={handleChange} />
           </FormGroup>
+          <FormGroup>
+            <Label for="location">Location</Label>
+            <Input type="text" required name="location" id="location" value={player.location || ""}
+              onChange={handleChange} />
+          </FormGroup>
           <div className="custom-button-row">
             <button className="auth-button">Save</button>
             <Link
