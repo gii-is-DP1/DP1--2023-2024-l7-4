@@ -32,8 +32,8 @@ private RequestRepository requestRepository;
 	}
  
     @Transactional(readOnly=true)
-    public List<Request> findRecievedRequest(String username) throws DataAccessException{
-        return requestRepository.findReceivedRequest(username);
+    public List<Request> findRecievedRequest(Integer id) throws DataAccessException{
+        return requestRepository.findReceivedRequest(id);
     }
 
     @Transactional

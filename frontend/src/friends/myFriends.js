@@ -4,7 +4,7 @@ import { Form, Table, FormGroup, Label, Input, Button } from 'reactstrap';
 import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import tokenService from '../services/token.service';
-
+import useFetchState from "../util/useFetchState";
 
 const jwt = tokenService.getLocalAccessToken();
 const user = tokenService.getUser();
@@ -14,9 +14,26 @@ export default function MyFriends(){
     const playerId = user.id;
     const username = jwt ? jwtDecode(jwt).sub : "null";
 
-    const [friends, setFriends ]= useState([]);
+    const [message, setMessage] = useState(null);
+    const [visible, setVisible] = useState(false);
 
-    const [pendingRequests,setPendingRequests] = useState([]);
+    const [friends, setFriends ]= useFetchState(
+        [],
+        `/api/v1/players/${playerId}/friends`,
+        jwt,
+        setMessage,
+        setVisible
+    );
+
+    console.log(friends)
+
+    const [pendingRequests,setPendingRequests] = useFetchState(
+        [],
+        `/api/v1/requests/${playerId}/received`,
+        jwt,
+        setMessage,
+        setVisible
+    );
 
     const [searchTerm, setSearchTerm] = useState('');
     const [loading, setLoading] = useState(true); // Para gestionar el estado de carga
@@ -26,39 +43,7 @@ export default function MyFriends(){
 
     const [error, setError] = useState(null);
 
-
-    useEffect(() => {
-        const fetchFriends = async () => {
-            try {
-                const response = await axios.get(`/api/players/${playerId}/friends`); // Llamada al backend
-                setFriends(response.data); // Guardamos los amigos en el estado
-                setLoading(false); // Desactivamos el estado de carga
-            } catch (err) {
-                setError(err); // Guardamos el error en caso de que haya uno
-                setLoading(false); // Desactivamos el estado de carga incluso si hay error
-            }
-        };
-
-        fetchFriends();
-        console.log(friends)
-        console.log(pendingRequests)
-    }, [playerId]);
-
-    // Usamos useEffect para hacer la solicitud de solicitudes pendientes
-    useEffect(() => {
-        const fetchPendingRequests = async () => {
-            try {
-                const response = await axios.get(`/api/requests/${playerId}`); // Llamada al backend para obtener solicitudes pendientes
-                setPendingRequests(response.data);
-                setLoadingRequests(false);
-            } catch (err) {
-                setError(err);
-                setLoadingRequests(false);
-            }
-        };
-
-        fetchPendingRequests();
-    }, [playerId]);
+    console.log(pendingRequests)
 
 
     const handleSearchChange = (e) => {
@@ -90,7 +75,7 @@ export default function MyFriends(){
                 <ul>
                     {pendingRequests.map((request, index) => (
                         <li key={index}>
-                            {request.playerOne} {/* Ajusta esto según el formato de la solicitud */}
+                            {request.playerOne.name} {/* Ajusta esto según el formato de la solicitud */}
                         </li>
                     ))}
                 </ul>

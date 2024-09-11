@@ -14,7 +14,8 @@ public interface RequestRepository extends CrudRepository<Request, Integer>{
     @Query("SELECT p FROM Player p WHERE p.username = :username")
     public Optional<Player> existsPlayer(String username);
 
-    @Query("SELECT r FROM Request r WHERE r.playerTwo = :username AND r.status = 'pending'")
-    public List<Request> findReceivedRequest(String username);
+    @Query("SELECT r FROM Request r WHERE r.playerTwo.id = :id AND r.status = 'PENDING'")
+    public List<Request> findReceivedRequest(Integer id);
+
   
 }
