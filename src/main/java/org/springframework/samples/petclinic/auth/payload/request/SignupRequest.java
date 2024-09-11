@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.auth.payload.request;
 
+import java.time.LocalDate;
+
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -31,6 +33,10 @@ public class SignupRequest {
 
 	@NotBlank
 	private String password;
+
+	@NotBlank
+	private String location;
+
 
 	
 	

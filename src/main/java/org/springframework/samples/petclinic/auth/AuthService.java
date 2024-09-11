@@ -36,6 +36,7 @@ public class AuthService {
 		player.setNickname(request.getNickname());
 		player.setEmail(request.getEmail());
 		player.setUsername(request.getUsername());
+		player.setLocation(request.getLocation());
 		player.setPassword(encoder.encode(request.getPassword()));
 		player.setAuthority(role);
 		playerService.savePlayer(player);
