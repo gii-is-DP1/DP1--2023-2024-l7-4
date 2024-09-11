@@ -2,10 +2,18 @@ import React, { useState, useEffect } from 'react';
 import '../App.css';
 import { Form, Table, FormGroup, Label, Input, Button } from 'reactstrap';
 import axios from 'axios';
+import jwtDecode from 'jwt-decode';
+import tokenService from '../services/token.service';
 
-export default function MyFriends({ playerId }){
 
-    
+const jwt = tokenService.getLocalAccessToken();
+const user = tokenService.getUser();
+
+
+export default function MyFriends(){
+    const playerId = user.id;
+    const username = jwt ? jwtDecode(jwt).sub : "null";
+
     const [friends, setFriends ]= useState([]);
 
     const [pendingRequests,setPendingRequests] = useState([]);
@@ -17,6 +25,7 @@ export default function MyFriends({ playerId }){
     const [loadingRequests, setLoadingRequests] = useState(true);
 
     const [error, setError] = useState(null);
+
 
     useEffect(() => {
         const fetchFriends = async () => {
@@ -31,6 +40,8 @@ export default function MyFriends({ playerId }){
         };
 
         fetchFriends();
+        console.log(friends)
+        console.log(pendingRequests)
     }, [playerId]);
 
     // Usamos useEffect para hacer la solicitud de solicitudes pendientes
@@ -59,14 +70,6 @@ export default function MyFriends({ playerId }){
         friend.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (loading) {
-        return <div>Loading friends...</div>; // Muestra un mensaje mientras se cargan los amigos
-    }
-
-    if (error) {
-        return <div>Error loading friends: {error.message}</div>; // Muestra un mensaje si hay error
-    }
-
 
     return (
         <div className="container">
@@ -87,7 +90,7 @@ export default function MyFriends({ playerId }){
                 <ul>
                     {pendingRequests.map((request, index) => (
                         <li key={index}>
-                            {request.sender} {/* Ajusta esto según el formato de la solicitud */}
+                            {request.playerOne} {/* Ajusta esto según el formato de la solicitud */}
                         </li>
                     ))}
                 </ul>
