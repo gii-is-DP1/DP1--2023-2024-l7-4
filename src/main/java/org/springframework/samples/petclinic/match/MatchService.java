@@ -288,7 +288,7 @@ public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
             Map<String, Integer> winnerCountMap = new HashMap<>();
             for (Match match : closedMatches) {
                  String winner = match.getWinner();
-                 if (winner != null) {
+                 if (winner != null) { 
                     winnerCountMap.put(winner, winnerCountMap.getOrDefault(winner, 0) + 1);
                 }
         }
