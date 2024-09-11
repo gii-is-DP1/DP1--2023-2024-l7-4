@@ -21,7 +21,6 @@ import jakarta.validation.Valid;
 import java.net.URISyntaxException;
 import java.util.List;
 
-
 @RestController
 @RequestMapping("/api/v1/requests")
 
@@ -35,13 +34,13 @@ public class RequestRestController {
 
     @GetMapping
     public ResponseEntity<List<Request>> getAllRequests() {
-		return new ResponseEntity<>((List<Request>) this.requestService.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>((List<Request>) this.requestService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping(value = "{id}")
-	public ResponseEntity<Request> findById(@PathVariable("id") Integer id) {
-		return new ResponseEntity<>(requestService.findRequestById(id), HttpStatus.OK);
-	}
+    public ResponseEntity<Request> findById(@PathVariable("id") Integer id) {
+        return new ResponseEntity<>(requestService.findRequestById(id), HttpStatus.OK);
+    }
 
     @GetMapping(value = "/{id}/received")
     public ResponseEntity<List<Request>> findReceivedRequest(@PathVariable("id") Integer id) {
@@ -51,34 +50,32 @@ public class RequestRestController {
 
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Request> create(@RequestBody @Valid Request request) throws URISyntaxException{
+    public ResponseEntity<Request> create(@RequestBody @Valid Request request) throws URISyntaxException {
         Request newRequest = new Request();
-		BeanUtils.copyProperties(request, newRequest, "id");
         newRequest.setStatus(RequestState.PENDING);
-		Request savedRequest = this.requestService.saveRequest(newRequest);
+        newRequest.setPlayerOne(request.getPlayerOne());
+        newRequest.setPlayerTwo(request.getPlayerTwo());
+        Request savedRequest = this.requestService.saveRequest(newRequest);
 
-		return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+        return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
     }
 
-    @PutMapping(value ="{requestId}")
+    @PutMapping(value = "{requestId}")
     @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<Request> update(@PathVariable("requestId") Integer requestId, @RequestBody @Valid Request updatedRequest) throws URISyntaxException {
+    public ResponseEntity<Request> update(@PathVariable("requestId") Integer requestId,
+            @RequestBody @Valid Request updatedRequest) throws URISyntaxException {
 
-        Request existingRequest = requestService.findRequestById(requestId);
-        if (existingRequest == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return new ResponseEntity<>(requestService.acceptRequest(updatedRequest), HttpStatus.OK);
+        RestPreconditions.checkNotNull(requestService.findRequestById(requestId), "Request", "ID", requestId);
+        return new ResponseEntity<>(this.requestService.acceptRequest(updatedRequest, requestId), HttpStatus.OK);
     }
-    
+
     @DeleteMapping(value = "{requestId}")
-	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<MessageResponse> delete(@PathVariable("requestId") Integer requestId) {
-		RestPreconditions.checkNotNull(requestService.findRequestById(requestId), "Request", "ID", requestId);
-		requestService.rejectRequest(requestService.findRequestById(requestId));
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<MessageResponse> delete(@PathVariable("requestId") Integer requestId) {
+        RestPreconditions.checkNotNull(requestService.findRequestById(requestId), "Request", "ID", requestId);
+        requestService.rejectRequest(requestService.findRequestById(requestId));
 
-		return new ResponseEntity<>(new MessageResponse("Request deleted!"), HttpStatus.OK);
-	}
-
+        return new ResponseEntity<>(new MessageResponse("Request deleted!"), HttpStatus.OK);
+    }
 
 }

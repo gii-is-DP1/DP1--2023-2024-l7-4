@@ -44,6 +44,7 @@ export default function MyFriends(){
     const [error, setError] = useState(null);
 
     console.log(pendingRequests)
+    
 
 
     const handleSearchChange = (e) => {
@@ -54,6 +55,78 @@ export default function MyFriends(){
     const filteredFriends = friends.filter(friend =>
         friend.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    const handleAcceptRequest = async (requestId) => {
+        try {
+            
+            const updatedRequest = {
+                status: 'ACCEPTED',
+            };
+
+            const response = await axios.put(`/api/v1/requests/${requestId}`, updatedRequest, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`, 
+                    'Content-Type': 'application/json'
+                }
+
+            });
+
+            if(response.status === 200) {
+                setPendingRequests(prevRequest => prevRequest.filter(request => request.id!== requestId));
+            } else {
+                throw new Error('Hubo un error al actualizar la solicitud.');
+            }
+            
+        } catch (error) {
+            console.error(error);
+            setError('Hubo un error al aceptar la solicitud.');
+            
+        }
+    
+    
+    }
+
+    const handleDeclineRequest = async (requestId) => {
+        try {
+            const response = await axios.delete(`/api/v1/requests/${requestId}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    'Content-Type': 'application/json'
+                }
+            })
+            if(response.status === 204) {
+                setPendingRequests(prevRequests => 
+                    prevRequests.filter(request => request.id !== requestId)
+                );
+            } else {    
+                throw new Error('Hubo un error al eliminar la solicitud.');
+            }
+        } catch {
+            console.error(error);
+            setError('Hubo un error al rechazar la solicitud.');
+        }
+    }
+
+    const handleSendRequest = async (username) => {
+        try{
+            const response = await axios.post('/api/v1/requests', username, {
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                    'Content-Type': 'application/json'
+                }
+                });
+            if(response.status === 201) {
+                setVisible(true);
+                setMessage('Solicitud enviada correctamente.');
+            }
+        }catch(error){
+            console.error(error);
+            setError('Hubo un error al enviar la solicitud.');
+    
+    }
+}
+
+
 
 
     return (
@@ -75,21 +148,40 @@ export default function MyFriends(){
                 <ul>
                     {pendingRequests.map((request, index) => (
                         <li key={index}>
-                            {request.playerOne.name} {/* Ajusta esto según el formato de la solicitud */}
+                            
+                            {request.playerOne.name} 
+                            <div>
+                                <Button  
+                                    onClick={() => handleAcceptRequest(request.id)}
+                                    color="success">
+                                    Accept
+                                </Button>
+                                <Button
+                                    onClick={() => handleDeclineRequest(request.id)}
+                                    color='danger'> 
+                                    Decline
+                                </Button>
+                            </div>
                         </li>
                     ))}
                 </ul>
             </div>
 
             <div className="search-friends">
-                <div className="search-header">Search friends</div>
+                <li>
+                <div className="search-header">Search new friends </div>
                 <input
                     type="text"
-                    placeholder="Escribe un nombre..."
+                    placeholder="Write an username..."
                     value={searchTerm}
                     onChange={handleSearchChange}
                     className="search-input"
                 />
+                <Button color="primary"
+                onClick={( ) => handleSendRequest()}>
+                    Send Request
+                    </Button>
+                </li>
             </div>
 
         </div>

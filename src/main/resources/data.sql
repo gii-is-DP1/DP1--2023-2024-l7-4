@@ -40,4 +40,10 @@ INSERT INTO joined_players (match_id, player) VALUES (3, 'Player2');
 
 INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (1,4,5,'ACCEPTED'); 
 
-INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (2,8,4,'PENDING'); 
+INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (2,7,4,'PENDING'); 
+
+INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (3,4,6,'ACCEPTED'); 
+
+INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (4,8,4,'PENDING'); 
+
+INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (5,9,6,'PENDING'); 
