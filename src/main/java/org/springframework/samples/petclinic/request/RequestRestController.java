@@ -1,10 +1,13 @@
 package org.springframework.samples.petclinic.request;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
+import org.springframework.samples.petclinic.player.Player;
+import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.samples.petclinic.util.RestPreconditions;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,10 +29,12 @@ import java.util.List;
 
 public class RequestRestController {
     private final RequestService requestService;
+    private final PlayerService playerService;
 
     @Autowired
-    public RequestRestController(RequestService requestService) {
+    public RequestRestController(RequestService requestService, PlayerService playerService) {
         this.requestService = requestService;
+        this.playerService = playerService;
     }
 
     @GetMapping
@@ -48,17 +53,29 @@ public class RequestRestController {
         return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
     }
 
+    
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Request> create(@RequestBody @Valid Request request) throws URISyntaxException {
-        Request newRequest = new Request();
-        newRequest.setStatus(RequestState.PENDING);
-        newRequest.setPlayerOne(request.getPlayerOne());
-        newRequest.setPlayerTwo(request.getPlayerTwo());
-        Request savedRequest = this.requestService.saveRequest(newRequest);
+    public ResponseEntity<Request> create(@RequestBody @Valid RequestDTO requestDTO) throws URISyntaxException {
+    // Buscar jugadores usando los nombres de usuario
+        System.out.println("Received RequestDTO: " + requestDTO);
 
-        return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
-    }
+    Player playerOne = playerService.findByUsername(requestDTO.getPlayerOneUsername());
+
+    Player playerTwo = playerService.findByUsername(requestDTO.getPlayerTwoUsername());
+
+    System.out.println("Received RequestDTO: " + requestDTO);
+
+    // Crear y guardar la solicitud
+    Request newRequest = new Request();
+    newRequest.setPlayerOne(playerOne);
+    newRequest.setPlayerTwo(playerTwo);
+    newRequest.setStatus(RequestState.PENDING);
+
+    Request savedRequest = requestService.saveRequest(newRequest);
+    return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+}
+
 
     @PutMapping(value = "{requestId}")
     @ResponseStatus(HttpStatus.OK)

@@ -25,7 +25,6 @@ export default function MyFriends(){
         setVisible
     );
 
-    console.log(friends)
 
     const [pendingRequests,setPendingRequests] = useFetchState(
         [],
@@ -35,7 +34,17 @@ export default function MyFriends(){
         setVisible
     );
 
+    const [players,setPlayers] = useFetchState(
+        [],
+        `/api/v1/players`,
+        jwt,
+        setMessage,
+        setVisible
+    );
+
+
     const [searchTerm, setSearchTerm] = useState('');
+
     const [loading, setLoading] = useState(true); // Para gestionar el estado de carga
 
     const [loadingFriends, setLoadingFriends] = useState(true);
@@ -43,7 +52,6 @@ export default function MyFriends(){
 
     const [error, setError] = useState(null);
 
-    console.log(pendingRequests)
     
 
 
@@ -52,9 +60,9 @@ export default function MyFriends(){
     };
 
     // Filtrar amigos por nombre usando el término de búsqueda
-    const filteredFriends = friends.filter(friend =>
-        friend.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    //const filteredFriends = friends.filter(friend =>
+     //   friend.name.toLowerCase().includes(searchTerm.toLowerCase())
+    //);
 
     const handleAcceptRequest = async (requestId) => {
         try {
@@ -109,12 +117,24 @@ export default function MyFriends(){
 
     const handleSendRequest = async (username) => {
         try{
-            const response = await axios.post('/api/v1/requests', username, {
+            
+            const player2 = players.find(player => player.nickname === username);
+
+            if (!player2) {
+                setError(`Jugador con nombre ${username} no encontrado.`);
+            }
+            const response = await axios.post(`/api/v1/requests`, {
+                    playerOne: user.username,
+                    playerTwo: player2.nickname,
+                    status: 'PENDING'
+            }, {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                     'Content-Type': 'application/json'
                 }
-                });
+        });
+
+            
             if(response.status === 201) {
                 setVisible(true);
                 setMessage('Solicitud enviada correctamente.');
@@ -135,7 +155,7 @@ export default function MyFriends(){
             <div className="friends-list">
                 <div className="friends-header">Online Friends</div>
                 <ul>
-                    {filteredFriends.map((friend, index) => (
+                    {friends.map((friend, index) => (
                         <li key={index} className={friend}>
                             {friend.name}
                         </li>
@@ -178,7 +198,7 @@ export default function MyFriends(){
                     className="search-input"
                 />
                 <Button color="primary"
-                onClick={( ) => handleSendRequest()}>
+                onClick={( ) => handleSendRequest(searchTerm)}>
                     Send Request
                     </Button>
                 </li>
