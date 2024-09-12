@@ -134,6 +134,17 @@ public class MatchService {
         }
     }
 
+    @Transactional
+    public void actionSingleCard(Match match, Gunfighter gunfighter0, Gunfighter gunfighter1) {
+        if (gunfighter0.getInsidious() > 0) {
+            cardService.executeSingleCard(gunfighter0.getCardPlayed(), gunfighter0, gunfighter1, match.getDeck(),
+                    match.getId());
+        } else {
+            cardService.executeSingleCard(gunfighter1.getCardPlayed(), gunfighter1, gunfighter0, match.getDeck(),
+                    match.getId());
+        }
+    }
+
     // FUNCIONES PARA LOS LOGROS:
     @Transactional(readOnly = true)
     public Boolean juegaTuPrimeraPartida(Integer u) throws DataAccessException {
@@ -255,13 +266,5 @@ public class MatchService {
         return res / matches.size();
     }
 
-    public void actionSingleCard(Match match, Gunfighter gunfighter0, Gunfighter gunfighter1) {
-        if (gunfighter0.getInsidious() > 0) {
-            cardService.executeSingleCard(gunfighter0.getCardPlayed(), gunfighter0, gunfighter1, match.getDeck(),
-                    match.getId());
-        } else {
-            cardService.executeSingleCard(gunfighter1.getCardPlayed(), gunfighter1, gunfighter0, match.getDeck(),
-                    match.getId());
-        }
-    }
+  
 }

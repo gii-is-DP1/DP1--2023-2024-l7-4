@@ -714,7 +714,7 @@ public class CardService {
                                 while (indicesAleatorios.size() < 2) {
                                         Double indiceAleatorio = Math
                                                         .floor(Math.random() * statePlayerSecondary.getCards().size()
-                                                                        + 1);
+                                                                        );
                                         if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                                 indicesAleatorios.add(indiceAleatorio.intValue());
                                         }
@@ -925,7 +925,7 @@ public class CardService {
                         while (indicesAleatorios.size() < 2) {
                                 Double indiceAleatorio = Math
                                                 .floor(Math.random() * statePlayerMain.getCards().size()
-                                                                + 1);
+                                                                );
                                 if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                         indicesAleatorios.add(indiceAleatorio.intValue());
                                 }
@@ -1348,8 +1348,7 @@ public class CardService {
                 List<Integer> indicesAleatorios = new ArrayList<>();
                 while (indicesAleatorios.size() < 3) {
                         Double indiceAleatorio = Math
-                                        .floor(Math.random() * statePlayerMain.getCards().size()
-                                                        + 1);
+                                        .floor(Math.random() * statePlayerMain.getCards().size());
                         if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                 indicesAleatorios.add(indiceAleatorio.intValue());
                         }
@@ -1418,7 +1417,7 @@ public class CardService {
 
                         }
                 } else {
-                        Double randomCardIndex = Math.random() * (statePlayerMain.getCards().size() + 1);
+                        Double randomCardIndex = Math.random() * (statePlayerMain.getCards().size());
                         List<Integer> updatedCards = statePlayerMain.getCards();
                         updatedCards.remove(randomCardIndex.intValue());
 
