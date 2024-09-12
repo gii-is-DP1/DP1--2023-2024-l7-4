@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 
 import java.net.URISyntaxException;
@@ -53,10 +53,43 @@ public class RequestRestController {
         return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
     }
 
+    // @PostMapping()
+    // @ResponseStatus(HttpStatus.CREATED)
+    // public ResponseEntity<Request> create(@RequestBody @Valid Request request)
+    // throws URISyntaxException {
+    // System.out.println("------------------------------------ Request: " +
+    // request);
+
+    // if (request.getPlayerOne() == null || request.getPlayerTwo() == null) {
+    // return ResponseEntity.badRequest().body(null);
+    // }
+
+    // Player playerOne =
+    // playerService.findByUsername(request.getPlayerOne().getUsername());
+    // Player playerTwo =
+    // playerService.findByUsername(request.getPlayerTwo().getUsername());
+
+    // System.out.println("Player One: " + playerOne);
+    // System.out.println("Player Two: " + playerTwo);
+
+    // if (playerOne == null || playerTwo == null) {
+    // return ResponseEntity.badRequest().body(null);
+    // }
+
+    // Request newRequest = new Request();
+    // newRequest.setPlayerOne(playerOne);
+    // newRequest.setPlayerTwo(playerTwo);
+    // newRequest.setStatus(RequestState.PENDING);
+
+    // Request savedRequest = requestService.saveRequest(newRequest);
+    // return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+    // }
+
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Request> create(@RequestBody @Valid RequestDTO requestDTO) throws URISyntaxException {
-        System.out.println("------------------------------------ RequestDTO: " + requestDTO);
+        System.out.println("------------------------------------ RequestDTO: " +
+                requestDTO);
 
         if (requestDTO.getPlayerOne() == null || requestDTO.getPlayerTwo() == null) {
             return ResponseEntity.badRequest().body(null);
