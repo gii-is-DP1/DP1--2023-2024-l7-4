@@ -123,16 +123,31 @@ export default function MyFriends(){
             if (!player2) {
                 setError(`Jugador con nombre ${username} no encontrado.`);
             }
-            const response = await axios.post(`/api/v1/requests`, {
-                    playerOne: user.username,
-                    playerTwo: player2.nickname,
-                    status: 'PENDING'
-            }, {
+            if (!user.username || !player2.username) {
+                setError('Nombre de usuario del jugador no puede ser nulo.');
+                return;
+            }
+            console.log('Enviando solicitud con los siguientes datos:', {
+                playerOne: user.username,
+                playerTwo: player2.username,
+                status: 'PENDING'
+            });
+    
+            const requestData = {
+                playerOne: user.username,
+                playerTwo: player2.username,
+                status: 'PENDING'
+            };
+    
+    
+            const response = await axios.post(`/api/v1/requests`, requestData, {
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                     'Content-Type': 'application/json'
                 }
-        });
+            });
+
+        console.log('Respuesta de la API:', response);
 
             
             if(response.status === 201) {

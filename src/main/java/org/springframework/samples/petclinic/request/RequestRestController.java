@@ -53,29 +53,33 @@ public class RequestRestController {
         return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
     }
 
-    
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Request> create(@RequestBody @Valid RequestDTO requestDTO) throws URISyntaxException {
-    // Buscar jugadores usando los nombres de usuario
-        System.out.println("Received RequestDTO: " + requestDTO);
+        System.out.println("------------------------------------ RequestDTO: " + requestDTO);
 
-    Player playerOne = playerService.findByUsername(requestDTO.getPlayerOneUsername());
+        if (requestDTO.getPlayerOne() == null || requestDTO.getPlayerTwo() == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
 
-    Player playerTwo = playerService.findByUsername(requestDTO.getPlayerTwoUsername());
+        Player playerOne = playerService.findByUsername(requestDTO.getPlayerOne());
+        Player playerTwo = playerService.findByUsername(requestDTO.getPlayerTwo());
 
-    System.out.println("Received RequestDTO: " + requestDTO);
+        System.out.println("Player One: " + playerOne);
+        System.out.println("Player Two: " + playerTwo);
 
-    // Crear y guardar la solicitud
-    Request newRequest = new Request();
-    newRequest.setPlayerOne(playerOne);
-    newRequest.setPlayerTwo(playerTwo);
-    newRequest.setStatus(RequestState.PENDING);
+        if (playerOne == null || playerTwo == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
 
-    Request savedRequest = requestService.saveRequest(newRequest);
-    return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
-}
+        Request newRequest = new Request();
+        newRequest.setPlayerOne(playerOne);
+        newRequest.setPlayerTwo(playerTwo);
+        newRequest.setStatus(RequestState.PENDING);
 
+        Request savedRequest = requestService.saveRequest(newRequest);
+        return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
+    }
 
     @PutMapping(value = "{requestId}")
     @ResponseStatus(HttpStatus.OK)

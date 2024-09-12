@@ -5,34 +5,45 @@ import jakarta.validation.constraints.NotNull;
 public class RequestDTO {
 
     @NotNull(message = "El nombre de usuario del primer jugador no puede ser nulo")
-    private String playerOneUsername;
+    private String playerOne;
 
     @NotNull(message = "El nombre de usuario del segundo jugador no puede ser nulo")
-    private String playerTwoUsername;
+    private String playerTwo;
+
+    @NotNull
+    private String status;
 
     // Getters y setters
 
-    public String getPlayerOneUsername() {
-        return playerOneUsername;
+    public String getPlayerOne() {
+        return playerOne;
     }
 
-    public void setPlayerOneUsername(String playerOneUsername) {
-        this.playerOneUsername = playerOneUsername;
+    public void setPlayerOne(String playerOne) {
+        this.playerOne = playerOne;
     }
 
-    public String getPlayerTwoUsername() {
-        return playerTwoUsername;
+    public String getPlayerTwo() {
+        return playerTwo;
     }
 
-    public void setPlayerTwoUsername(String playerTwoUsername) {
-        this.playerTwoUsername = playerTwoUsername;
+    public void setPlayerTwo(String playerTwo) {
+        this.playerTwo = playerTwo;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
     public String toString() {
         return "RequestDTO{" +
-                "playerOneUsername='" + playerOneUsername + '\'' +
-                ", playerTwoUsername='" + playerTwoUsername + '\'' +
+                "playerOne='" + playerOne + '\'' +
+                ", playerTwo='" + playerTwo + '\'' +
                 '}';
     }
 }
