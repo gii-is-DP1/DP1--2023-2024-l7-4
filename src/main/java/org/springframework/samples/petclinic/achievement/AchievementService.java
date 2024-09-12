@@ -43,17 +43,8 @@ public class AchievementService {
     }
 
     //FUNCIONES PARA LOS LOGROS:
-    @Transactional(readOnly = true)
-    public Boolean juegaTuPrimeraPartida(Integer u) throws DataAccessException {
-    String userName= userRepository.findById(u).get().getUsername();
-    List<Match> matches= matchService.findMatchsByPlayer(userName);
-        if(matches.size()==0){
-            return false;
-    }
-    return true;
-}
 @Transactional(readOnly = true)
-public Boolean juega5partidas(Integer u) throws DataAccessException {
+public Boolean juegaXpartidas(Integer u) throws DataAccessException {
     String userName= userRepository.findById(u).get().getUsername();
     List<Match> matches = matchService.findMatchsByPlayer(userName);
     if(matches.size()<5){
@@ -61,22 +52,9 @@ public Boolean juega5partidas(Integer u) throws DataAccessException {
     }
     return true;
 }
+
 @Transactional(readOnly = true)
-public Boolean ganaPrimeraPartida(Integer u) throws DataAccessException {
-    String userName= userRepository.findById(u).get().getUsername();
-    List<Match> matches= matchService.findMatchsByPlayer(userName);
-    if(matches.size()==0){
-        return false;
-    }
-    for (Match match : matches) {
-        if(match.getWinner()==userName){
-            return true;
-        }
-    }
-    return false;
-}
-@Transactional(readOnly = true)
-    public Boolean gana5partidas(Integer u) throws DataAccessException {
+    public Boolean ganaXpartidas(Integer u) throws DataAccessException {
         String userName= userRepository.findById(u).get().getUsername();
         List<Match> matches= matchService.findMatchsByPlayer(userName);
         if(matches.size()<5){
