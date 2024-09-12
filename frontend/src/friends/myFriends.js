@@ -5,6 +5,8 @@ import axios from 'axios';
 import jwtDecode from 'jwt-decode';
 import tokenService from '../services/token.service';
 import useFetchState from "../util/useFetchState";
+import '../static/css/westernTheme.css';
+
 
 const jwt = tokenService.getLocalAccessToken();
 const user = tokenService.getUser();
@@ -165,24 +167,25 @@ export default function MyFriends(){
 
 
     return (
-        <div className="container">
+        <div className='admin-page-container' >
+            <div className="container">
             
-            <div className="friends-list">
+            <div className="hero-div">
                 <div className="friends-header">Online Friends</div>
-                <ul>
+                <div>
                     {friends.map((friend, index) => (
-                        <li key={index} className={friend}>
+                       <div>
                             {friend.name}
-                        </li>
+                            </div>
                     ))}
-                </ul>
+                    </div>
             </div>
 
-            <div className="pending-requests">
+            <div className="hero-div" >
                 <div className="requests-header">Pending Requests</div>
-                <ul>
+                <div>
                     {pendingRequests.map((request, index) => (
-                        <li key={index}>
+                        <div>
                             
                             {request.playerOne.name} 
                             <div>
@@ -197,13 +200,13 @@ export default function MyFriends(){
                                     Decline
                                 </Button>
                             </div>
-                        </li>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
 
-            <div className="search-friends">
-                <li>
+            <div className="hero-div">
+                
                 <div className="search-header">Search new friends </div>
                 <input
                     type="text"
@@ -216,9 +219,18 @@ export default function MyFriends(){
                 onClick={( ) => handleSendRequest(searchTerm)}>
                     Send Request
                     </Button>
-                </li>
-            </div>
+                    <div>                   {visible && <alert className="success">{message}</alert>}
+                                            {error && <alert className="error">{error}</alert>  }
+                    </div>
 
+                  
+
+                
+            </div>
+            <div className='hero-div'>
+                        <div className="friends-header">Game Invitations</div>
+                        </div>
+            </div>
         </div>
     );
 }
