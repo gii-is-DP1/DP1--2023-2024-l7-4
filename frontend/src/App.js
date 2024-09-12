@@ -24,13 +24,13 @@ import './static/css/westernTheme.css';
 import MyMatchesAdmin from "./matches/myMatchesAdmin";
 import Stadistics from "./player/stadistics/Stadistics";
 
-import Logros from "./player/stadistics/Logros";
+import Achievements from "./player/stadistics/Achievements";
 
 import PlayerListAdmin from "./admin/players/PlayerListAdmin";
 import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import Personal from "./player/stadistics/Personal";
 import Ranking from "./player/stadistics/Ranking"
-
+import AchievementsEdit from "./admin/Achievements/AchievementsEdit"
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -68,6 +68,7 @@ function App() {
           <Route path="/allMatches" exact={true} element={<PrivateRoute><MyMatchesAdmin /></PrivateRoute>} />
           <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
           <Route path="/players/:playerId" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
+          <Route path="/achievementsEdit" exact={true} element={<PrivateRoute><AchievementsEdit/></PrivateRoute>} />
         </>)
     }
     if (role === "PLAYER") {
@@ -77,7 +78,7 @@ function App() {
       <Route path="/statistics" exact={true} element={<PrivateRoute><Stadistics /></PrivateRoute>} />
           <Route path="/myProfile/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
           <Route path="/statistics/personal" exact={true} element={<PrivateRoute><Personal /></PrivateRoute>} />
-          <Route path= "/statistics/achievements" exact={true} element={<PrivateRoute><Logros /></PrivateRoute>} />
+          <Route path= "/statistics/achievements" exact={true} element={<PrivateRoute><Achievements /></PrivateRoute>} />
           <Route path= "/statistics/ranking" exact={true} element={<PrivateRoute><Ranking /></PrivateRoute>} />
           <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
           <Route path="/players/edit2/:username" element={<PrivateRoute><PublicProfileEdit /></PrivateRoute>} />

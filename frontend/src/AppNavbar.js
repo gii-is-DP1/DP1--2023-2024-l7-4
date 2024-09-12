@@ -37,6 +37,9 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink className='western-navlink' tag={Link} to="/allMatches">Matches</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/achievementsEdit">Achievements</NavLink>
+                    </NavItem>
                 </>
             )
         }
