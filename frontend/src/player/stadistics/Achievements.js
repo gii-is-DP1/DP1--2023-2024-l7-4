@@ -1,99 +1,71 @@
-import {Button,Container,Row,Col} from "reactstrap";
+import { Button, Container, Row, Col } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import tokenService from '../../services/token.service';
 
 const user = tokenService.getUser();
 
-export default function PlayerStadisticLogros(){
-  
-
+export default function PlayerStadisticLogros() {
   const jwt = tokenService.getLocalAccessToken();
   const userId = user.id;
-  const [logro1, set1] = useState(null);
-  const [logro2, set2] = useState(null);
-  const [logro3, set3] = useState(null);
-  const [logro4, set4] = useState(null);
+  
+  const [achievements, setAchievements] = useState([]);
+  const [successMap, setSuccessMap] = useState({});
+
+
+  const fetchAchievements = async () => {
+    try {
+      const response = await fetch(`/api/v1/achievements`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error al obtener logros`);
+      }
+      const result = await response.json();
+      setAchievements(Array.isArray(result) ? result : []);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const checkSuccess = async (achievementId) => {
+    try {
+      const response = await fetch(`/api/v1/achievements/${userId}/${achievementId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error al verificar logro`);
+      }
+      const result = await response.json();
+      return result;
+    } catch (error) {
+      console.error(error.message);
+      return false;
+    }
+  };
 
   useEffect(() => {
-    const fetchLogro1 = async () => {
-      try {
-        const response = await fetch(`/api/v1/matches/juegaTuPrimeraPartida/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        });        
-        if (!response.ok) {
-          throw new Error(`Error `);
-        }
-        const result = await response.json();
-        set1(result);
-      } catch (error) {
-        console.error(error.message);
+    const verifyAchievements = async () => {
+      const newSuccessMap = {};
+      for (const achievement of achievements) {
+        const isSuccess = await checkSuccess(achievement.id);
+        newSuccessMap[achievement.id] = isSuccess;
       }
+      setSuccessMap(newSuccessMap);
     };
-    fetchLogro1();
+
+    if (achievements.length > 0) {
+      verifyAchievements();
+    }
+  }, [achievements]);
+
+  useEffect(() => {
+    fetchAchievements();
   }, [jwt, userId]);
-
-  useEffect(() => {
-    const fetchLogro2 = async () => {
-      try {
-        const response = await fetch(`/api/v1/matches/juega5partidas/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        });        
-        if (!response.ok) {
-          throw new Error(`Error `);
-        }
-        const result = await response.json();
-        set2(result);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    fetchLogro2();
-  }, [jwt, userId]);
-
-  useEffect(() => {
-    const logro3 = async () => {
-      try {
-        const response = await fetch(`/api/v1/matches/ganaPrimeraPartida/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        });        
-        if (!response.ok) {
-          throw new Error(`Error `);
-        }
-        const result = await response.json();
-        set3(result);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    logro3();
-  }, [jwt,userId]);
-
-  useEffect(() => {
-    const logro4 = async () => {
-      try {
-        const response = await fetch(`/api/v1/matches/gana5partidas/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        });        
-        if (!response.ok) {
-          throw new Error(`Error `);
-        }
-        const result = await response.json();
-        set4(result);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-    logro4();
-  }, [jwt,userId]);
 
   const LogroBox = ({ children }) => (
     <div style={{
@@ -113,65 +85,54 @@ export default function PlayerStadisticLogros(){
 
   return (
     <div className="auth-page-purple">
-     <Container style={{ marginTop: "15px" }} fluid>
-          <h1 className="text-center">Statistics</h1>
-          <div className="auth-page-yellow d-flex justify-content-center">
-            <Button
-              size="md"
-              color="warning"
-              tag={Link}
-              to={`/statistics/personal`}
-              className="mx-2"
-            >
-              Personal statistics
-            </Button>
-            <Button
-              size="md"
-              color="warning"
-              tag={Link}
-              to={`/statistics/achievements`}
-              className="mx-2"
-            >
-              Achievements
-            </Button>
-            <Button
-              size="md"
-              color="warning"
-              tag={Link}
-              to={`/statistics/ranking`}
-              className="mx-2"
-            >
-              Ranking
-            </Button>
-          </div>
-        </Container>
+      <Container style={{ marginTop: "15px" }} fluid>
+        <h1 className="text-center">Statistics</h1>
+        <div className="auth-page-yellow d-flex justify-content-center">
+          <Button
+            size="md"
+            color="warning"
+            tag={Link}
+            to={`/statistics/personal`}
+            className="mx-2"
+          >
+            Personal statistics
+          </Button>
+          <Button
+            size="md"
+            color="warning"
+            tag={Link}
+            to={`/statistics/achievements`}
+            className="mx-2"
+          >
+            Achievements
+          </Button>
+          <Button
+            size="md"
+            color="warning"
+            tag={Link}
+            to={`/statistics/ranking`}
+            className="mx-2"
+          >
+            Ranking
+          </Button>
+        </div>
+      </Container>
+
       <Container style={{ marginTop: "5px" }} fluid>
-        <h1 className="text-center">Logros</h1>
+        <h1 className="text-center">Achievements</h1>
         <Row>
-          <Col sm="6">
-            <LogroBox>
-              <p>Juega Tu Primera Partida: </p>
-              <p>{logro1 ? "✔️" : "❌"}</p>
-            </LogroBox>
-          </Col>
-          <Col sm="6">
-            <LogroBox>
-              <p>Juega 5 Partidas: </p>
-              <p>{logro2 ? "✔️" : "❌"}</p>
-            </LogroBox>
-          </Col>
-          <Col sm="6">
-            <LogroBox>
-              <p>Gana Tu Primera Partida: </p>
-              <p>{logro3 ? "✔️" : "❌"}</p>
-            </LogroBox>
-          </Col>
-          <Col sm="6">
-            <LogroBox>
-              <p>Gana 5 Partidas: </p>
-              <p>{logro4 ? "✔️" : "❌"}</p>
-            </LogroBox>
-          </Col>
+          {achievements.length > 0 ? (
+            achievements.map((achievement) => (
+              <Col sm="6" key={achievement.id}>
+                <LogroBox>
+                <p>{achievement.name}</p>
+                <p>{successMap[achievement.id] ? "✔️" : "❌"}</p>
+                </LogroBox>
+              </Col>
+            ))
+          ) : (
+            <p>No achievements found</p>
+          )}
         </Row>
       </Container>
     </div>

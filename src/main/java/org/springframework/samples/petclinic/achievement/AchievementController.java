@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.achievement;
 
 import java.net.URISyntaxException;
+import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +26,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/achievement")
+@RequestMapping("/api/v1/achievements")
 @SecurityRequirement(name = "bearerAuth")
 public class AchievementController {
 
@@ -36,6 +38,10 @@ public class AchievementController {
         this.matchService = matchService;
         this.achievementService= achievementService;
 
+    }
+        @GetMapping
+    public ResponseEntity<List<Achievement>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
+        return new ResponseEntity<>((List<Achievement>) achievementService.findAll(), HttpStatus.OK);
     }
     @GetMapping("/{id}")
     public ResponseEntity<Achievement> findById(@PathVariable(name = "id") int id) {
@@ -57,13 +63,9 @@ public class AchievementController {
     }
 //LOGROS
 
-@GetMapping("/juegaXpartidas/{id}")
-public Boolean juega5partidas(@PathVariable("id") Integer id){
-    return achievementService.juegaXpartidas(id);
+@GetMapping("{id}/{achievementId}")
+public Boolean Success(@PathVariable("id") Integer id,@PathVariable("achievementId") Integer achievementId){
+    return achievementService.Success(id,achievementId);
 }
 
-@GetMapping("/ganaXpartidas/{id}")
-public Boolean gana5partidas(@PathVariable("id") Integer id) {
- return achievementService.ganaXpartidas(id);
-}
 }

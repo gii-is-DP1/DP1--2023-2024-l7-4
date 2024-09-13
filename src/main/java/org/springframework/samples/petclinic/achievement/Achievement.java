@@ -3,7 +3,8 @@ package org.springframework.samples.petclinic.achievement;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,18 +22,14 @@ import lombok.Setter;
 @Setter
 public class Achievement extends NamedEntity {
 
-    @Column(name = "description")
-    @NotEmpty
-    private String description;
 
-    //IMAGES
 
     @Column(name = "metric")
     @NotNull
     private Integer metric;
 
     @Column(name = "threshold")
-    @NotNull
+    @Enumerated(EnumType.STRING)
     private Threshold threshold;
 
 }

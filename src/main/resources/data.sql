@@ -51,3 +51,9 @@ INSERT INTO joined_players (match_id, player) VALUES (7, 'Player3');
 INSERT INTO joined_players (match_id, player) VALUES (8, 'Player1');
 INSERT INTO joined_players (match_id, player) VALUES (8, 'Player3');
 
+INSERT INTO achievement(id,metric,threshold,name) VALUES (1,1,'GAMESPLAYED','Play One Game' );
+INSERT INTO achievement(id,metric,threshold,name) VALUES (2,1,'VICTORIES','Win One Game');
+INSERT INTO achievement(id,metric,threshold,name) VALUES (3,10,'GAMESPLAYED','Play 10 Game');
+INSERT INTO achievement(id,metric,threshold,name) VALUES (4,5,'VICTORIES','Win 5 Game');
+INSERT INTO achievement(id,metric,threshold,name) VALUES (5,100,'GAMESPLAYED','Play 100 Game');
+
