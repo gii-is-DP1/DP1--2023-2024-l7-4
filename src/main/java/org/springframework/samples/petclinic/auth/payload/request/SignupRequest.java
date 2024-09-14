@@ -37,8 +37,15 @@ public class SignupRequest {
 	@NotBlank
 	private String location;
 
+	private String biography;
 
-	
-	
+	private LocalDate birthdate;
+
+	private String favoriteGenres;
+
+	private String favoritePlatforms;
+
+	private String favoriteSagas;
+
 
 }

@@ -6,7 +6,6 @@ import '../../static/css/westernTheme.css';
 import '../../App.css'
 import getErrorModal from "../../util/getErrorModal";
 import getIdFromUrl from "../../util/getIdFromUrl";
-import useFetchData from "../../util/useFetchData";
 import useFetchState from "../../util/useFetchState";
 
 const jwt = tokenService.getLocalAccessToken();
@@ -118,8 +117,33 @@ export default function PlayerEditAdmin() {
               onChange={handleChange} />
           </FormGroup>
           <FormGroup>
+            <Label for="biography">Biography</Label>
+            <Input type="textarea" name="biography" id="biography" value={player.biography || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
             <Label for="location">Location</Label>
             <Input type="text" required name="location" id="location" value={player.location || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="birthdate">Birthdate</Label>
+            <Input type="date" name="birthdate" id="birthdate" value={player.birthdate || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="favoriteGenres">Favorite Genres</Label>
+            <Input type="text" name="favoriteGenres" id="favoriteGenres" value={player.favoriteGenres || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="favoritePlatforms">Favorite Platforms</Label>
+            <Input type="text" name="favoritePlatforms" id="favoritePlatforms" value={player.favoritePlatforms || ""}
+              onChange={handleChange} />
+          </FormGroup>
+          <FormGroup>
+            <Label for="favoriteSagas">Favorite Sagas</Label>
+            <Input type="text" name="favoriteSagas" id="favoriteSagas" value={player.favoriteSagas || ""}
               onChange={handleChange} />
           </FormGroup>
           <div className="custom-button-row">
