@@ -123,13 +123,23 @@ public class RequestRestController {
         return new ResponseEntity<>(this.requestService.acceptRequest(updatedRequest, requestId), HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "{requestId}")
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<MessageResponse> delete(@PathVariable("requestId") Integer requestId) {
-        RestPreconditions.checkNotNull(requestService.findRequestById(requestId), "Request", "ID", requestId);
-        requestService.rejectRequest(requestService.findRequestById(requestId));
+    // @DeleteMapping(value = "{requestId}")
+    // @ResponseStatus(HttpStatus.OK)
+    // public ResponseEntity<MessageResponse> delete(@PathVariable("requestId")
+    // Integer requestId) {
+    // RestPreconditions.checkNotNull(requestService.findRequestById(requestId),
+    // "Request", "ID", requestId);
+    // requestService.rejectRequest(requestService.findRequestById(requestId));
 
-        return new ResponseEntity<>(new MessageResponse("Request deleted!"), HttpStatus.OK);
+    // return new ResponseEntity<>(new MessageResponse("Request deleted!"),
+    // HttpStatus.OK);
+    // }
+
+    @DeleteMapping(value = "{requestId}")
+    public ResponseEntity<Void> delete(@PathVariable("requestId") Integer requestId) {
+        this.requestService.rejectRequest(requestService.findRequestById(requestId));
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 
 }

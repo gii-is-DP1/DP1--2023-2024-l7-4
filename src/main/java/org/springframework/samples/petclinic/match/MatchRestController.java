@@ -90,7 +90,8 @@ public class MatchRestController {
 
     @PutMapping("/{id}/join")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) throws NotFoundException{
+    public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username)
+            throws NotFoundException {
         Match m = matchService.findMatchById(id);
         List<String> joinedPlayers = m.getJoinedPlayers();
         username = username.replace("\"", "");
@@ -124,8 +125,8 @@ public class MatchRestController {
         m.setWinner(username);
         if (m.getMatchState() == MatchState.IN_PROGRESS)
             m.setMatchState(MatchState.CLOSED);
-            m.setFinishDateTime(LocalDateTime.now());
-            m.setStartDate(m.getStartDate());
+        m.setFinishDateTime(LocalDateTime.now());
+        m.setStartDate(m.getStartDate());
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
@@ -140,7 +141,7 @@ public class MatchRestController {
             m.setMatchState(MatchState.IN_PROGRESS);
             m.setStartDate(LocalDateTime.now());
             m.setFinishDateTime(null);
- 
+
             Gunfighter gunfighter0 = new Gunfighter();
             gunfighter0.setPlayerNumber(0);
             gunfighter0.setPlayer(playerService.findByUsername(m.getJoinedPlayers().get(0)));
@@ -254,82 +255,53 @@ public class MatchRestController {
 
     }
 
-    //LOGROS
+    // LOGROS
 
     @GetMapping("/juegaTuPrimeraPartida/{id}")
-        public Boolean juegaTuPrimeraPartida(@PathVariable("id") Integer id) {
-         return matchService.juegaTuPrimeraPartida(id);
-}
+    public Boolean juegaTuPrimeraPartida(@PathVariable("id") Integer id) {
+        return matchService.juegaTuPrimeraPartida(id);
+    }
 
     @GetMapping("/juega5partidas/{id}")
-        public Boolean juega5partidas(@PathVariable("id") Integer id){
-            return matchService.juega5partidas(id);
-        }
+    public Boolean juega5partidas(@PathVariable("id") Integer id) {
+        return matchService.juega5partidas(id);
+    }
+
     @GetMapping("/ganaPrimeraPartida/{id}")
-        public Boolean ganaPrimeraPartida(@PathVariable("id") Integer id) {
-            return matchService.ganaPrimeraPartida(id);
-}
+    public Boolean ganaPrimeraPartida(@PathVariable("id") Integer id) {
+        return matchService.ganaPrimeraPartida(id);
+    }
 
     @GetMapping("/gana5partidas/{id}")
-        public Boolean gana5partidas(@PathVariable("id") Integer id) {
-         return matchService.gana5partidas(id);
-}
+    public Boolean gana5partidas(@PathVariable("id") Integer id) {
+        return matchService.gana5partidas(id);
+    }
 
-    //PERSONAL
+    // PERSONAL
 
     @GetMapping("/winMatches/{id}")
-        public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
-            return matchService.findWinMatchsByPlayer(id);
+    public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
+        return matchService.findWinMatchsByPlayer(id);
     }
 
     @GetMapping("/timePlayed/{id}")
-        public Double timePlayedByUserName(@PathVariable("id") Integer id) {
-            return matchService.timePlayedByUserName(id);
+    public Double timePlayedByUserName(@PathVariable("id") Integer id) {
+        return matchService.timePlayedByUserName(id);
     }
-    
-    
+
     @GetMapping("/maxTimePlayed/{username}")
-        public Double maxTimePlayedByUserName(@PathVariable("username") Integer username) {
-            return matchService.maxTimePlayedByUserName(username);
+    public Double maxTimePlayedByUserName(@PathVariable("username") Integer username) {
+        return matchService.maxTimePlayedByUserName(username);
     }
 
     @GetMapping("/minTimePlayed/{username}")
-        public Double minTimePlayedByUserName(@PathVariable("username") Integer username) {
-            return matchService.minTimePlayedByUserName(username);
+    public Double minTimePlayedByUserName(@PathVariable("username") Integer username) {
+        return matchService.minTimePlayedByUserName(username);
     }
 
-@GetMapping("/avgTimePlayed/{username}")
-        public Double averageTimePlayedByUserName(@PathVariable("username") Integer username) {
-            return matchService.averageTimePlayedByUserName(username);
+    @GetMapping("/avgTimePlayed/{username}")
+    public Double averageTimePlayedByUserName(@PathVariable("username") Integer username) {
+        return matchService.averageTimePlayedByUserName(username);
     }
-    
-
-    /*
-     * @MessageMapping("/match/{id}/players")
-     * 
-     * @SendTo("/topic/match/{id}/players")
-     * public MatchGunfighterMessage
-     * particularGamePlayerMessage(@DestinationVariable int id,
-     * Integer playerNumber) {
-     * Gunfighter gunfighter = gunfighterService.findByMatchAndGunfighter(id,
-     * playerNumber);
-     * return new MatchGunfighterMessage(TypeMessage.PLAYERINFO,
-     * gunfighter.getHealth(),
-     * gunfighter.getBullets(),
-     * gunfighter.getPrecision(), gunfighter.getPlayerNumber(),
-     * gunfighter.getCards());
-     * }
-     * 
-     * @MessageMapping("/match/{id}/actions")
-     * 
-     * @SendTo("/topic/match/{id}/actions")
-     * public MatchActionsPlayersMessage
-     * particularGameActionMessage(@DestinationVariable int id,
-     * MatchActionsPlayersMessage actionMessage) {
-     * return new MatchActionsPlayersMessage(actionMessage.getAction(),
-     * actionMessage.getPlayerNumber());
-     * }
-     * 
-     */
 
 }
