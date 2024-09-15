@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Form, Input, Label, FormGroup } from "reactstrap";
 import tokenService from "../../services/token.service";
 import '../../static/css/westernTheme.css';
+import '../../static/css/public.css'
 import '../../App.css'
 import getErrorModal from "../../util/getErrorModal";
 import getIdFromUrl from "../../util/getIdFromUrl";
@@ -76,81 +77,91 @@ export default function PlayerEditAdmin() {
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
-    <div className="auth-page-container2">
+    <div className="auth-page-container3">
       <div className="hero-div">
-        {<h2>{player.id ? "Edit Player" : "Add Player"}</h2>}
+        {<h1>{player.id ? "Edit" : "New"}</h1>}
         {modal}
-        <Form onSubmit={handleSubmit} className='auth-form-container2'>
-          <FormGroup>
-            <Label for="name">Name</Label>
-            <Input type="text" required name="name" id="name" value={player.name || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="surname">Surname</Label>
-            <Input type="text" required name="surname" id="surname" value={player.surname || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="avatar">Avatar</Label>
-            <Input type="text" required name="avatar" id="avatar" value={player.avatar || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="nickname">Nickname</Label>
-            <Input type="text" required name="nickname" id="nickname" value={player.nickname || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="email">Email</Label>
-            <Input type="text" required name="email" id="email" value={player.email || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="username">Username</Label>
-            <Input type="text" required name="username" id="username" value={player.username || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="password">Password</Label>
-            <Input type="password" required name="password" id="password" value={player.password || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="biography">Biography</Label>
-            <Input type="textarea" name="biography" id="biography" value={player.biography || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="location">Location</Label>
-            <Input type="text" required name="location" id="location" value={player.location || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="birthdate">Birthdate</Label>
-            <Input type="date" name="birthdate" id="birthdate" value={player.birthdate || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="favoriteGenres">Favorite Genres</Label>
-            <Input type="text" name="favoriteGenres" id="favoriteGenres" value={player.favoriteGenres || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="favoritePlatforms">Favorite Platforms</Label>
-            <Input type="text" name="favoritePlatforms" id="favoritePlatforms" value={player.favoritePlatforms || ""}
-              onChange={handleChange} />
-          </FormGroup>
-          <FormGroup>
-            <Label for="favoriteSagas">Favorite Sagas</Label>
-            <Input type="text" name="favoriteSagas" id="favoriteSagas" value={player.favoriteSagas || ""}
-              onChange={handleChange} />
-          </FormGroup>
+        <Form onSubmit={handleSubmit} className='western-form-container2'>
+          <div className="form-container">
+            <div className="main-info">
+              <h1>Player</h1>
+              <FormGroup>
+                <Label for="name">Name</Label>
+                <Input type="text" required name="name" id="name" value={player.name || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="surname">Surname</Label>
+                <Input type="text" required name="surname" id="surname" value={player.surname || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="nickname">Nickname</Label>
+                <Input type="text" required name="nickname" id="nickname" value={player.nickname || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="email">Email</Label>
+                <Input type="text" required name="email" id="email" value={player.email || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="username">Username</Label>
+                <Input type="text" required name="username" id="username" value={player.username || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="password">Password</Label>
+                <Input type="password" required name="password" id="password" value={player.password || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+            </div>
+  
+            <div className="public-info">
+              <h1>Public Profile</h1>
+              <FormGroup>
+                <Label for="avatar">Avatar</Label>
+                <Input type="text" required name="avatar" id="avatar" value={player.avatar || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="biography">Biography</Label>
+                <Input type="textarea" name="biography" id="biography" value={player.biography || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="location">Location</Label>
+                <Input type="text" required name="location" id="location" value={player.location || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="birthdate">Birthdate</Label>
+                <Input type="date" name="birthdate" id="birthdate" value={player.birthdate || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="favoriteGenres">Favorite Genres</Label>
+                <Input type="text" name="favoriteGenres" id="favoriteGenres" value={player.favoriteGenres || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="favoritePlatforms">Favorite Platforms</Label>
+                <Input type="text" name="favoritePlatforms" id="favoritePlatforms" value={player.favoritePlatforms || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="favoriteSagas">Favorite Sagas</Label>
+                <Input type="text" name="favoriteSagas" id="favoriteSagas" value={player.favoriteSagas || ""}
+                  onChange={handleChange} />
+              </FormGroup>
+            </div>
+          </div>
+          
           <div className="custom-button-row">
-            <button className="auth-button">Save</button>
+            <button className="button-container">Save</button>
             <Link
               to={`/players`}
-              className="auth-button"
+              className="button-container-bad"
               style={{ textDecoration: "none" }}
             >
               Cancel
@@ -159,5 +170,5 @@ export default function PlayerEditAdmin() {
         </Form>
       </div>
     </div>
-  );
+  );  
 }

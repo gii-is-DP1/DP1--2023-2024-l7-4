@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.player;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,4 +81,34 @@ public class PlayerRestController {
 		playerService.deletePlayer(username);
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}
+
+	@GetMapping("/list")
+	public ResponseEntity<List<PlayerListDTO>> listAllPlayers() {
+    	List<Player> players = playerService.findAll();
+    	List<PlayerListDTO> playerDTOs = players.stream().map(player -> {
+        	PlayerListDTO dto = new PlayerListDTO();
+        	dto.setNickname(player.getNickname());
+        	dto.setAvatar(player.getAvatar());
+        	return dto;
+    	}).collect(Collectors.toList());
+    
+    	return new ResponseEntity<>(playerDTOs, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/{pusername}")
+	public ResponseEntity<PlayerDetailDTO> getPlayerDetails(@PathVariable("pusername") String pusername) {
+    	Player player = playerService.findByUsername(pusername);
+    	PlayerDetailDTO dto = new PlayerDetailDTO();
+		dto.setNickname(player.getNickname());
+    	dto.setAvatar(player.getAvatar());
+    	dto.setBiography(player.getBiography());
+    	dto.setLocation(player.getLocation());
+    	dto.setBirthdate(player.getBirthdate());
+    	dto.setFavoriteGenres(player.getFavoriteGenres());
+    	dto.setFavoritePlatforms(player.getFavoritePlatforms());
+    	dto.setFavoriteSagas(player.getFavoriteSagas());
+
+    	return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+
 }

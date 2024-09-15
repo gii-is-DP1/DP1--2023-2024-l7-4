@@ -7,6 +7,7 @@ class PublicProfileEdit extends Component {
 
     emptyItem = {
         id: '',
+        avatar: '',
         biography: '',
         location: '',
         birthdate: '',
@@ -68,10 +69,15 @@ class PublicProfileEdit extends Component {
         const { item } = this.state;
         const title = <h1 className='text-center'> Public Profile</h1>;
 
-        return <div className='admin-page-container'>
+        return <div className='auth-page-container2'>
             <div className="hero-div h6">
                 {title}
                 <Form onSubmit={this.handleSubmit} className='western-form-container2'>
+                    <FormGroup>
+                        <Label for="avatar">Avatar</Label>
+                        <Input type="text" required name="avatar" id="avatar" value={item.avatar}
+                            onChange={this.handleChange} />
+                    </FormGroup>
                     <FormGroup>
                         <Label for="biography">Biography</Label>
                         <Input type="textarea" name="biography" id="biography" value={item.biography}
