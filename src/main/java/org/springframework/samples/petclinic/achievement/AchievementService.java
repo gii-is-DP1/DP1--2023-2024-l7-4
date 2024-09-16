@@ -2,6 +2,7 @@ package org.springframework.samples.petclinic.achievement;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,7 @@ import org.springframework.samples.petclinic.exceptions.ResourceNotFoundExceptio
 import org.springframework.samples.petclinic.match.Match;
 import org.springframework.samples.petclinic.match.MatchRepository;
 import org.springframework.samples.petclinic.match.MatchService;
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,12 @@ public class AchievementService {
     public Achievement saveAchievement(Achievement achievement) throws DataAccessException {
         achievementRepository.save(achievement);
         return achievement;
+    }
+        @Transactional
+    public Achievement updateAchievement(Achievement achievement, int id) throws DataAccessException {
+        Achievement toUpdate = findAchievementById(id);
+        BeanUtils.copyProperties(achievement, toUpdate, "id");
+        return saveAchievement(toUpdate);
     }
     @Transactional
     public void deleteAchievement(int id) throws DataAccessException {
