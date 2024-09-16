@@ -16,6 +16,7 @@ import UserEditAdmin from "./admin/users/UserEditAdmin";
 import SwaggerDocs from "./public/swagger";
 import PlayerEdit from "./player";
 import PublicProfileEdit from "./player/public";
+import PlayerList from "./player/publicPlayers/profiles";
 import WaitingRoom from "./matches/WaitingRoom";
 import CreateMatch from "./matches/CreateMatch";
 import Game from "./game/Game";
@@ -31,6 +32,7 @@ import PlayerEditAdmin from "./admin/players/PlayerEditAdmin";
 import Personal from "./player/stadistics/Personal";
 import Ranking from "./player/stadistics/Ranking"
 import AchievementsEdit from "./admin/Achievements/AchievementsEdit"
+import PlayerDetails from "./player/publicPlayers/details";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -54,7 +56,7 @@ function App() {
   }
 
   let adminRoutes = <></>;
-  let ownerRoutes = <></>;
+  let playerRoutes = <></>;
   let userRoutes = <></>;
   let vetRoutes = <></>;
   let publicRoutes = <></>;
@@ -72,7 +74,7 @@ function App() {
         </>)
     }
     if (role === "PLAYER") {
-      ownerRoutes = (
+      playerRoutes = (
         <>
     {/* aqui se meten todas las rutas que voy a usar */}
       <Route path="/statistics" exact={true} element={<PrivateRoute><Stadistics /></PrivateRoute>} />
@@ -87,6 +89,8 @@ function App() {
           <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
           <Route path="/game/:matchId" exact={true} element={<PrivateRoute><Game /></PrivateRoute>} />
           <Route path="/myMatches" exact={true} element={<PrivateRoute><MyMatches /></PrivateRoute>} />
+          <Route path="/players" exact={true} element={<PrivateRoute><PlayerList /></PrivateRoute>} />
+          <Route path="/players/:username" exact={true} element={<PrivateRoute><PlayerDetails /></PrivateRoute>} />
         </>)
     }
   })
@@ -118,7 +122,7 @@ function App() {
           {publicRoutes}
           {userRoutes}
           {adminRoutes}
-          {ownerRoutes}
+          {playerRoutes}
           {vetRoutes}
         </Routes>
       </ErrorBoundary>
