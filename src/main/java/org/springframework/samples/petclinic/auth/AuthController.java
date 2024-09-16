@@ -13,6 +13,7 @@ import org.springframework.samples.petclinic.auth.payload.response.JwtResponse;
 import org.springframework.samples.petclinic.auth.payload.response.MessageResponse;
 import org.springframework.samples.petclinic.configuration.jwt.JwtUtils;
 import org.springframework.samples.petclinic.configuration.services.UserDetailsImpl;
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,7 +29,6 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.springframework.security.authentication.BadCredentialsException;
-
 
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -51,19 +51,22 @@ public class AuthController {
 
 	@PostMapping("/signin")
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-		try{
+		try {
 			Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+					new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 			String jwt = jwtUtils.generateJwtToken(authentication);
 
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
-				.collect(Collectors.toList());
+					.collect(Collectors.toList());
+			Player p = playerService.findByUsername(userDetails.getUsername());
+			p.setOnline(true);
 
-			return ResponseEntity.ok().body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
-		}catch(BadCredentialsException exception){
+			return ResponseEntity.ok()
+					.body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
+		} catch (BadCredentialsException exception) {
 			return ResponseEntity.badRequest().body("Bad Credentials!");
 		}
 	}
@@ -74,7 +77,6 @@ public class AuthController {
 		return ResponseEntity.ok(isValid);
 	}
 
-	
 	@PostMapping("/signup")
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (playerService.existsPlayer(signUpRequest.getUsername()).equals(true)) {

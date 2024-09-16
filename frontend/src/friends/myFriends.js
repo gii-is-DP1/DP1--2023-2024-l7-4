@@ -41,6 +41,14 @@ export default function MyFriends() {
     setVisible
   );
 
+  const [mymatches, setMyMatches] = useFetchState(
+    [],
+    `/api/v1/matches/player/${username}`,
+    jwt,
+    setMessage,
+    setVisible
+  );
+
   async function updateFriends() {
     try {
       const response = await fetch(`/api/v1/players/${playerId}/friends`, {
@@ -94,10 +102,8 @@ export default function MyFriends() {
 
   const [searchTerm, setSearchTerm] = useState("");
 
-  const [loading, setLoading] = useState(true); // Para gestionar el estado de carga
-
-  const [loadingFriends, setLoadingFriends] = useState(true);
-  const [loadingRequests, setLoadingRequests] = useState(true);
+  const [selectedMatch, setSelectedMatch] = useState(null);
+  const [showSelect, setShowSelect] = useState(null);
 
   const [error, setError] = useState(null);
 
@@ -207,18 +213,30 @@ export default function MyFriends() {
     }
   };
 
-  //   useEffect(() => {
-  //     if (friends) updateFriends();
+  const toggleSelect = (friendId) => {
+    setShowSelect((prev) => (prev === friendId ? null : friendId));
+  };
 
-  //     if (pendingRequests) updatePendingRequests();
-
-  //     if (players) updatePlayers();
-  //   }, [handleAcceptRequest, handleDeclineRequest, handleSendRequest]);
-  // useEffect(() => {
-  //   updateFriends();
-  //   updatePendingRequests();
-  //   updatePlayers();
-  // }, []);
+  async function handleAddFriendToMatch(matchId, friend) {
+    try {
+      const response = await axios.put(
+        `/api/v1/matches/${matchId}/join`,
+        friend,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${jwt}`,
+          },
+        }
+      );
+      console.log(friend);
+      if (response.status !== 201) {
+        throw new Error("Failed to invite friend to match");
+      }
+    } catch (error) {
+      console.error("Error inviting friend:", error);
+    }
+  }
 
   return (
     <div className="admin-page-container">
@@ -230,7 +248,41 @@ export default function MyFriends() {
               .slice() // Crea una copia del array original para no mutarlo
               .sort((a, b) => a.name.localeCompare(b.name)) // Ordena alfabéticamente
               .map((friend, index) => (
-                <div key={friend.id}>{friend.name}</div>
+                <div key={friend.id}>
+                  {friend.name}
+                  {/* Botón para alternar la visibilidad del menú de selección de partida */}
+                  <Button onClick={() => toggleSelect(friend.id)}>
+                    {showSelect === friend.id ? "Select Match" : "Invite Match"}
+                  </Button>
+
+                  {/* Si el estado showSelect es igual al id del amigo, se muestra el menú de selección */}
+                  {showSelect === friend.id && (
+                    <div>
+                      <select
+                        onChange={(e) => setSelectedMatch(e.target.value)}
+                      >
+                        <option value="">Select a match</option>
+                        {/* Mapeo de las partidas disponibles */}
+                        {mymatches.map((match) => (
+                          <option key={match.id} value={match.id}>
+                            {match.name}
+                          </option>
+                        ))}
+                      </select>
+
+                      {/* Botón para confirmar la invitación, habilitado solo si se selecciona una partida */}
+                      <Button
+                        onClick={() =>
+                          handleAddFriendToMatch(selectedMatch, friend.username)
+                        }
+                        disabled={!selectedMatch} // Deshabilita si no se ha seleccionado una partida
+                      >
+                        Confirm Invitation
+                      </Button>
+                      {console.log({ friend })}
+                    </div>
+                  )}
+                </div>
               ))}
           </div>
         </div>

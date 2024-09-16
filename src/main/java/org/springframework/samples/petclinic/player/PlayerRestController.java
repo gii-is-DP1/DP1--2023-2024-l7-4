@@ -31,23 +31,24 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class PlayerRestController {
 
-    private final PlayerService playerService;
+	private final PlayerService playerService;
 	private final MatchService matchService;
 	private final RequestService requestService;
 
-    @Autowired
-    public PlayerRestController(PlayerService playerService, UserService userService, RequestService requestService, MatchService matchService) {
-        this.playerService = playerService;
+	@Autowired
+	public PlayerRestController(PlayerService playerService, UserService userService, RequestService requestService,
+			MatchService matchService) {
+		this.playerService = playerService;
 		this.matchService = matchService;
 		this.requestService = requestService;
-    }
+	}
 
-    @GetMapping
+	@GetMapping
 	public ResponseEntity<List<Player>> findAll() {
 		return new ResponseEntity<>((List<Player>) this.playerService.findAll(), HttpStatus.OK);
 	}
 
-    @GetMapping(value = "{id}")
+	@GetMapping(value = "{id}")
 	public ResponseEntity<Player> findById(@PathVariable("id") Integer id) {
 		return new ResponseEntity<>(playerService.findPlayer(id), HttpStatus.OK);
 	}
@@ -56,12 +57,26 @@ public class PlayerRestController {
 	public ResponseEntity<Player> findByUsername(@PathVariable("id") String username) {
 		return new ResponseEntity<>(playerService.findByUsername(username), HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/{id}/friends")
-    public ResponseEntity<Set<Player>> getFriends(@PathVariable("id") Integer id) {
-        Set<Player> friends = requestService.getFriends(id);
-        return new ResponseEntity<>(friends, HttpStatus.OK);
-    }
+	public ResponseEntity<Set<Player>> getFriends(@PathVariable("id") Integer id) {
+		Set<Player> friends = requestService.getFriends(id);
+		return new ResponseEntity<>(friends, HttpStatus.OK);
+	}
+
+	@GetMapping("/{id}/friends/online")
+	public ResponseEntity<Set<Player>> getFriendsOnline(@PathVariable("id") Integer id) {
+		Set<Player> friends = requestService.getFriendsOnline(id);
+		return new ResponseEntity<>(friends, HttpStatus.OK);
+	}
+
+	// @GetMapping("/{username}/friends/online")
+	// public ResponseEntity<Set<Player>> getFriendsOnline(@PathVariable("username")
+	// String username) {
+	// Set<Player> friends =
+	// requestService.getFriendsOnline(playerService.findByUsername(username).getId());
+	// return new ResponseEntity<>(friends, HttpStatus.OK);
+	// }
 
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
@@ -85,7 +100,7 @@ public class PlayerRestController {
 	public ResponseEntity<MessageResponse> delete(@PathVariable("username") String username) {
 		RestPreconditions.checkNotNull(playerService.findByUsername(username), "Player", "username", username);
 		List<Match> matchesToDelete = matchService.findMatchsByPlayer(username);
-        matchService.deleteMatches(matchesToDelete);
+		matchService.deleteMatches(matchesToDelete);
 		playerService.deletePlayer(username);
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}

@@ -66,4 +66,21 @@ public class RequestService {
         return friends;
     }
 
+    @Transactional
+    public Set<Player> getFriendsOnline(Integer id) throws DataAccessException {
+        List<Request> allRequests = findAll();
+        Set<Player> friends = new HashSet<>();
+        for (Request r : allRequests) {
+            if (r.getPlayerTwo().getOnline()) {
+
+                if (r.getPlayerOne().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)) {
+                    friends.add(r.getPlayerTwo());
+                } else if (r.getPlayerTwo().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)) {
+                    friends.add(r.getPlayerOne());
+                }
+            }
+        }
+        return friends;
+    }
+
 }
