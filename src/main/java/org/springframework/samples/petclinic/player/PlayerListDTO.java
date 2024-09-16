@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class PlayerListDTO {
     
+    private String username;
     private String nickname;
     private String avatar;
 }

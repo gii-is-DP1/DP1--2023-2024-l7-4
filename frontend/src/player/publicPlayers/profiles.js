@@ -1,22 +1,22 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Button, ButtonGroup, Table } from "reactstrap";
+import { Button } from "reactstrap";
 import tokenService from "../../services/token.service";
 import '../../static/css/westernTheme.css';
 import '../../App.css';
 import '../../static/css/public.css'
 import getErrorModal from "../../util/getErrorModal";
 import useFetchState from "../../util/useFetchState";
-import getIdFromUrl from "../../util/getIdFromUrl";
 
 const jwt = tokenService.getLocalAccessToken();
 
 export default function PlayerList() {
+
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [players, setPlayers] = useFetchState(
     [],
-    `/api/v1/players/list`, 
+    `/api/v1/players/public`, 
     jwt,
     setMessage,
     setVisible

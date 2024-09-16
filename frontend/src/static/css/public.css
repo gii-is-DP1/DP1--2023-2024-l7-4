@@ -22,11 +22,11 @@
   }
   
   .player-card {
-    background-color: #a0522d; /* Color marrón terroso */
-    background-image: url('../images/wanted1.jpg'); /* Imagen de fondo que evoque madera o cuero */
+    background-color: #a0522d; 
+    background-image: url('../images/wanted1.jpg'); 
     background-size: cover;
     background-position: center;
-    border: 1px solid #8b4513; /* Borde marrón oscuro */
+    border: 1px solid #8b4513; 
     border-radius: 8px;
     padding: 25px;
     text-align: center;

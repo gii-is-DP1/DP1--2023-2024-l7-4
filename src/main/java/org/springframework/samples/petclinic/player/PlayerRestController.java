@@ -82,11 +82,12 @@ public class PlayerRestController {
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}
 
-	@GetMapping("/list")
+	@GetMapping("/public")
 	public ResponseEntity<List<PlayerListDTO>> listAllPlayers() {
     	List<Player> players = playerService.findAll();
     	List<PlayerListDTO> playerDTOs = players.stream().map(player -> {
         	PlayerListDTO dto = new PlayerListDTO();
+			dto.setUsername(player.getUsername());
         	dto.setNickname(player.getNickname());
         	dto.setAvatar(player.getAvatar());
         	return dto;
@@ -95,9 +96,9 @@ public class PlayerRestController {
     	return new ResponseEntity<>(playerDTOs, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "/{pusername}")
-	public ResponseEntity<PlayerDetailDTO> getPlayerDetails(@PathVariable("pusername") String pusername) {
-    	Player player = playerService.findByUsername(pusername);
+	@GetMapping(value = "/public/{username}")
+	public ResponseEntity<PlayerDetailDTO> getPlayerDetails(@PathVariable("username") String username) {
+    	Player player = playerService.findByUsername(username);
     	PlayerDetailDTO dto = new PlayerDetailDTO();
 		dto.setNickname(player.getNickname());
     	dto.setAvatar(player.getAvatar());
