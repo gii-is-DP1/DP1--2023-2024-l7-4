@@ -34,22 +34,22 @@ INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUE
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (8, 'Match 7','2024-09-11T17:49:36.428862','2024-09-11T17:40:53.016859', 'CLOSED', 'player3');
 
 
-INSERT INTO joined_players (match_id, player) VALUES (1, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (1, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (2, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (2, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (3, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (3, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (4, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (4, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (5, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (5, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (6, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (6, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (7, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (7, 'Player3');
-INSERT INTO joined_players (match_id, player) VALUES (8, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (8, 'Player3');
+INSERT INTO joined_players (match_id, player) VALUES (1, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (1, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (2, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (2, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (3, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (3, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (4, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (4, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (5, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (5, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (6, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (6, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (7, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (7, 'player3');
+INSERT INTO joined_players (match_id, player) VALUES (8, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (8, 'player3');
 
 INSERT INTO achievement(id,metric,threshold,name) VALUES (1,1,'GAMESPLAYED','Play One Game' );
 INSERT INTO achievement(id,metric,threshold,name) VALUES (2,1,'VICTORIES','Win One Game');
