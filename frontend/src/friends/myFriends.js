@@ -25,6 +25,7 @@ export default function MyFriends() {
     setVisible
   );
 
+  console.log(playerId);
   const [pendingRequests, setPendingRequests] = useFetchState(
     [],
     `/api/v1/requests/${playerId}/received`,
@@ -44,6 +45,14 @@ export default function MyFriends() {
   const [mymatches, setMyMatches] = useFetchState(
     [],
     `/api/v1/matches/player/${username}`,
+    jwt,
+    setMessage,
+    setVisible
+  );
+
+  const [myGamesRequests, setMyGamesRequests] = useFetchState(
+    [],
+    `/api/v1/gameRequests/${playerId}/received`,
     jwt,
     setMessage,
     setVisible
@@ -238,11 +247,65 @@ export default function MyFriends() {
     }
   }
 
+  const handleAcceptGameRequest = async (gameRequestId) => {
+    try {
+      const updatedGameRequest = {
+        status: "ACCEPTED",
+      };
+
+      const response = await axios.put(
+        `/api/v1/gameRequests/${gameRequestId}`,
+        updatedGameRequest,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        setMyGamesRequests((prevRequest) =>
+          prevRequest.filter((gamerequest) => gamerequest.id !== gameRequestId)
+        );
+      } else {
+        throw new Error("Hubo un error al actualizar la solicitud.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Hubo un error al aceptar la solicitud.");
+    }
+  };
+
+  const handleDeclineGameRequest = async (gameRequestId) => {
+    try {
+      const response = await axios.delete(
+        `/api/v1/gameRequests/${gameRequestId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status === 204) {
+        setMyGamesRequests((prevRequests) =>
+          prevRequests.filter((request) => request.id !== gameRequestId)
+        );
+      } else {
+        throw new Error("Hubo un error al eliminar la solicitud.");
+      }
+    } catch {
+      console.error(error);
+      setError("Hubo un error al rechazar la solicitud.");
+    }
+  };
+
   return (
     <div className="admin-page-container">
       <div className="container">
         <div className="hero-div">
-          <div className="friends-header">Online Friends</div>
+          <div className="friends-header">Friends</div>
           <div>
             {friends
               .slice() // Crea una copia del array original para no mutarlo
@@ -269,7 +332,6 @@ export default function MyFriends() {
                           </option>
                         ))}
                       </select>
-
                       {/* Botón para confirmar la invitación, habilitado solo si se selecciona una partida */}
                       <Button
                         onClick={() =>
@@ -278,8 +340,7 @@ export default function MyFriends() {
                         disabled={!selectedMatch} // Deshabilita si no se ha seleccionado una partida
                       >
                         Confirm Invitation
-                      </Button>
-                      {console.log({ friend })}
+                      </Button>{" "}
                     </div>
                   )}
                 </div>
@@ -331,6 +392,27 @@ export default function MyFriends() {
         </div>
         <div className="hero-div">
           <div className="friends-header">Game Invitations</div>
+          <div>
+            {myGamesRequests.map((myGameRequest) => (
+              <div key={myGameRequest.id}>
+                {myGameRequest.playerOne.name}
+                <div>
+                  <Button
+                    onClick={() => handleAcceptGameRequest(myGameRequest.id)}
+                    color="success"
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    onClick={() => handleDeclineGameRequest(myGameRequest.id)}
+                    color="danger"
+                  >
+                    Decline
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

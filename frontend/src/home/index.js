@@ -26,16 +26,6 @@ export default function Home() {
     setVisible
   );
 
-  const [friendsOnline, setFriendsOnline] = useFetchState(
-    [],
-    `/api/v1/players/${user.id}/friends/online`,
-    jwt,
-    setMessage,
-    setVisible
-  );
-
-  console.log(friendsOnline);
-
   async function handleUpdateMatches() {
     try {
       const response = await fetch(`/api/v1/matches?open=true`, {
@@ -130,10 +120,7 @@ export default function Home() {
     return (
       <div>
         <div className="admin-page-container">
-          <div className="hero-div">
-            Online Friends
-            <div>{friendsOnline}</div>
-          </div>
+          <div className="hero-div">Online Friends</div>
 
           <div className="hero-div">
             <h1 className="text-center"> ONLINE GAMES</h1>

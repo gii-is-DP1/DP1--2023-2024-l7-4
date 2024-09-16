@@ -19,7 +19,7 @@ import WaitingRoom from "./matches/WaitingRoom";
 import CreateMatch from "./matches/CreateMatch";
 import Game from "./game/Game";
 import MyMatches from "./matches/myMatches";
-import './static/css/westernTheme.css';
+import "./static/css/westernTheme.css";
 import MyMatchesAdmin from "./matches/myMatchesAdmin";
 import Stadistics from "./player/stadistics/Stadistics";
 
@@ -37,12 +37,12 @@ function ErrorFallback({ error, resetErrorBoundary }) {
       <pre>{error.message}</pre>
       <button onClick={resetErrorBoundary}>Try again</button>
     </div>
-  )
+  );
 }
 
 function App() {
   const jwt = tokenService.getLocalAccessToken();
-  let roles = []
+  let roles = [];
   if (jwt) {
     roles = getRolesFromJWT(jwt);
   }
@@ -61,51 +61,186 @@ function App() {
     if (role === "ADMIN") {
       adminRoutes = (
         <>
-          <Route path="/users" exact={true} element={<PrivateRoute><UserListAdmin /></PrivateRoute>} />
-          <Route path="/users/:username" exact={true} element={<PrivateRoute><UserEditAdmin /></PrivateRoute>} />
-          <Route path="/allMatches" exact={true} element={<PrivateRoute><MyMatchesAdmin /></PrivateRoute>} />
-          <Route path="/players" exact={true} element={<PrivateRoute><PlayerListAdmin/></PrivateRoute>} />
-          <Route path="/players/:playerId" exact={true} element={<PrivateRoute><PlayerEditAdmin/></PrivateRoute>} />
-        </>)
+          <Route
+            path="/users"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <UserListAdmin />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/users/:username"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <UserEditAdmin />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/allMatches"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <MyMatchesAdmin />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/players"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <PlayerListAdmin />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/players/:playerId"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <PlayerEditAdmin />
+              </PrivateRoute>
+            }
+          />
+        </>
+      );
     }
     if (role === "PLAYER") {
       ownerRoutes = (
         <>
-    {/* aqui se meten todas las rutas que voy a usar */}
-      <Route path="/statistics" exact={true} element={<PrivateRoute><Stadistics /></PrivateRoute>} />
-          <Route path="/myProfile/:username" element={<PrivateRoute><MyProfile /></PrivateRoute>} />
-          <Route path="/statistics/personal" exact={true} element={<PrivateRoute><Personal /></PrivateRoute>} />
-          <Route path= "/statistics/achievements" exact={true} element={<PrivateRoute><Logros /></PrivateRoute>} />
-          <Route path="/players/edit/:username" element={<PrivateRoute><PlayerEdit /></PrivateRoute>} />
-          <Route path="/game" element={<PrivateRoute><Game/></PrivateRoute>} />
-          <Route path="/match/:id/waitingRoom" element={<PrivateRoute><WaitingRoom/></PrivateRoute>} />
-          <Route path="/match/create" exact={true} element={<PrivateRoute><CreateMatch /></PrivateRoute>} />
-          <Route path="/game/:matchId" exact={true} element={<PrivateRoute><Game /></PrivateRoute>} />
-          <Route path="/myMatches" exact={true} element={<PrivateRoute><MyMatches /></PrivateRoute>} />
-          <Route path="/myFriends" exact={true} element={<PrivateRoute><MyFriends /></PrivateRoute>} />
-        </>)
+          {/* aqui se meten todas las rutas que voy a usar */}
+          <Route
+            path="/statistics"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <Stadistics />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/myProfile/:username"
+            element={
+              <PrivateRoute>
+                <MyProfile />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/statistics/personal"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <Personal />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/statistics/achievements"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <Logros />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/players/edit/:username"
+            element={
+              <PrivateRoute>
+                <PlayerEdit />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/game"
+            element={
+              <PrivateRoute>
+                <Game />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/match/:id/waitingRoom"
+            element={
+              <PrivateRoute>
+                <WaitingRoom />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/match/create"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <CreateMatch />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/game/:matchId"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <Game />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/myMatches"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <MyMatches />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/myFriends"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <MyFriends />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/myGameRequests"
+            exact={true}
+            element={
+              <PrivateRoute>
+                <MyFriends />
+              </PrivateRoute>
+            }
+          />
+        </>
+      );
     }
-  })
+  });
   if (!jwt) {
     publicRoutes = (
-      <>        
+      <>
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
       </>
-    )
+    );
   } else {
     userRoutes = (
       <>
-        {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}        
+        {/* <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} /> */}
         <Route path="/logout" element={<Logout />} />
         <Route path="/login" element={<Login />} />
       </>
-    )
+    );
   }
 
   return (
     <div>
-      <ErrorBoundary FallbackComponent={ErrorFallback} >
+      <ErrorBoundary FallbackComponent={ErrorFallback}>
         <AppNavbar />
         <Routes>
           <Route path="/" exact={true} element={<Home />} />

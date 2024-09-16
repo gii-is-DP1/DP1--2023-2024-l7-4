@@ -1,27 +1,17 @@
 package org.springframework.samples.petclinic.player;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
-import org.springframework.samples.petclinic.request.RequestRepository;
-import org.springframework.samples.petclinic.request.Request;
-import org.springframework.samples.petclinic.request.RequestService;
-import org.springframework.samples.petclinic.request.RequestState;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PlayerService {
-    
 
     private PlayerRepository playerRepository;
-    
 
     @Autowired
     public PlayerService(PlayerRepository playerRepository) {
@@ -30,25 +20,26 @@ public class PlayerService {
     }
 
     @Transactional(readOnly = true)
-	public List<Player> findAll() {
-		return (List<Player>) playerRepository.findAll();
-	}
+    public List<Player> findAll() {
+        return (List<Player>) playerRepository.findAll();
+    }
 
     @Transactional(readOnly = true)
-	public Player findPlayer(int id) throws DataAccessException {
-		return this.playerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
-	}
+    public Player findPlayer(int id) throws DataAccessException {
+        return this.playerRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Player", "id", id));
+    }
 
     @Transactional(readOnly = true)
     public Player findByUsername(String username) throws DataAccessException {
-        return this.playerRepository.existsPlayer(username).orElseThrow(() -> new ResourceNotFoundException("Player", "username", username));
+        return this.playerRepository.existsPlayer(username)
+                .orElseThrow(() -> new ResourceNotFoundException("Player", "username", username));
     }
 
     @Transactional
-	public Player savePlayer(Player player) throws DataAccessException {
-		playerRepository.save(player);
-		return player;
-	}
+    public Player savePlayer(Player player) throws DataAccessException {
+        playerRepository.save(player);
+        return player;
+    }
 
     @Transactional
     public Player updatePlayer(Player player, int id) throws DataAccessException {
@@ -58,13 +49,13 @@ public class PlayerService {
     }
 
     @Transactional
-    public void deletePlayer( int id) throws DataAccessException {
+    public void deletePlayer(int id) throws DataAccessException {
         Player toDelete = findPlayer(id);
         playerRepository.delete(toDelete);
     }
 
     @Transactional
-    public void deletePlayer( String username) throws DataAccessException {
+    public void deletePlayer(String username) throws DataAccessException {
         Player toDelete = findByUsername(username);
         playerRepository.delete(toDelete);
     }
@@ -72,7 +63,5 @@ public class PlayerService {
     public Boolean existsPlayer(String username) throws DataAccessException {
         return !playerRepository.existsPlayer(username).isEmpty();
     }
-
-    
 
 }

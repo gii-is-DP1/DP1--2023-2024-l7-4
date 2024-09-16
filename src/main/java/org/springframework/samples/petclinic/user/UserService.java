@@ -15,8 +15,6 @@
  */
 package org.springframework.samples.petclinic.user;
 
-import java.util.Optional;
-
 import jakarta.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
@@ -92,6 +90,5 @@ public class UserService {
 		User toDelete = findUser(id);
 		this.userRepository.delete(toDelete);
 	}
-
 
 }

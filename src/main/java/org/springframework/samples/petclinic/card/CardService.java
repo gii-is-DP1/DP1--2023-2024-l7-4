@@ -12,8 +12,6 @@ import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.samples.petclinic.card.CardUtils;
 import org.springframework.samples.petclinic.configuration.services.NotificationService;
 
 import jakarta.transaction.Transactional;

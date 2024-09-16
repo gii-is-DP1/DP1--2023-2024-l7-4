@@ -1,23 +1,14 @@
 package org.springframework.samples.petclinic.player;
 
-import java.util.Set;
-
 import org.springframework.samples.petclinic.user.User;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-import org.springframework.samples.petclinic.request.Request;
-
-import java.util.Set;
-import java.util.HashSet;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Builder.Default;
 
 @Getter
 @Setter
