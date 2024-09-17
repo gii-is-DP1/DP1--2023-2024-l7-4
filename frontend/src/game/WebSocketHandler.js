@@ -20,7 +20,7 @@ const WebSocketHandler = ({
     setShowConfirmationModal,
     tempCardPlayed,
     setTempCardPlayed,
-    setJoinedPlayers
+    setPlayed
 }) => {
 
 
@@ -40,8 +40,8 @@ const WebSocketHandler = ({
                     precisionBefore: prevState.precision,
                 }));
             }
-            setShowCards(false);
             setWaiting(true);
+            setShowCards(false);
             setTempCardPlayed(null);
         }
     }, [tempCardPlayed, playerNumber]);
@@ -66,7 +66,6 @@ const WebSocketHandler = ({
                 .then(matchPlayerList => {
                     if (matchPlayerList.includes(username))
                         setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
-                        setJoinedPlayers(matchPlayerList);
                 })
                 .catch(error => {
                     console.error('Error fetching match:', error);
@@ -130,9 +129,6 @@ const WebSocketHandler = ({
                     case 'PLAYERINFO':
                         setDeckOfCards(body.deckCards);
                         updatePlayers();
-                        break;
-                    case 'END':
-                        window.location.href = ('/');
                         break;
                     default:
                         break;
@@ -207,6 +203,8 @@ const WebSocketHandler = ({
                     }));
                 if (playerNumber === 1 && player1.cardPlayed === -1) {
                     setShowConfirmationModal(true);
+                    setPlayed(false);
+                    
                 }
             })
             .catch(error => {

@@ -25,7 +25,6 @@ const WebSocketComponent = () => {
     const [chooseCard, setChooseCard] = useState(0);
     const [tempCardPlayed, setTempCardPlayed] = useState(0);
     const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
-    const location = useLocation();
 
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
@@ -49,7 +48,6 @@ const WebSocketComponent = () => {
     const [played, setPlayed] = useState(false);
     const [readyForDiscard, setReadyForDiscard] = useState(false);
     const [discardedCards, setDiscardedCards] = useState([]);
-    const [joinedPlayers, setJoinedPlayers] = useState([])
 
     const [deckOfCards, setDeckOfCards] = useState([]);
     const [stompClient, setStompClient] = useState(null);
@@ -70,6 +68,7 @@ const WebSocketComponent = () => {
     }, [waiting])
 
 
+    
     //Acciones 
     useEffect(() => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
@@ -78,24 +77,16 @@ const WebSocketComponent = () => {
         }
     }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
+    
     //Accionar el final de partida
     useEffect(() => {
-        if (statePlayer0.health < 1 || statePlayer1.health < 1)
+        if (statePlayer0.health < 1 || statePlayer1.health < 1) {
+            setShowConfirmationModal(false);
             setShowEndModal(true);
+        }
 
     }, [statePlayer0.health, statePlayer1.health]);
 
-
-
-    useEffect(() => {
-        return () => {
-            if (playerNumber === 0) {
-                handleSetMatchWinner(joinedPlayers[1], true);
-            } else if (playerNumber === 1) {
-                handleSetMatchWinner(joinedPlayers[0], true);
-            }
-        };
-    }, [location, playerNumber]);
 
     useEffect(() => {
         if (!readyForDiscard && discardedCards.length === 0 && (statePlayer0.cards.length === 6 || statePlayer1.cards.length === 6)) {
@@ -236,17 +227,6 @@ const WebSocketComponent = () => {
                 playedCard1: -1,
             }));
         }
-        else if (type === 'END') {
-            stompClient.send(`/app/match/${matchId}/cards`, {}, JSON.stringify({
-                type: 'END',
-                deckCards: deckOfCards,
-                player0Cards: playerNumber === 0 ? statePlayer0.cards : Array.of(),
-                player1Cards: playerNumber === 1 ? statePlayer1.cards : Array.of(),
-                playedCard0: -1,
-                playedCard1: -1,
-            }));
-
-        }
     };
 
     const handleGoToLobby = () => {
@@ -269,7 +249,7 @@ const WebSocketComponent = () => {
         }
     }
 
-    const handleSetMatchWinner = async (playerUsername, noticePlayer = false) => {
+    const handleSetMatchWinner = async (playerUsername) => {
         try {
             const response = await fetch(`/api/v1/matches/${matchId}/winner`, {
                 method: 'PATCH',
@@ -283,11 +263,7 @@ const WebSocketComponent = () => {
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-            if (noticePlayer) {
-                handleSendDeckMessage('END');
-            } else {
-                window.location.href = '/';
-            }
+            window.location.href = '/';
         } catch (error) {
             console.error('Error setting the winner:', error);
         }
@@ -332,7 +308,6 @@ const WebSocketComponent = () => {
                 setShowConfirmationModal={setShowConfirmationModal}
                 tempCardPlayed={tempCardPlayed}
                 setTempCardPlayed={setTempCardPlayed}
-                setJoinedPlayers={setJoinedPlayers}
             />
             <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
             {playerNumber === 0 ?

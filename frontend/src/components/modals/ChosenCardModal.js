@@ -4,17 +4,14 @@ import CardButton from '../buttons/cardButton';
 
 const ChooseCardModal = ({ isOpen, deckOfCards = [], chooseCard = 3, handleSendDeckMessage, playerNumber, setStatePlayer0, setStatePlayer1, setDeckOfCards, setChooseCard }) => {
     const [chosenCard, setChosenCard] = useState(null);
-    const [readyToDiscard, setReadyToDiscard] = useState(false);
     const [remainingCards, setRemainingCards] = useState([]);
-
+    
     useEffect(() => {
-        if (readyToDiscard) {
-            handleDiscardRemaining(remainingCards);
-            setReadyToDiscard(false);
-            setRemainingCards([]);
-            
+        if (remainingCards.length > 0) {
+            handleSendDeckMessage('CUSTOM', playerNumber);
+            setChooseCard(0);
         }
-    }, [readyToDiscard, remainingCards]);
+    }, [remainingCards]);
 
     const handleCardClick = (card) => {
         setChosenCard(prevCard => (prevCard === card ? null : card));
@@ -32,17 +29,11 @@ const ChooseCardModal = ({ isOpen, deckOfCards = [], chooseCard = 3, handleSendD
                 cards: [...prevState.cards, chosenCard]
             }));
         }
-        setReadyToDiscard(true);
-    };
-
-    const handleDiscardRemaining = (remainingCards) => {
-        setDeckOfCards(remainingCards);
-        handleSendDeckMessage('CUSTOM', playerNumber);
-        setChooseCard(0);
     };
 
     const handleConfirmClick = () => {
-        const updatedRemainingCards = deckOfCards.filter(card => card !== chosenCard);
+        const updatedRemainingCards = deckOfCards.filter(card => !deckOfCards.slice(0, chooseCard).includes(card) );
+        setDeckOfCards(updatedRemainingCards);
         setRemainingCards(updatedRemainingCards);
         handleConfirmPickCard(chosenCard, updatedRemainingCards);
     };
