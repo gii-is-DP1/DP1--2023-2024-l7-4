@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,7 @@ public class AuthController {
 		this.authenticationManager = authenticationManager;
 		this.authService = authService;
 		this.playerService = playerService;
+
 	}
 
 	@PostMapping("/signin")
@@ -63,6 +65,7 @@ public class AuthController {
 					.collect(Collectors.toList());
 			Player p = playerService.findByUsername(userDetails.getUsername());
 			p.setOnline(true);
+			playerService.savePlayer(p);
 
 			return ResponseEntity.ok()
 					.body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
@@ -77,12 +80,21 @@ public class AuthController {
 		return ResponseEntity.ok(isValid);
 	}
 
+	@PatchMapping("/signout")
+	public ResponseEntity<MessageResponse> signOut(@Valid @RequestBody String username) {
+		Player p = playerService.findByUsername(username.replace("\"", ""));
+		p.setOnline(false);
+		playerService.savePlayer(p);
+		return ResponseEntity.ok(new MessageResponse("Player signed out successfully!"));
+	}
+
 	@PostMapping("/signup")
 	public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 		if (playerService.existsPlayer(signUpRequest.getUsername()).equals(true)) {
 			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
 		}
 		authService.createPlayer(signUpRequest);
+
 		return ResponseEntity.ok(new MessageResponse("Player registered successfully!"));
 	}
 

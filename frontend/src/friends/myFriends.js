@@ -25,7 +25,6 @@ export default function MyFriends() {
     setVisible
   );
 
-  console.log(playerId);
   const [pendingRequests, setPendingRequests] = useFetchState(
     [],
     `/api/v1/requests/${playerId}/received`,
@@ -238,7 +237,6 @@ export default function MyFriends() {
           },
         }
       );
-      console.log(friend);
       if (response.status !== 201) {
         throw new Error("Failed to invite friend to match");
       }
@@ -247,14 +245,17 @@ export default function MyFriends() {
     }
   }
 
-  const handleAcceptGameRequest = async (gameRequestId) => {
+  const handleAcceptGameRequest = async (gameRequest) => {
     try {
       const updatedGameRequest = {
         status: "ACCEPTED",
+        matchId: gameRequest.matchId,
+        playerOne: gameRequest.playerOne,
+        playerTwo: gameRequest.playerTwo,
       };
 
       const response = await axios.put(
-        `/api/v1/gameRequests/${gameRequestId}`,
+        `/api/v1/gameRequests/${gameRequest.id}`,
         updatedGameRequest,
         {
           headers: {
@@ -265,9 +266,28 @@ export default function MyFriends() {
       );
 
       if (response.status === 200) {
+        // Filtrar las solicitudes de juego para eliminar la aceptada
         setMyGamesRequests((prevRequest) =>
-          prevRequest.filter((gamerequest) => gamerequest.id !== gameRequestId)
+          prevRequest.filter((gamerequest) => gamerequest.id !== gameRequest.id)
         );
+        // Hacer join a la partida con el ID proporcionado
+        const joinResponse = await axios.put(
+          `/api/v1/matches/${gameRequest.matchId}/join`,
+          gameRequest.playerOne.username,
+
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (joinResponse.status === 201) {
+          console.log("Successfully joined the match!");
+        } else {
+          throw new Error("Hubo un error al unirte a la partida.");
+        }
       } else {
         throw new Error("Hubo un error al actualizar la solicitud.");
       }
@@ -398,7 +418,7 @@ export default function MyFriends() {
                 {myGameRequest.playerOne.name}
                 <div>
                   <Button
-                    onClick={() => handleAcceptGameRequest(myGameRequest.id)}
+                    onClick={() => handleAcceptGameRequest(myGameRequest)}
                     color="success"
                   >
                     Accept

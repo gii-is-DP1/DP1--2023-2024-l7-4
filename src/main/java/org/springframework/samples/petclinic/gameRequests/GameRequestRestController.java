@@ -83,8 +83,12 @@ public class GameRequestRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<GameRequest> update(@PathVariable("gameRequestId") Integer gameRequestId,
             @RequestBody @Valid GameRequest updatedGameRequest) throws URISyntaxException {
-
+        GameRequest g = gameRequestService.findById(gameRequestId);
         RestPreconditions.checkNotNull(gameRequestService.findById(gameRequestId), "GameRequest", "ID", gameRequestId);
+        updatedGameRequest.setMatchId(g.getMatchId());
+        updatedGameRequest.setPlayerOne(g.getPlayerOne());
+        updatedGameRequest.setPlayerTwo(g.getPlayerTwo());
+        updatedGameRequest.setStatus(GameRequestStatus.ACCEPTED);
         return new ResponseEntity<>(this.gameRequestService.acceptRequest(updatedGameRequest, gameRequestId),
                 HttpStatus.OK);
     }

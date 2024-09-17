@@ -11,30 +11,30 @@ INSERT INTO appusers(id, username, password, authority) VALUES (7, 'player4', '$
 INSERT INTO appusers(id, username, password, authority) VALUES (8, 'player5', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
 INSERT INTO appusers(id, username, password, authority) VALUES (9, 'player6', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
 
-INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
-(4, 'Daniel', 'Fernandez Caballero', 'https://pbs.twimg.com/profile_images/1875354853/actor_400x400.jpg', 'sudani', 'danifercaba@gmail.com');
-INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
-(5, 'Francisco', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sucapo', 'capot@gmail.com');
-INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
-(6, 'Alvaro', 'Martin Muñoz', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sualva', 'alvaro@gmail.com');
-INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
-(7, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com');
-INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
-(8, 'Conrado', 'Menendez Marquez', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com');
-INSERT INTO players(id, name, surname, avatar, nickname, email) VALUES 
-(9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com');
+INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES 
+(4, 'Daniel', 'Fernandez Caballero', 'https://pbs.twimg.com/profile_images/1875354853/actor_400x400.jpg', 'sudani', 'danifercaba@gmail.com', 'false');
+INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES 
+(5, 'Francisco', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sucapo', 'capot@gmail.com', 'false');
+INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES 
+(6, 'Alvaro', 'Martin Muñoz', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sualva', 'alvaro@gmail.com', 'false');
+INSERT INTO players(id, name, surname, avatar, nickname, email,online ) VALUES 
+(7, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com', 'false');
+INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES 
+(8, 'Conrado', 'Menendez Marquez', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com', 'false');
+INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES 
+(9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'false');
 
 INSERT INTO matches (id, name, match_state, winner) VALUES (1, 'Match 1', 'IN_PROGRESS', null);
 INSERT INTO matches (id, name, match_state, winner) VALUES (2, 'Match 2', 'CLOSED', null);
 INSERT INTO matches (id, name, match_state, winner) VALUES (3, 'DO_NOT_ENTRY', 'OPEN', null);
 
 
-INSERT INTO joined_players (match_id, player) VALUES (1, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (1, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (2, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (2, 'Player2');
-INSERT INTO joined_players (match_id, player) VALUES (3, 'Player1');
-INSERT INTO joined_players (match_id, player) VALUES (3, 'Player2');
+INSERT INTO joined_players (match_id, player) VALUES (1, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (1, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (2, 'player1');
+INSERT INTO joined_players (match_id, player) VALUES (2, 'player2');
+INSERT INTO joined_players (match_id, player) VALUES (3, 'player1');
+-- INSERT INTO joined_players (match_id, player) VALUES (3, 'Player2');
 
 
 
@@ -49,4 +49,4 @@ INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (4,8,4,'PE
 INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (5,9,6,'PENDING'); 
 
 
-INSERT INTO game_request (id, player_one_id, player_two_id, status) VALUES (1,6,4,'PENDING'); 
+INSERT INTO game_request (id, player_one_id, player_two_id, status, match_id) VALUES (1,6,4,'PENDING',3); 

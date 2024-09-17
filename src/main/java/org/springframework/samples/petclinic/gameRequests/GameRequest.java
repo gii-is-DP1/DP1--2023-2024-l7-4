@@ -9,6 +9,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.ManyToOne;
@@ -27,6 +28,9 @@ public class GameRequest extends BaseEntity {
     Player playerOne;
 
     @ManyToOne(optional = false)
+    @NotNull
     Player playerTwo;
+
+    Integer matchId;
 
 }

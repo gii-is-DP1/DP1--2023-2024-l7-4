@@ -12,6 +12,9 @@ public class GameRequestDTO {
     @NotNull
     private String status;
 
+    @NotNull
+    private String matchId;
+
     // Getters y setters
 
     public String getPlayerOne() {
@@ -36,6 +39,14 @@ public class GameRequestDTO {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getMatchId() {
+        return matchId;
+    }
+
+    public void setMathId(String matchId) {
+        this.matchId = matchId;
     }
 
     @Override
