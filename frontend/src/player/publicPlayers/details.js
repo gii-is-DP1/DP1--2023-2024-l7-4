@@ -92,12 +92,13 @@ export default function PlayerDetails() {
                         )}
                     </div>
                     <div className="custom-button-row">
+                        <Link 
+                            to={`/players/${username}/statistics`}
+                            className="button-container">Statistics
+                        </Link>
                         <Link
                             to={`/players`}
-                            className="button-container-bad"
-                            style={{ textDecoration: "none" }}
-                        >
-                            Cancel
+                            className="button-container-bad">Back
                         </Link>
                     </div>
                 </Form>
@@ -105,5 +106,3 @@ export default function PlayerDetails() {
         </div>
     );
 }
-
-

@@ -33,6 +33,7 @@ import Personal from "./player/stadistics/Personal";
 import Ranking from "./player/stadistics/Ranking"
 import AchievementsEdit from "./admin/Achievements/AchievementsEdit"
 import PlayerDetails from "./player/publicPlayers/details";
+import PlayerStatistics from "./player/publicPlayers/statistics";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -91,6 +92,7 @@ function App() {
           <Route path="/myMatches" exact={true} element={<PrivateRoute><MyMatches /></PrivateRoute>} />
           <Route path="/players" exact={true} element={<PrivateRoute><PlayerList /></PrivateRoute>} />
           <Route path="/players/:username" exact={true} element={<PrivateRoute><PlayerDetails /></PrivateRoute>} />
+          <Route path="/players/:username/statistics" exact={true} element={<PrivateRoute><PlayerStatistics /></PrivateRoute>} />
         </>)
     }
   })
