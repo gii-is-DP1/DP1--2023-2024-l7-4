@@ -14,7 +14,7 @@ const jwt = tokenService.getLocalAccessToken();
 export default function Home() {
   const username = jwt ? jwtDecode(jwt).sub : "null";
   const user = tokenService.getUser();
-
+  const playerId = user ? user.id : null;
   const [message, setMessage] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const [visible, setVisible] = useState(false);
@@ -25,6 +25,42 @@ export default function Home() {
     setMessage,
     setVisible
   );
+
+  const [friendsOnline, setFriendsOnline] = useFetchState(
+    [],
+    `api/v1/players/${playerId}/friends/online`,
+    jwt,
+    setMessage,
+    setVisible
+  );
+
+  useEffect(() => {
+    setFriendsOnline([]);
+    const intervalId = setInterval(updateFriendsOnline, 5000); // Actualiza cada 5 segundos
+
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId);
+  }, [playerId, jwt]);
+
+  async function updateFriendsOnline() {
+    try {
+      const response = await fetch(
+        `/api/v1/players/${playerId}/friends/online`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const newFriendsOnline = await response.json();
+      setFriendsOnline(newFriendsOnline);
+    } catch (error) {
+      console.error("Error fetching new friends online:", error);
+    }
+  }
 
   async function handleUpdateMatches() {
     try {
@@ -120,7 +156,14 @@ export default function Home() {
     return (
       <div>
         <div className="admin-page-container">
-          <div className="hero-div">Online Friends</div>
+          <div className="hero-div">
+            Online Friends
+            <div>
+              {friendsOnline.map((f) => (
+                <div key={f.id}>{f.nickname}</div>
+              ))}
+            </div>
+          </div>
 
           <div className="hero-div">
             <h1 className="text-center"> ONLINE GAMES</h1>

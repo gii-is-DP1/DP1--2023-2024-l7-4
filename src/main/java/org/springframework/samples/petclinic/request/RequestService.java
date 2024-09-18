@@ -70,7 +70,7 @@ public class RequestService {
         List<Request> allRequests = findAll();
         Set<Player> friends = new HashSet<>();
         for (Request r : allRequests) {
-            if (r.getPlayerTwo().getOnline()) {
+            if (r.getPlayerTwo().getOnline() == true) {
 
                 if (r.getPlayerOne().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)) {
                     friends.add(r.getPlayerTwo());
