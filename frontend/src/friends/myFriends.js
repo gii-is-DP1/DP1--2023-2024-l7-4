@@ -57,6 +57,14 @@ export default function MyFriends() {
     setVisible
   );
 
+  const [requests, setRequests] = useFetchState(
+    [],
+    `/api/v1/requests`,
+    jwt,
+    setMessage,
+    setVisible
+  );
+
   async function updateFriends() {
     try {
       const response = await fetch(`/api/v1/players/${playerId}/friends`, {
@@ -321,6 +329,40 @@ export default function MyFriends() {
     }
   };
 
+  const handleRemoveFriend = async (friendId) => {
+    try {
+      const request = requests.find(
+        (request) =>
+          (request.playerOne.id === playerId &&
+            request.playerTwo.id === friendId) ||
+          (request.playerOne.id === friendId &&
+            request.playerTwo.id === playerId)
+      );
+
+      if (!request) {
+        throw new Error("No se encontró la solicitud de amistad.");
+      }
+
+      const requestId = request.id;
+      const response = await axios.delete(`api/v1/requests/${requestId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (response === 204) {
+        setFriends((prevFriends) =>
+          prevFriends.filter((friends) => friends.id !== friendId)
+        );
+      } else {
+        throw new Error("Hubo un error al eliminar la solicitud.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("Hubo un error al eliminar el amigo.");
+    }
+  };
+
   return (
     <div className="admin-page-container">
       <div className="container">
@@ -333,36 +375,12 @@ export default function MyFriends() {
               .map((friend, index) => (
                 <div key={friend.id}>
                   {friend.name}
-                  {/* Botón para alternar la visibilidad del menú de selección de partida */}
-                  <Button onClick={() => toggleSelect(friend.id)}>
-                    {showSelect === friend.id ? "Select Match" : "Invite Match"}
+                  <Button
+                    onClick={() => handleRemoveFriend(friend.id)}
+                    color="danger"
+                  >
+                    Remove
                   </Button>
-
-                  {/* Si el estado showSelect es igual al id del amigo, se muestra el menú de selección */}
-                  {showSelect === friend.id && (
-                    <div>
-                      <select
-                        onChange={(e) => setSelectedMatch(e.target.value)}
-                      >
-                        <option value="">Select a match</option>
-                        {/* Mapeo de las partidas disponibles */}
-                        {mymatches.map((match) => (
-                          <option key={match.id} value={match.id}>
-                            {match.name}
-                          </option>
-                        ))}
-                      </select>
-                      {/* Botón para confirmar la invitación, habilitado solo si se selecciona una partida */}
-                      <Button
-                        onClick={() =>
-                          handleAddFriendToMatch(selectedMatch, friend.username)
-                        }
-                        disabled={!selectedMatch} // Deshabilita si no se ha seleccionado una partida
-                      >
-                        Confirm Invitation
-                      </Button>{" "}
-                    </div>
-                  )}
                 </div>
               ))}
           </div>
