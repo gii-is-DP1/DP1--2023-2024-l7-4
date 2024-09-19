@@ -152,7 +152,6 @@ public class MatchServiceTests {
 		Match match2 = this.matchService.findMatchById(2);
 
 		matchService.deleteMatches(List.of(match2, match1));
-
 	}
 
 	@Test
