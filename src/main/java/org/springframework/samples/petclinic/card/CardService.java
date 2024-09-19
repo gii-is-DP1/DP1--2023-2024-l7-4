@@ -912,9 +912,6 @@ public class CardService {
 
                 statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
 
-                // TODO: MANDAR MODAL POR SI QUIERE DESCARTAR DOS CARTAS PARA PREVENIR EL DAÑO
-                // Versión preliminar que lo hace de forma aleatoria
-
                 if (statePlayerMain.getPreventDamage() == true) {
 
                         // DESCARTAR 2 CARTAS
@@ -1174,7 +1171,6 @@ public class CardService {
                 updatedCards.add(newCard);
                 statePlayerMain.setCards(updatedCards);
 
-                // TODO: Setear "insidious" a true. Ver a que se refiere
         }
 
         @Transactional
@@ -1239,7 +1235,6 @@ public class CardService {
                 }
         }
 
-        // TODO: Funcion carta 45
         @Transactional
         private void executeCard45(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
