@@ -17,7 +17,6 @@ import jakarta.persistence.ManyToOne;
 @Entity
 @Getter
 @Setter
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "player_one_id", "player_two_id", "status" }))
 public class GameRequest extends BaseEntity {
 
     @Column(name = "status")

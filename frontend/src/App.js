@@ -208,15 +208,6 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/myGameRequests"
-            exact={true}
-            element={
-              <PrivateRoute>
-                <MyFriends />
-              </PrivateRoute>
-            }
-          />
         </>
       );
     }

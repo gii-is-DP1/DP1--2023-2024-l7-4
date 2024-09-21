@@ -99,6 +99,26 @@ export default function MyFriends() {
     }
   }
 
+  async function updatePendingGameRequests() {
+    try {
+      const response = await fetch(
+        `/api/v1/gameRequests/${playerId}/received`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const newPendingGameRequests = await response.json();
+      setMyGamesRequests(newPendingGameRequests);
+    } catch (error) {
+      console.error("Error fetching new pending game requests:", error);
+    }
+  }
+
   async function updatePlayers() {
     try {
       const response = await fetch(`/api/v1/players`, {
@@ -151,6 +171,7 @@ export default function MyFriends() {
         updateFriends();
         updatePendingRequests();
         updatePlayers();
+        updatePendingGameRequests();
       } else {
         throw new Error("Hubo un error al actualizar la solicitud.");
       }
@@ -175,6 +196,7 @@ export default function MyFriends() {
         updateFriends();
         updatePendingRequests();
         updatePlayers();
+        updatePendingGameRequests();
       } else {
         throw new Error("Hubo un error al eliminar la solicitud.");
       }
@@ -183,6 +205,15 @@ export default function MyFriends() {
       setError("Hubo un error al rechazar la solicitud.");
     }
   };
+
+  useEffect(() => {
+    setMyGamesRequests([]);
+
+    const intervalId = setInterval(updatePendingGameRequests, 5000); // Actualiza cada 5 segundos
+
+    // Limpia el intervalo cuando el componente se desmonte
+    return () => clearInterval(intervalId);
+  }, [playerId, jwt]);
 
   const handleSendRequest = async (username) => {
     try {
@@ -233,26 +264,6 @@ export default function MyFriends() {
     setShowSelect((prev) => (prev === friendId ? null : friendId));
   };
 
-  async function handleAddFriendToMatch(matchId, friend) {
-    try {
-      const response = await axios.put(
-        `/api/v1/matches/${matchId}/join`,
-        friend,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwt}`,
-          },
-        }
-      );
-      if (response.status !== 201) {
-        throw new Error("Failed to invite friend to match");
-      }
-    } catch (error) {
-      console.error("Error inviting friend:", error);
-    }
-  }
-
   const handleAcceptGameRequest = async (gameRequest) => {
     try {
       const updatedGameRequest = {
@@ -278,10 +289,12 @@ export default function MyFriends() {
         setMyGamesRequests((prevRequest) =>
           prevRequest.filter((gamerequest) => gamerequest.id !== gameRequest.id)
         );
+        console.log(gameRequest.playerOne.username);
         // Hacer join a la partida con el ID proporcionado
         const joinResponse = await axios.put(
           `/api/v1/matches/${gameRequest.matchId}/join`,
-          gameRequest.playerOne.username,
+          // gameRequest.playerOne.username,
+          gameRequest.playerTwo.username,
 
           {
             headers: {
@@ -290,8 +303,9 @@ export default function MyFriends() {
             },
           }
         );
-
+        console.log(joinResponse);
         if (joinResponse.status === 201) {
+          window.location.href = `/match/${gameRequest.matchId}/waitingRoom`;
           console.log("Successfully joined the match!");
         } else {
           throw new Error("Hubo un error al unirte a la partida.");
@@ -350,7 +364,7 @@ export default function MyFriends() {
           "Content-Type": "application/json",
         },
       });
-      if (response === 204) {
+      if (response.status === 204) {
         setFriends((prevFriends) =>
           prevFriends.filter((friends) => friends.id !== friendId)
         );

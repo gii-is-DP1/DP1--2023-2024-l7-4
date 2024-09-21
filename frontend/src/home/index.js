@@ -34,6 +34,8 @@ export default function Home() {
     setVisible
   );
 
+  console.log(friendsOnline);
+
   useEffect(() => {
     setFriendsOnline([]);
     const intervalId = setInterval(updateFriendsOnline, 5000); // Actualiza cada 5 segundos

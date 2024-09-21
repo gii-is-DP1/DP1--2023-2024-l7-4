@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.gameRequests;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.match.Match;
+import org.springframework.samples.petclinic.match.MatchService;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.samples.petclinic.util.RestPreconditions;
@@ -21,16 +23,20 @@ import jakarta.validation.Valid;
 import java.net.URISyntaxException;
 import java.util.List;
 
-@RequestMapping("/api/v1/gameRequests")
 @RestController
+@RequestMapping("/api/v1/gameRequests")
+
 public class GameRequestRestController {
     private final GameRequestService gameRequestService;
     private final PlayerService playerService;
+    private final MatchService matchService;
 
     @Autowired
-    public GameRequestRestController(GameRequestService gameRequestService, PlayerService playerService) {
+    public GameRequestRestController(GameRequestService gameRequestService, PlayerService playerService,
+            MatchService matchService) {
         this.gameRequestService = gameRequestService;
         this.playerService = playerService;
+        this.matchService = matchService;
     }
 
     @GetMapping
@@ -60,8 +66,9 @@ public class GameRequestRestController {
             return ResponseEntity.badRequest().body(null);
         }
 
-        Player playerOne = playerService.findByUsername(gameRequestDTO.getPlayerOne());
-        Player playerTwo = playerService.findByUsername(gameRequestDTO.getPlayerTwo());
+        Player playerOne = playerService.findPlayer(Integer.parseInt(gameRequestDTO.getPlayerOne()));
+        Player playerTwo = playerService.findPlayer(Integer.parseInt(gameRequestDTO.getPlayerTwo()));
+        Match m = matchService.findMatchById(Integer.parseInt(gameRequestDTO.getMatchId()));
 
         System.out.println("Player One: " + playerOne);
         System.out.println("Player Two: " + playerTwo);
@@ -74,6 +81,7 @@ public class GameRequestRestController {
         newRequest.setPlayerOne(playerOne);
         newRequest.setPlayerTwo(playerTwo);
         newRequest.setStatus(GameRequestStatus.PENDING);
+        newRequest.setMatchId(m.getId());
 
         GameRequest savedRequest = gameRequestService.saveRequest(newRequest);
         return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
