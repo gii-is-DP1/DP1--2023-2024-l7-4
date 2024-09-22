@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,9 +16,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.samples.petclinic.configuration.services.NotificationService;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
-import org.springframework.samples.petclinic.match.messages.MatchActionsPlayersMessage;
 import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
-import org.springframework.samples.petclinic.match.messages.MatchGunfighterMessage;
 import org.springframework.samples.petclinic.match.messages.MatchMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
 import org.springframework.samples.petclinic.player.PlayerService;
@@ -91,7 +88,8 @@ public class MatchRestController {
 
     @PutMapping("/{id}/join")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username) throws NotFoundException{
+    public ResponseEntity<Match> updateMatchJoining(@PathVariable("id") Integer id, @RequestBody String username)
+            throws NotFoundException {
         Match m = matchService.findMatchById(id);
         List<String> joinedPlayers = m.getJoinedPlayers();
         username = username.replace("\"", "");
@@ -125,8 +123,8 @@ public class MatchRestController {
         m.setWinner(username);
         if (m.getMatchState() == MatchState.IN_PROGRESS)
             m.setMatchState(MatchState.CLOSED);
-            m.setFinishDateTime(LocalDateTime.now());
-            m.setStartDate(m.getStartDate());
+        m.setFinishDateTime(LocalDateTime.now());
+        m.setStartDate(m.getStartDate());
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
@@ -141,7 +139,7 @@ public class MatchRestController {
             m.setMatchState(MatchState.IN_PROGRESS);
             m.setStartDate(LocalDateTime.now());
             m.setFinishDateTime(null);
- 
+
             Gunfighter gunfighter0 = new Gunfighter();
             gunfighter0.setPlayerNumber(0);
             gunfighter0.setPlayer(playerService.findByUsername(m.getJoinedPlayers().get(0)));
@@ -239,45 +237,86 @@ public class MatchRestController {
 
             if (gunfighter0.getCardPlayed() != -1 && gunfighter1.getCardPlayed() != -1) {
 
-                matchService.actionCards(match, gunfighter0, gunfighter1);
-                matchService.saveMatch(match);
-                gunfighterService.resetState(gunfighter0);
-                gunfighterService.resetState(gunfighter1);
+                if (gunfighter0.getCardPlayedBefore() == 41) {
 
-                return new MatchDeckMessage(TypeMessage.PLAYERINFO, match.getDeck(), List.of(), List.of(), -1,
-                        -1);
-            } else {
-                return null;
+                    matchService.actionCards(match, gunfighter0, gunfighter1);
+                    gunfighterService.resetPartialState(gunfighter0);
+                    gunfighterService.save(gunfighter1);
+
+                } else if (gunfighter1.getCardPlayedBefore() == 41) {
+
+                    matchService.actionCards(match, gunfighter0, gunfighter1);
+                    gunfighterService.resetPartialState(gunfighter1);
+                    gunfighterService.save(gunfighter0);
+                    
+                } else {
+                    if ((gunfighter0.getCardPlayedBefore() != 41 && gunfighter0.getInsidious() > 0)
+                            || (gunfighter1.getCardPlayedBefore() != 41 && gunfighter1.getInsidious() > 0)) {
+                        matchService.actionSingleCard(match, gunfighter0, gunfighter1);
+                    } else {
+                        matchService.actionCards(match, gunfighter0, gunfighter1);
+                    }
+                    gunfighterService.resetState(gunfighter0);
+                    gunfighterService.resetState(gunfighter1);
+                }
+
+                matchService.saveMatch(match);
+
+                return new MatchDeckMessage(TypeMessage.PLAYERINFO, match.getDeck(), List.of(), List.of(), -1, -1);
             }
+
+            return null;
+
         }
+
         return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
                 gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
 
     }
 
     
+    // LOGROS
 
-    //PERSONAL
+    @GetMapping("/juegaTuPrimeraPartida/{id}")
+    public Boolean juegaTuPrimeraPartida(@PathVariable("id") Integer id) {
+        return matchService.juegaTuPrimeraPartida(id);
+    }
+
+    @GetMapping("/juega5partidas/{id}")
+    public Boolean juega5partidas(@PathVariable("id") Integer id) {
+        return matchService.juega5partidas(id);
+    }
+
+    @GetMapping("/ganaPrimeraPartida/{id}")
+    public Boolean ganaPrimeraPartida(@PathVariable("id") Integer id) {
+        return matchService.ganaPrimeraPartida(id);
+    }
+
+    @GetMapping("/gana5partidas/{id}")
+    public Boolean gana5partidas(@PathVariable("id") Integer id) {
+        return matchService.gana5partidas(id);
+    }
+
+    // PERSONAL
 
     @GetMapping("/winMatches/{id}")
-        public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
-            return matchService.findWinMatchsByPlayer(id);
+    public Integer findWinMatchByPlayer(@PathVariable("id") Integer id) {
+        return matchService.findWinMatchsByPlayer(id);
     }
 
     @GetMapping("/timePlayed/{id}")
-        public Double timePlayedByUserName(@PathVariable("id") Integer id) {
-            return matchService.timePlayedByUserName(id);
+    public Double timePlayedByUserName(@PathVariable("id") Integer id) {
+        return matchService.timePlayedByUserName(id);
     }
-    
-    
+
     @GetMapping("/maxTimePlayed/{username}")
-        public Double maxTimePlayedByUserName(@PathVariable("username") Integer username) {
-            return matchService.maxTimePlayedByUserName(username);
+    public Double maxTimePlayedByUserName(@PathVariable("username") Integer username) {
+        return matchService.maxTimePlayedByUserName(username);
     }
 
     @GetMapping("/minTimePlayed/{username}")
-        public Double minTimePlayedByUserName(@PathVariable("username") Integer username) {
-            return matchService.minTimePlayedByUserName(username);
+    public Double minTimePlayedByUserName(@PathVariable("username") Integer username) {
+        return matchService.minTimePlayedByUserName(username);
     }
 
     @GetMapping("/avgTimePlayed/{username}")
@@ -293,6 +332,7 @@ public class MatchRestController {
     public ResponseEntity<Map<String, Integer>> maxWinnerPlayer() {
         return new ResponseEntity<>(matchService.maxWinnerPlayer(),HttpStatus.OK);
     }
+
     /*
      * @MessageMapping("/match/{id}/players")
      * 

@@ -19,9 +19,9 @@ const WebSocketHandler = ({
     setChooseCard,
     setShowConfirmationModal,
     tempCardPlayed,
-    setTempCardPlayed
+    setTempCardPlayed,
+    setPlayed
 }) => {
-
 
 
 
@@ -30,20 +30,18 @@ const WebSocketHandler = ({
             if (playerNumber === 0) {
                 setStatePlayer1(prevState => ({
                     ...prevState,
-                    cardPlayedBefore: prevState.cardPlayed,
                     cardPlayed: tempCardPlayed,
                     precisionBefore: prevState.precision,
                 }));
             } else {
                 setStatePlayer0(prevState => ({
                     ...prevState,
-                    cardPlayedBefore: prevState.cardPlayed,
                     cardPlayed: tempCardPlayed,
                     precisionBefore: prevState.precision,
                 }));
             }
-            setShowCards(false);
             setWaiting(true);
+            setShowCards(false);
             setTempCardPlayed(null);
         }
     }, [tempCardPlayed, playerNumber]);
@@ -66,7 +64,8 @@ const WebSocketHandler = ({
                 })
                 .then(match => match.joinedPlayers)
                 .then(matchPlayerList => {
-                    setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
+                    if (matchPlayerList.includes(username))
+                        setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
                 })
                 .catch(error => {
                     console.error('Error fetching match:', error);
@@ -103,14 +102,15 @@ const WebSocketHandler = ({
                             ...prevState,
                             cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
                         }));
-                        if (playerNumber == 0 && body.player0Cards.length === 8) {
+                        if (playerNumber === 0 && body.player0Cards.length === 8) {
                             setReadyForDiscard(true);
                             setReceived(true);
                         }
-                        else if (playerNumber == 1 && body.player1Cards.length === 8) {
+                        else if (playerNumber === 1 && body.player1Cards.length === 8) {
                             setReadyForDiscard(true);
                             setReceived(true);
                         }
+                        break;
                     case 'PLAYEDCARD':
                         if (playerNumber === 0 && body.playedCard1 !== -1) {
                             setTempCardPlayed(body.playedCard1);
@@ -128,35 +128,10 @@ const WebSocketHandler = ({
                         break;
                     case 'PLAYERINFO':
                         setDeckOfCards(body.deckCards);
-                        setShowConfirmationModal(true);
                         updatePlayers();
+                        break;
                     default:
                         break;
-                }
-            });
-
-            client.subscribe(`/topic/match/${matchId}/players`, (message) => {
-                const body = JSON.parse(message.body);
-                if (body.type === 'PLAYERINFO') {
-                    if (body.playerNumber === 1) {
-                        setStatePlayer1(prevState => ({
-                            ...prevState,
-                            health: body.health,
-                            bullets: body.bullets,
-                            precision: body.precision,
-                            cards: body.cards,
-                        }));
-                    }
-                    if (body.playerNumber === 0) {
-                        setStatePlayer0(prevState => ({
-                            ...prevState,
-                            health: body.health,
-                            bullets: body.bullets,
-                            precision: body.precision,
-                            cards: body.cards,
-
-                        }));
-                    }
                 }
             });
 
@@ -193,7 +168,11 @@ const WebSocketHandler = ({
                         bullets: player0.bullets,
                         precision: player0.precision,
                         cards: player0.cards,
-                    }))
+                    }));
+                if (playerNumber === 0 && player0.cardPlayed === -1) {
+                    setShowConfirmationModal(true);
+
+                }
             })
             .catch(error => {
                 console.error('Error fetching gunfighter:', error);
@@ -221,7 +200,12 @@ const WebSocketHandler = ({
                         bullets: player1.bullets,
                         precision: player1.precision,
                         cards: player1.cards,
-                    }))
+                    }));
+                if (playerNumber === 1 && player1.cardPlayed === -1) {
+                    setShowConfirmationModal(true);
+                    setPlayed(false);
+                    
+                }
             })
             .catch(error => {
                 console.error('Error fetching gunfighter:', error);

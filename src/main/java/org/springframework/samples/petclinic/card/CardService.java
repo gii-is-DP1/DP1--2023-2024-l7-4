@@ -12,8 +12,7 @@ import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.samples.petclinic.card.CardUtils;
+
 import org.springframework.samples.petclinic.configuration.services.NotificationService;
 
 import jakarta.transaction.Transactional;
@@ -51,7 +50,7 @@ public class CardService {
         }
 
         @Transactional
-        private void executeSingleCard(Integer card, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
+        public void executeSingleCard(Integer card, Gunfighter statePlayerMain, Gunfighter statePlayerSecondary,
                         List<Integer> deck, Integer matchId) {
                 switch (card) {
                         default:
@@ -715,7 +714,7 @@ public class CardService {
                                 while (indicesAleatorios.size() < 2) {
                                         Double indiceAleatorio = Math
                                                         .floor(Math.random() * statePlayerSecondary.getCards().size()
-                                                                        + 1);
+                                                                        );
                                         if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                                 indicesAleatorios.add(indiceAleatorio.intValue());
                                         }
@@ -913,9 +912,6 @@ public class CardService {
 
                 statePlayerMain.setBullets(CardUtils.limit(statePlayerMain.getBullets() + 1));
 
-                // TODO: MANDAR MODAL POR SI QUIERE DESCARTAR DOS CARTAS PARA PREVENIR EL DAÑO
-                // Versión preliminar que lo hace de forma aleatoria
-
                 if (statePlayerMain.getPreventDamage() == true) {
 
                         // DESCARTAR 2 CARTAS
@@ -926,7 +922,7 @@ public class CardService {
                         while (indicesAleatorios.size() < 2) {
                                 Double indiceAleatorio = Math
                                                 .floor(Math.random() * statePlayerMain.getCards().size()
-                                                                + 1);
+                                                                );
                                 if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                         indicesAleatorios.add(indiceAleatorio.intValue());
                                 }
@@ -1175,7 +1171,6 @@ public class CardService {
                 updatedCards.add(newCard);
                 statePlayerMain.setCards(updatedCards);
 
-                // TODO: Setear "insidious" a true. Ver a que se refiere
         }
 
         @Transactional
@@ -1240,7 +1235,6 @@ public class CardService {
                 }
         }
 
-        // TODO: Funcion carta 45
         @Transactional
         private void executeCard45(List<Integer> deckOfCards, Gunfighter statePlayerMain,
                         Gunfighter statePlayerSecondary,
@@ -1349,8 +1343,7 @@ public class CardService {
                 List<Integer> indicesAleatorios = new ArrayList<>();
                 while (indicesAleatorios.size() < 3) {
                         Double indiceAleatorio = Math
-                                        .floor(Math.random() * statePlayerMain.getCards().size()
-                                                        + 1);
+                                        .floor(Math.random() * statePlayerMain.getCards().size());
                         if (!indicesAleatorios.contains(indiceAleatorio.intValue())) {
                                 indicesAleatorios.add(indiceAleatorio.intValue());
                         }
@@ -1419,7 +1412,7 @@ public class CardService {
 
                         }
                 } else {
-                        Double randomCardIndex = Math.random() * (statePlayerMain.getCards().size() + 1);
+                        Double randomCardIndex = Math.random() * (statePlayerMain.getCards().size());
                         List<Integer> updatedCards = statePlayerMain.getCards();
                         updatedCards.remove(randomCardIndex.intValue());
 

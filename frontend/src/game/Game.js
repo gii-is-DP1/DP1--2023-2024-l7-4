@@ -1,20 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Form, FormGroup, Label, Modal, ModalBody, ModalFooter, ModalHeader, Input, Button, Card } from 'reactstrap';
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
 import getIdFromUrl from "../util/getIdFromUrl";
 import tokenService from '../services/token.service';
 import jwtDecode from 'jwt-decode';
 import '../static/css/GameBoard.css';
 import '../static/css/playerStats.css';
 import CardButton from '../components/buttons/cardButton';
-import { generateNewRandomNumbers, generateUniqueRandomNumbers, initialDeal, handleActionCard } from '../util/game/utils';
-import DiscardCardsModalContent from '../components/modals/DiscardCardsModalContent';
 import CardRow from '../components/modals/CardRow';
 import TopRow from '../components/modals/TopRow';
 import PlayerStats from '../util/game/playerStatsModal';
 import GameModals from '../components/modals/GameModals';
 import WebSocketHandler from './WebSocketHandler';
+import { useLocation } from 'react-router-dom';
 
 
 const WebSocketComponent = () => {
@@ -30,7 +26,6 @@ const WebSocketComponent = () => {
     const [tempCardPlayed, setTempCardPlayed] = useState(0);
     const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
 
-
     const [statePlayer0, setStatePlayer0] = useState({
         health: 2,
         bullets: 2,
@@ -38,7 +33,6 @@ const WebSocketComponent = () => {
         cards: [],
         cardPlayed: null,
         playerNumber: 0,
-        doubleCard: false,
     });
 
     const [statePlayer1, setStatePlayer1] = useState({
@@ -48,7 +42,6 @@ const WebSocketComponent = () => {
         cards: [],
         cardPlayed: null,
         playerNumber: 1,
-        doubleCard: false,
     });
 
     const [waiting, setWaiting] = useState(false);
@@ -56,7 +49,7 @@ const WebSocketComponent = () => {
     const [readyForDiscard, setReadyForDiscard] = useState(false);
     const [discardedCards, setDiscardedCards] = useState([]);
 
-    const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());
+    const [deckOfCards, setDeckOfCards] = useState([]);
     const [stompClient, setStompClient] = useState(null);
 
     const matchId = getIdFromUrl(2);
@@ -69,28 +62,30 @@ const WebSocketComponent = () => {
     }, [stompClient, received]);
 
 
-    //Rebarajar las cartas
     useEffect(() => {
-        if (deckOfCards.length < 1 && statePlayer0.cards.length !== 0 && statePlayer1.cards.length !== 0)
-            setDeckOfCards(generateNewRandomNumbers(statePlayer0.cards, statePlayer1.cards));
-    }, [deckOfCards]);
+        if (waiting)
+            setShowCards(false);
+    }, [waiting])
 
 
+    
     //Acciones 
     useEffect(() => {
         if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
             setShowCards(true);
             setWaiting(false);
-            setPlayed(false);
         }
     }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
+    
     //Accionar el final de partida
     useEffect(() => {
-        if (statePlayer0.health < 1 || statePlayer1.health < 1)
+        if (statePlayer0.health < 1 || statePlayer1.health < 1) {
+            setShowConfirmationModal(false);
             setShowEndModal(true);
+        }
 
-    }, [statePlayer0.health, statePlayer1.health])
+    }, [statePlayer0.health, statePlayer1.health]);
 
 
     useEffect(() => {
@@ -106,7 +101,7 @@ const WebSocketComponent = () => {
     const handleActionConfirmed = async () => {
         setShowConfirmationModal(false);
         setShowCards(false);
-        console.log(`${waiting}, ${playerNumber}`);
+        setPlayed(false);
         if (waiting) {
             switch (playerNumber) {
                 case 0:
@@ -239,12 +234,12 @@ const WebSocketComponent = () => {
             if (statePlayer0.health < 1)
                 window.location.href = ('/');
             else
-                handleSetMatchWinner();
+                handleSetMatchWinner(username);
         } else {
             if (statePlayer1.health < 1)
                 window.location.href = ('/');
             else
-                handleSetMatchWinner();
+                handleSetMatchWinner(username);
         }
     };
 
@@ -254,26 +249,24 @@ const WebSocketComponent = () => {
         }
     }
 
-    const handleSetMatchWinner = async () => {
-        await fetch(`/api/v1/matches/${matchId}/winner`, {
-            method: 'PATCH',
-            headers: {
-                "Authorization": `Bearer ${jwt}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            body: `${username}`
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
+    const handleSetMatchWinner = async (playerUsername) => {
+        try {
+            const response = await fetch(`/api/v1/matches/${matchId}/winner`, {
+                method: 'PATCH',
+                headers: {
+                    "Authorization": `Bearer ${jwt}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: `${playerUsername}`
             })
-            .then(window.location.href = ('/'))
-            .catch(error => {
-                console.error('Error setting the winner:', error);
-            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            window.location.href = '/';
+        } catch (error) {
+            console.error('Error setting the winner:', error);
+        }
     };
 
     const handleSetDiscardCard = (player, cardNumber) => {
@@ -308,6 +301,7 @@ const WebSocketComponent = () => {
                 setReadyForDiscard={setReadyForDiscard}
                 setReceived={setReceived}
                 setShowCards={setShowCards}
+                setPlayed={setPlayed}
                 setWaiting={setWaiting}
                 setStompClient={setStompClient}
                 setChooseCard={setChooseCard}

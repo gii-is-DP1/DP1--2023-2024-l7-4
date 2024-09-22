@@ -15,7 +15,6 @@
  */
 package org.springframework.samples.petclinic.user;
 
-import java.util.Optional;
 
 import jakarta.validation.Valid;
 

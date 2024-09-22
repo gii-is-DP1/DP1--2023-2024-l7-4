@@ -1,6 +1,5 @@
 package org.springframework.samples.petclinic.player;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
