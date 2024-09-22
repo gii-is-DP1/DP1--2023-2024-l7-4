@@ -117,7 +117,7 @@ export default function PlayerStadisticLogros() {
   const handleEdit = (achievement) => {
     setSelectedAchievement(achievement);
     setEditedAchievement({ ...achievement }); 
-    toggleModalEdit(); // Abrimos el modal
+    toggleModalEdit(); 
   };
 
 
