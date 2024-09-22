@@ -4,19 +4,19 @@ import { Button } from "reactstrap";
 import tokenService from "../../services/token.service";
 import '../../static/css/westernTheme.css';
 import '../../App.css';
-import '../../static/css/public.css'
+import '../../static/css/public.css';
 import getErrorModal from "../../util/getErrorModal";
 import useFetchState from "../../util/useFetchState";
 
 const jwt = tokenService.getLocalAccessToken();
+const loggedInUser = tokenService.getUser()?.username;  
 
 export default function PlayerList() {
-
   const [message, setMessage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [players, setPlayers] = useFetchState(
     [],
-    `/api/v1/players/public`, 
+    `/api/v1/players/public`,
     jwt,
     setMessage,
     setVisible
@@ -24,11 +24,18 @@ export default function PlayerList() {
   const [currentPage, setCurrentPage] = useState(1);
   const playersPerPage = 2; 
 
+  const currentUserPlayer = players.find(player => player.username === loggedInUser);
+  const otherPlayers = players.filter(player => player.username !== loggedInUser);
+
+  const sortedPlayers = currentUserPlayer ? [currentUserPlayer, ...otherPlayers] : otherPlayers;
+
   const indexOfLastPlayer = currentPage * playersPerPage;
   const indexOfFirstPlayer = indexOfLastPlayer - playersPerPage;
-  const currentPlayers = players.slice(indexOfFirstPlayer, indexOfLastPlayer);
+  const currentPlayers = sortedPlayers.slice(indexOfFirstPlayer, indexOfLastPlayer);
 
   const playerList = currentPlayers.map((player) => {
+    const isCurrentUser = player.username === loggedInUser;
+
     return (
       <div className="player-card" key={player.id}>
         <img
@@ -39,12 +46,12 @@ export default function PlayerList() {
         <h3>{player.nickname}</h3>
         <Button
           size="sm"
-          color="primary"
+          color={isCurrentUser ? "warning" : "primary"}  
           aria-label={"view-" + player.username}
           tag={Link}
           to={`/players/${player.username}`} 
         >
-          View Profile
+          {isCurrentUser ? "My Profile" : "View Profile"}  
         </Button>
       </div>
     );

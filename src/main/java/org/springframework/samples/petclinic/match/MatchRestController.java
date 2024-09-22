@@ -293,6 +293,37 @@ public class MatchRestController {
     public ResponseEntity<Map<String, Integer>> maxWinnerPlayer() {
         return new ResponseEntity<>(matchService.maxWinnerPlayer(),HttpStatus.OK);
     }
+
+
+
+    //PUBLIC
+
+    @GetMapping("/winMatchesPublic/{username}")
+        public Integer findWinMatchPublic(@PathVariable("username") String username) {
+            return matchService.findWinMatchsPublic(username);
+    }
+
+    @GetMapping("/timePlayedPublic/{username}")
+        public Double timePlayedPublic(@PathVariable("username") String username) {
+            return matchService.timePlayedPublic(username);
+    }
+    
+    @GetMapping("/maxTimePlayedPublic/{username}")
+        public Double maxTimePlayedPublic(@PathVariable("username") String username) {
+            return matchService.maxTimePlayedPublic(username);
+    }
+
+    @GetMapping("/minTimePlayedPublic/{username}")
+        public Double minTimePlayedPublic(@PathVariable("username") String username) {
+            return matchService.minTimePlayedPublic(username);
+    }
+
+    @GetMapping("/avgTimePlayedPublic/{username}")
+        public Double averageTimePlayedPublic(@PathVariable("username") String username) {
+            return matchService.averageTimePlayedPublic(username);
+    }
+
+
     /*
      * @MessageMapping("/match/{id}/players")
      * 

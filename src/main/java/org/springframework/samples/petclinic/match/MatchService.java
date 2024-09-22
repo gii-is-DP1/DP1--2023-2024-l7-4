@@ -255,4 +255,75 @@ public class MatchService {
 
     return winnerCountMap;
     }
+
+    //PUBLIC
+
+    @Transactional(readOnly = true)
+    public Integer findWinMatchsPublic(String u) throws DataAccessException {
+        Integer count = 0;
+        List<Match> matches= findMatchsByPlayer(u);
+        for(Match m:matches){
+            if (u.equals(m.getWinner())) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    @Transactional(readOnly = true)
+    public Double timePlayedPublic(String u) throws DataAccessException {
+        List<Double> timePlayedForGamesByPlayer = new ArrayList<>();
+        List<Match> matches = findMatchsByPlayer(u); 
+        for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForGamesByPlayer.add(tiempo);
+            }
+        }
+        Double res = timePlayedForGamesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
+        return res;
+    }
+    
+     
+    @Transactional(readOnly = true)
+    public Double maxTimePlayedPublic(String u) throws DataAccessException {
+        List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
+        List<Match> matches= findMatchsByPlayer(u);
+        for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForMatchesByPlayer.add(tiempo);
+            }
+        }
+        Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        return res;
+    }
+
+    @Transactional(readOnly = true)
+    public Double minTimePlayedPublic(String u) throws DataAccessException {
+        List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
+        List<Match> matches= findMatchsByPlayer(u);
+        for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForMatchesByPlayer.add(tiempo);
+            }
+        }
+        Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).min().getAsDouble();
+        return res;
+    }
+
+    @Transactional(readOnly = true)
+    public Double averageTimePlayedPublic(String u) throws DataAccessException {
+        List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
+        List<Match> matches= findMatchsByPlayer(u);
+        for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForMatchesByPlayer.add(tiempo);
+            }
+        }
+        Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
+        return res/matches.size();
+    }
 }

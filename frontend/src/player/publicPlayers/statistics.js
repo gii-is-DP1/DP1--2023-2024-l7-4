@@ -7,31 +7,12 @@ import { useParams } from 'react-router-dom';
 export default function PlayerStatistics() {
   const { username } = useParams();
   const jwt = tokenService.getLocalAccessToken();
-
-  const [userId, setUserId] = useState(null);
   const [matchesList, setMatches] = useState(null);
   const [winMatchesList, setWinMatches] = useState(null);
   const [minutesPlayed, setMinutesPlayed] = useState(null);
   const [maxMinutesPlayed, setMaxMinutesPlayed] = useState(null);
+  const [minMinutesPlayed, setMinMinutesPlayed] = useState(null);
   const [avgMinutesPlayed, setAvgMinutesPlayed] = useState(null);
-  const [error, setError] = useState(null);
-
-  const fetchPlayerId = async () => {
-    try {
-      const response = await fetch(`/api/v1/players/public/${username}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`Error fetching player ID for ${username}`);
-      }
-      const playerData = await response.json();
-      setUserId(playerData.id); 
-    } catch (error) {
-      setError(error.message);
-    }
-  };
 
   const listMatches = async () => {
     try {
@@ -51,15 +32,15 @@ export default function PlayerStatistics() {
   };
 
   const listWinMatches = async () => {
-    if (!userId) return; 
+    if (!username) return; 
     try {
-      const response = await fetch(`/api/v1/matches/winMatches/${userId}`, {
+      const response = await fetch(`/api/v1/matches/winMatchesPublic/${username}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response.ok) {
-        throw new Error(`Error fetching win matches for ${userId}`);
+        throw new Error(`Error fetching win matches for ${username}`);
       }
       const result = await response.json();
       setWinMatches(result);
@@ -69,15 +50,15 @@ export default function PlayerStatistics() {
   };
 
   const listMinutes = async () => {
-    if (!userId) return; 
+    if (!username) return; 
     try {
-      const response = await fetch(`/api/v1/matches/timePlayed/${userId}`, {
+      const response = await fetch(`/api/v1/matches/timePlayedPublic/${username}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response.ok) {
-        throw new Error(`Error fetching time played for ${userId}`);
+        throw new Error(`Error fetching time played for ${username}`);
       }
       const result = await response.json();
       setMinutesPlayed(result);
@@ -87,15 +68,15 @@ export default function PlayerStatistics() {
   };
 
   const maxMinutes = async () => {
-    if (!userId) return; 
+    if (!username) return; 
     try {
-      const response = await fetch(`/api/v1/matches/maxTimePlayed/${userId}`, {
+      const response = await fetch(`/api/v1/matches/maxTimePlayedPublic/${username}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response.ok) {
-        throw new Error(`Error fetching max time played for ${userId}`);
+        throw new Error(`Error fetching max time played for ${username}`);
       }
       const result = await response.json();
       setMaxMinutesPlayed(result);
@@ -104,16 +85,33 @@ export default function PlayerStatistics() {
     }
   };
 
-  const avgMinutes = async () => {
-    if (!userId) return; 
+  const minMinutes = async () => {
     try {
-      const response = await fetch(`/api/v1/matches/avgTimePlayed/${userId}`, {
+      const response = await fetch(`/api/v1/matches/minTimePlayedPublic/${username}`, {
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
       });
       if (!response.ok) {
-        throw new Error(`Error fetching avg time played for ${userId}`);
+        throw new Error(`Error fetching min time played for ${username}`);
+      }
+      const result = await response.json();
+      setMinMinutesPlayed(result);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const avgMinutes = async () => {
+    if (!username) return; 
+    try {
+      const response = await fetch(`/api/v1/matches/avgTimePlayedPublic/${username}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error fetching avg time played for ${username}`);
       }
       const result = await response.json();
       setAvgMinutesPlayed(result);
@@ -123,26 +121,13 @@ export default function PlayerStatistics() {
   };
 
   useEffect(() => {
-    fetchPlayerId(); 
-  }, [jwt, username]);
-
-
-  useEffect(() => {
-    if (userId) {
-      avgMinutes();
-      maxMinutes();
-      listMinutes();
-      listWinMatches();
-    }
-  }, [jwt, userId]);
-
-  useEffect(() => {
     listMatches();
+    listWinMatches();
+    avgMinutes();
+    maxMinutes();
+    minMinutes();
+    listMinutes();
   }, [jwt, username]);
-
-  if (error) {
-    return <p>Error: {error}</p>;
-  }
 
 
   return (
@@ -164,6 +149,10 @@ export default function PlayerStatistics() {
             <div>
               <strong>Max Minutes in a Single Match:</strong>{" "}
               {maxMinutesPlayed ? maxMinutesPlayed : 0}
+            </div>
+            <div>
+              <strong>Min Minutes in a Single Match:</strong>{" "}
+              {minMinutesPlayed ? minMinutesPlayed : 0}
             </div>
             <div>
               <strong>Average Minutes per Match:</strong>{" "}
