@@ -15,6 +15,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.samples.petclinic.configuration.services.NotificationService;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
+import org.springframework.samples.petclinic.match.messages.MatchChatMessage;
 import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
 import org.springframework.samples.petclinic.match.messages.MatchMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
@@ -250,6 +251,12 @@ public class MatchRestController {
         return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
                 gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
 
+    }
+
+    @MessageMapping("/match/{id}/chat")
+    @SendTo("/topic/match/{id}/chat")
+    public MatchChatMessage particularMatchChatMessage(@DestinationVariable int id, MatchChatMessage message) {
+        return new MatchChatMessage(message.getMessage(), message.getPlayerNumber());
     }
 
     // LOGROS
