@@ -15,7 +15,7 @@ export default function PlayerStadisticLogros() {
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalCreate, setIsModalCreate] = useState(false);
   const [isModalDelete, setIsModalDelete] = useState(false);
-  const thresholdOptions = ['VICTORIES', 'GAMESPLAYED', 'TOTALPLAYTIME']
+  const thresholdOptions = ['','VICTORIES', 'GAMESPLAYED', 'TOTALPLAYTIME']
 
   const toggleModalEdit = () => setIsModalEdit(!isModalEdit);
   const toggleModalCreate = () => setIsModalCreate(!isModalCreate);

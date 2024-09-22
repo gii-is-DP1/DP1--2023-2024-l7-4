@@ -221,12 +221,16 @@ public class MatchRestController {
                     gunfighter0.setPreventDamage(true);
                 }
                 gunfighter0.setCardPlayed(deckMessage.getPlayedCard0());
+                match.getPlayedCards0().add(deckMessage.getPlayedCard0());
+                matchService.saveMatch(match);
                 gunfighterService.save(gunfighter0);
             } else {
                 if (deckMessage.getPlayedCard1() == 30 && deckMessage.getPlayer1Cards().size() > 0) {
                     gunfighter1.setPreventDamage(true);
                 }
                 gunfighter1.setCardPlayed(deckMessage.getPlayedCard1());
+                match.getPlayedCards1().add(deckMessage.getPlayedCard1());
+                matchService.saveMatch(match);
                 gunfighterService.save(gunfighter1);
             }
 

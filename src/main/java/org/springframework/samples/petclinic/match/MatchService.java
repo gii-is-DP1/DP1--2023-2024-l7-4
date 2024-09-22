@@ -122,6 +122,7 @@ public class MatchService {
 
     @Transactional
     public void actionCards(Match match, Gunfighter gunfighter0, Gunfighter gunfighter1) {
+        
         if (gunfighter0.getBullets() > gunfighter1.getBullets()) {
             cardService.executeActionsInOrder(gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed(), gunfighter0,
                     gunfighter1, match);
@@ -137,6 +138,8 @@ public class MatchService {
             cardService.executeActionsInOrder(gunfighter1.getCardPlayed(), gunfighter0.getCardPlayed(), gunfighter1,
                     gunfighter0, match);
         }
+
+      
     }
 
     @Transactional

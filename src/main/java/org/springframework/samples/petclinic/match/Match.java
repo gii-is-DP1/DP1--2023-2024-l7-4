@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.match;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -44,12 +45,11 @@ public class Match extends BaseEntity {
     @Column(name="deck")
     private List<Integer> deck;
     
+    @Column(name="playedCards0")
+    private List<Integer> playedCards0= new ArrayList<>();;
+
     @Column(name="playedCards1")
-    private List<Integer> playedCards1;
-
-    @Column(name="playedCards2")
-    private List<Integer> playedCards2;
-
+    private List<Integer> playedCards1= new ArrayList<>();
     @Column
     private String winner;
 
