@@ -44,6 +44,12 @@ public class Match extends BaseEntity {
 
     @Column(name="deck")
     private List<Integer> deck;
+    
+    @Column(name="playedCards1")
+    private List<Integer> playedCards1;
+
+    @Column(name="playedCards2")
+    private List<Integer> playedCards2;
 
     @Column
     private String winner;
