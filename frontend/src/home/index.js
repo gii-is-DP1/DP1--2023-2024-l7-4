@@ -4,7 +4,7 @@ import tokenService from "../services/token.service";
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
 import jwtDecode from "jwt-decode";
-import { Form, Table, FormGroup, Label, Input, Button } from "reactstrap";
+import { Table } from "reactstrap";
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import ImageButton from "../components/buttons/imageButton";
@@ -168,7 +168,7 @@ export default function Home() {
           </div>
 
           <div className="hero-div">
-            <h1 className="text-center"> ONLINE GAMES</h1>
+            <h1> ONLINE GAMES</h1>
             <div>
               <Table aria-label="onlineGames" className="table-western">
                 <thead>

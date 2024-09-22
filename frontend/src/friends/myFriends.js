@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
-import { Form, Table, FormGroup, Label, Input, Button } from "reactstrap";
+import { Button } from "reactstrap";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
 import tokenService from "../services/token.service";
@@ -135,6 +135,24 @@ export default function MyFriends() {
       console.error("Error fetching new players:", error);
     }
   }
+
+  useEffect(() => {
+    if (jwt) {
+      setFriends([]);
+      setMyGamesRequests([]);
+      setPendingRequests([]);
+
+      const updateAll = () => {
+        updateFriends();
+        updatePendingGameRequests();
+        updatePendingRequests();
+      };
+
+      const intervalId = setInterval(updateAll, 5000);
+
+      return () => clearInterval(intervalId);
+    }
+  }, [jwt]);
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -368,6 +386,7 @@ export default function MyFriends() {
         setFriends((prevFriends) =>
           prevFriends.filter((friends) => friends.id !== friendId)
         );
+        updateFriends();
       } else {
         throw new Error("Hubo un error al eliminar la solicitud.");
       }
@@ -381,15 +400,16 @@ export default function MyFriends() {
     <div className="admin-page-container">
       <div className="container">
         <div className="hero-div">
-          <div className="friends-header">Friends</div>
+          <div className="search-header">Friends</div>
           <div>
             {friends
               .slice() // Crea una copia del array original para no mutarlo
               .sort((a, b) => a.name.localeCompare(b.name)) // Ordena alfabéticamente
               .map((friend, index) => (
-                <div key={friend.id}>
+                <div className="list-friends" key={friend.id}>
                   {friend.name}
                   <Button
+                    style={{ marginLeft: "10px" }}
                     onClick={() => handleRemoveFriend(friend.id)}
                     color="danger"
                   >
@@ -404,9 +424,9 @@ export default function MyFriends() {
           <div className="requests-header">Pending Requests</div>
           <div>
             {pendingRequests.map((request, index) => (
-              <div key={request.id}>
+              <div className="list-friends" key={request.id}>
                 {request.playerOne.name}
-                <div>
+                <div className="list-friends">
                   <Button
                     onClick={() => handleAcceptRequest(request.id)}
                     color="success"
@@ -446,7 +466,7 @@ export default function MyFriends() {
           <div className="friends-header">Game Invitations</div>
           <div>
             {myGamesRequests.map((myGameRequest) => (
-              <div key={myGameRequest.id}>
+              <div className="list-friends" key={myGameRequest.id}>
                 {myGameRequest.playerOne.name}
                 <div>
                   <Button

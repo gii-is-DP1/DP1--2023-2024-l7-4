@@ -36,6 +36,9 @@ public class RequestService {
 
     @Transactional
     public Request saveRequest(Request request) throws DataAccessException {
+        if (request.getPlayerOne() == request.getPlayerTwo()) {
+            throw new IllegalArgumentException("You can't send a friend request to yourself");
+        }
         return requestRepository.save(request);
     }
 

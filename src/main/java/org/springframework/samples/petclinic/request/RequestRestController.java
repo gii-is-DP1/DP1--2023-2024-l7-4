@@ -91,6 +91,9 @@ public class RequestRestController {
         if (requestDTO.getPlayerOne() == null || requestDTO.getPlayerTwo() == null) {
             return ResponseEntity.badRequest().body(null);
         }
+        if (requestDTO.getPlayerOne().equals(requestDTO.getPlayerTwo())) {
+            return ResponseEntity.badRequest().body(null);
+        }
 
         Player playerOne = playerService.findByUsername(requestDTO.getPlayerOne());
         Player playerTwo = playerService.findByUsername(requestDTO.getPlayerTwo());

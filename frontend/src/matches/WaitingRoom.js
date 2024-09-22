@@ -359,7 +359,7 @@ export default function WaitingRoom() {
                   joinedPlayers.map((player, index) => (
                     <tr key={index}>
                       <td className="table-western td">{player}</td>
-                      <td>
+                      <td className="table-western td">
                         {joinedPlayers.length <= 1 && (
                           <Button onClick={() => handleInviteClick(index)}>
                             Invite
@@ -378,7 +378,8 @@ export default function WaitingRoom() {
                             {selectedFriend && (
                               <button
                                 onClick={() =>
-                                  handleSendGameRequest(selectedFriend)
+                                  handleSendGameRequest(selectedFriend) &&
+                                  setShowDropdown(null)
                                 }
                               >
                                 Send
