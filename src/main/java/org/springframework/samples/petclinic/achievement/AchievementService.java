@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.achievement;
 
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -85,7 +87,21 @@ public Boolean Success(Integer u, Integer achievementId) throws DataAccessExcept
             res= true;
         }
     }
-    return res;
-}
+    if (threshold == Threshold.TOTALPLAYTIME){
+         List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
+         Double timePlayed= null;
+         for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForMatchesByPlayer.add(tiempo);
+                timePlayed= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
+                    if (metric<=timePlayed){
+                        res= true;
+                    }
+            }
+         }
 
+    }
+    return res;
+    }
 }

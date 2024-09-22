@@ -56,4 +56,6 @@ INSERT INTO achievement(id,metric,threshold,name) VALUES (2,1,'VICTORIES','Win O
 INSERT INTO achievement(id,metric,threshold,name) VALUES (3,10,'GAMESPLAYED','Play 10 Game');
 INSERT INTO achievement(id,metric,threshold,name) VALUES (4,5,'VICTORIES','Win 5 Game');
 INSERT INTO achievement(id,metric,threshold,name) VALUES (5,100,'GAMESPLAYED','Play 100 Game');
+INSERT INTO achievement(id,metric,threshold,name) VALUES (6,1,'TOTALPLAYTIME','Play 1 minutes');
+INSERT INTO achievement(id,metric,threshold,name) VALUES (7,100,'TOTALPLAYTIME','Play 100 minutes');
 
