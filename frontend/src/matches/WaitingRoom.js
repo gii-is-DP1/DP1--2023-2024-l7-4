@@ -45,7 +45,6 @@ export default function WaitingRoom() {
     setMessage,
     setVisible
   );
-  console.log(friendsOnline);
   useEffect(() => {
     if (joinedPlayers) {
       if (joinedPlayers[0] === username) {
@@ -58,7 +57,7 @@ export default function WaitingRoom() {
         setShowDropdown(null);
       }
     }
-  }, [match]);
+  }, [match, joinedPlayers]);
 
   async function updateFriendsOnline() {
     if (!jwt) {
@@ -99,7 +98,7 @@ export default function WaitingRoom() {
         },
       });
       const newJoinedPlayers = await response.json();
-      setJoinedPlayers(newJoinedPlayers);
+      setJoinedPlayers(newJoinedPlayers.joinedPlayers);
     } catch (error) {
       console.error("Error fetching new joined players:", error);
     }
@@ -119,7 +118,6 @@ export default function WaitingRoom() {
   useEffect(() => {
     if (jwt) {
       setJoinedPlayers([]);
-
       const intervalId = setInterval(updateJoinedPlayers, 10000); // Actualiza cada 5 segundos
 
       // Limpia el intervalo cuando el componente se desmonte
@@ -357,44 +355,45 @@ export default function WaitingRoom() {
                 </tr>
               </thead>
               <tbody>
-                {joinedPlayers.map((player, index) => (
-                  <tr key={index}>
-                    <td className="table-western td">{player}</td>
-                    <td>
-                      {joinedPlayers.length <= 1 && (
-                        <Button onClick={() => handleInviteClick(index)}>
-                          Invite
-                        </Button>
-                      )}
-                      {showDropdown === index && (
-                        <>
-                          <select onChange={handleFriendSelect}>
-                            <option value="">Select a friend</option>
-                            {friendsOnline.map((friend, i) => (
-                              <option key={friend.id} value={friend.id}>
-                                {friend.username}
-                              </option>
-                            ))}
-                          </select>
-                          {selectedFriend && (
-                            <button
-                              onClick={() =>
-                                handleSendGameRequest(selectedFriend)
-                              }
-                            >
-                              Send
-                            </button>
-                          )}
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {Array.isArray(joinedPlayers) &&
+                  joinedPlayers.map((player, index) => (
+                    <tr key={index}>
+                      <td className="table-western td">{player}</td>
+                      <td>
+                        {joinedPlayers.length <= 1 && (
+                          <Button onClick={() => handleInviteClick(index)}>
+                            Invite
+                          </Button>
+                        )}
+                        {showDropdown === index && (
+                          <>
+                            <select onChange={handleFriendSelect}>
+                              <option value="">Select a friend</option>
+                              {friendsOnline.map((friend, i) => (
+                                <option key={friend.id} value={friend.id}>
+                                  {friend.username}
+                                </option>
+                              ))}
+                            </select>
+                            {selectedFriend && (
+                              <button
+                                onClick={() =>
+                                  handleSendGameRequest(selectedFriend)
+                                }
+                              >
+                                Send
+                              </button>
+                            )}
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
               </tbody>
             </Table>
           </div>
           {joinedPlayers &&
-            (joinedPlayers.length == 2 && username === joinedPlayers[0] ? (
+            (joinedPlayers.length === 2 && username === joinedPlayers[0] ? (
               <span></span>
             ) : (
               <span className="western-message">{waitingMessage}</span>
@@ -406,9 +405,9 @@ export default function WaitingRoom() {
         <Button className="button-container-bad" onClick={handleConfirmLeave}>
           Go to Lobby
         </Button>
-        {match.joinedPlayers ? (
-          match.joinedPlayers.length === 2 &&
-          match.joinedPlayers[0] === username ? (
+        {console.log(match.joinedPlayers)}
+        {joinedPlayers ? (
+          joinedPlayers.length === 2 && joinedPlayers[0] === username ? (
             <Button className="button-container" onClick={handleStartMatch}>
               Start Match
             </Button>

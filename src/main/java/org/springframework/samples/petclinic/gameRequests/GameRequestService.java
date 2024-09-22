@@ -33,6 +33,14 @@ public class GameRequestService {
 
     @Transactional
     public GameRequest saveRequest(GameRequest gameRequest) throws DataAccessException {
+        List<GameRequest> requests = findAll();
+        for (GameRequest request : requests) {
+            if (request.getPlayerOne().getId() == gameRequest.getPlayerOne().getId()
+                    && request.getPlayerTwo().getId() == gameRequest.getPlayerTwo().getId()
+                    && request.getStatus() == GameRequestStatus.PENDING) {
+                throw new IllegalStateException("Request already exists");
+            }
+        }
         return gameRequestRepository.save(gameRequest);
     }
 

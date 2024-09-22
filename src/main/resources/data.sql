@@ -49,4 +49,3 @@ INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (4,8,4,'PE
 INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (5,9,6,'PENDING'); 
 
 
-INSERT INTO game_request (id, player_one_id, player_two_id, status, match_id) VALUES (1,6,4,'PENDING',3); 
