@@ -322,32 +322,4 @@ public class MatchRestController {
         return matchService.averageTimePlayedByUserName(username);
     }
 
-    /*
-     * @MessageMapping("/match/{id}/players")
-     * 
-     * @SendTo("/topic/match/{id}/players")
-     * public MatchGunfighterMessage
-     * particularGamePlayerMessage(@DestinationVariable int id,
-     * Integer playerNumber) {
-     * Gunfighter gunfighter = gunfighterService.findByMatchAndGunfighter(id,
-     * playerNumber);
-     * return new MatchGunfighterMessage(TypeMessage.PLAYERINFO,
-     * gunfighter.getHealth(),
-     * gunfighter.getBullets(),
-     * gunfighter.getPrecision(), gunfighter.getPlayerNumber(),
-     * gunfighter.getCards());
-     * }
-     * 
-     * @MessageMapping("/match/{id}/actions")
-     * 
-     * @SendTo("/topic/match/{id}/actions")
-     * public MatchActionsPlayersMessage
-     * particularGameActionMessage(@DestinationVariable int id,
-     * MatchActionsPlayersMessage actionMessage) {
-     * return new MatchActionsPlayersMessage(actionMessage.getAction(),
-     * actionMessage.getPlayerNumber());
-     * }
-     * 
-     */
-
 }

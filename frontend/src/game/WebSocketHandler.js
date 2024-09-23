@@ -1,26 +1,28 @@
-import React, { useEffect } from 'react';
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
+import React, { useEffect } from "react";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
 const WebSocketHandler = ({
-    username,
-    jwt,
-    matchId,
-    playerNumber,
-    setPlayerNumber,
-    setDeckOfCards,
-    setStatePlayer0,
-    setStatePlayer1,
-    setReadyForDiscard,
-    setReceived,
-    setShowCards,
-    setWaiting,
-    setStompClient,
-    setChooseCard,
-    setShowConfirmationModal,
-    tempCardPlayed,
-    setTempCardPlayed,
-    setPlayed
+  username,
+  jwt,
+  matchId,
+  playerNumber,
+  setPlayerNumber,
+  setDeckOfCards,
+  setStatePlayer0,
+  setStatePlayer1,
+  setReadyForDiscard,
+  setReceived,
+  setShowCards,
+  setWaiting,
+  setStompClient,
+  setChatMessages,
+  chatMessages,
+  setChooseCard,
+  setShowConfirmationModal,
+  tempCardPlayed,
+  setTempCardPlayed,
+    setPlayed,
 }) => {
 
 
@@ -72,10 +74,10 @@ const WebSocketHandler = ({
                 });
         };
 
-        if (matchId) handleAssignPlayers();
+    if (matchId) handleAssignPlayers();
 
-        const socket = new SockJS('http://localhost:8080/ws');
-        const client = Stomp.over(socket);
+    const socket = new SockJS("http://localhost:8080/ws");
+    const client = Stomp.over(socket);
 
         client.connect({}, () => {
             client.subscribe(`/topic/match/${matchId}/cards`, (message) => {
@@ -135,15 +137,19 @@ const WebSocketHandler = ({
                 }
             });
 
-            setStompClient(client);
-        });
+            client.subscribe(`/topic/chat/${matchId}`, (message) => {
+                fetchChatMessages();
+              });
 
-        return () => {
-            if (client && client.connected) {
-                client.disconnect();
-            }
-        };
-    }, [matchId, playerNumber]);
+      setStompClient(client);
+    });
+
+    return () => {
+      if (client && client.connected) {
+        client.disconnect();
+      }
+    };
+  }, [matchId, playerNumber]);
 
     const updatePlayers = async () => {
         await fetch(`/api/v1/gunfighters/${matchId}/0`, {
@@ -212,10 +218,30 @@ const WebSocketHandler = ({
             });
     };
 
+  const fetchChatMessages = async () => {
+    await fetch(`/api/v1/chats/${matchId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((chatMessages) => {
+        setChatMessages(chatMessages);
+      })
+      .catch((error) => {
+        console.error("Error fetching the chat:", error);
+      });
+  };
 
-    return null;
-
+  return null;
 };
-
 
 export default WebSocketHandler;

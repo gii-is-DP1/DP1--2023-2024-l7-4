@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.card.CardService;
@@ -265,6 +264,4 @@ public class MatchService {
         Double res = timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
         return res / matches.size();
     }
-
-  
 }

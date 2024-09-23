@@ -41,17 +41,17 @@ public class Match extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MatchState matchState;
 
-    @Column(name="deck")
+    @Column(name = "deck")
     private List<Integer> deck;
 
     @Column
     private String winner;
 
     @Column(name = "start_date")
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
     private LocalDateTime startDate;
 
     @Column(name = "finish_date")
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
     private LocalDateTime finishDateTime;
 }

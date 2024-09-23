@@ -30,6 +30,7 @@ body {
 }
 
 .button-container {
+
     background-color: #8b4513 !important;
     border: none !important;
     color: white !important;
@@ -47,15 +48,18 @@ body {
 }
 
 .button-container:hover {
+    font-family: 'Almendra SC', cursive;
     transform: scale(1.05) !important;
     background-color: #391d0b !important;
 }
 
 .button-container a {
+    font-family: 'Almendra SC', cursive;
     text-decoration: none !important;
 }
 
 .button-container-bad {
+    
     background-color: #484644 !important;
     border: none !important;
     color: white !important;
@@ -73,11 +77,13 @@ body {
 }
 
 .button-container-bad:hover {
+    font-family: 'Almendra SC', cursive;
     transform: scale(1.05) !important;
     background-color: #19120d !important;
 }
 
 .button-container-bad a {
+    font-family: 'Almendra SC', cursive;
     text-decoration: none !important;
 }
 
@@ -143,6 +149,7 @@ body {
 }
 
 .button-container .btn:hover {
+    font-family: 'Almendra SC', cursive;
     background-color: #5c3317;
     color: rgb(255, 255, 255);
 }
@@ -164,6 +171,7 @@ body {
 }
 
 .image-button:hover {
+    font-family: 'Almendra SC', cursive;
     opacity: 0.8;
     transform: scale(1.10);
     transition-duration: 300ms;
@@ -188,6 +196,7 @@ body {
 }
 
 .western-navbar {
+    font-family: 'Almendra SC', cursive;
     background-color: #4d3a2c;
     /* Marrón oscuro */
     border-bottom: 4px solid #4B2E00;
@@ -213,6 +222,7 @@ body {
 }
 
 .western-navlink:hover {
+    font-family: 'Almendra SC', cursive;
     color: #FFA500;
     text-shadow: 1px 1px 2px #000;
 }
@@ -235,6 +245,7 @@ body {
     /* Un color marrón oscuro para el texto */
 }
 
+
 .western-form-container2 label {
     font-size: 1.2rem;
     margin-bottom: 5px;
@@ -256,6 +267,7 @@ body {
 }
 
 .western-form-container2 .options-row {
+    font-family: 'Almendra SC', cursive;
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
@@ -264,3 +276,34 @@ body {
 .western-button {
     font-family: 'Almendra SC', serif;
 }
+
+thead.entrada-tabla {
+    font-family: 'Almendra SC', cursive;
+    position: absolute; /* Para que esté en la parte superior */
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around; /* Distribuye los elementos de manera uniforme */
+    background-color: transparent; /* Asegura que el fondo sea transparente */
+    margin-top: 10px; /* Espacio adicional en la parte superior */
+    padding: 10px 0; /* Espaciado interno */
+}
+
+.search-header {
+    font-family: 'Almendra SC', cursive;
+}
+
+.friends-header {
+    font-family: 'Almendra SC', cursive;
+}
+
+.requests-header {
+    font-family: 'Almendra SC', cursive;
+}
+
+.list-friends {
+    font-family: 'Almendra SC', cursive;
+    font-size: medium;
+    margin-top: 10px;
+}
+
