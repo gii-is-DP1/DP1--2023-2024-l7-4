@@ -14,6 +14,7 @@ class PublicProfileEdit extends Component {
         favoriteGenres: '',
         favoritePlatforms: '',
         favoriteSagas: '',
+        profileType: '',
         username: '',
     };
 
@@ -67,9 +68,10 @@ class PublicProfileEdit extends Component {
 
     render() {
         const { item } = this.state;
+        const profileTypes = ['HARDCORE', 'CASUAL']
         const title = <h1 className='text-center'> Public Profile</h1>;
 
-        return <div className='auth-page-container2'>
+        return <div className='auth-page-container3'>
             <div className="hero-div h6">
                 {title}
                 <Form onSubmit={this.handleSubmit} className='western-form-container2'>
@@ -107,6 +109,22 @@ class PublicProfileEdit extends Component {
                         <Label for="favoriteSagas">Favorite Sagas</Label>
                         <Input type="text" name="favoriteSagas" id="favoriteSagas" value={item.favoriteSagas}
                             onChange={this.handleChange} />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="profileType">Profile Type</Label>
+                        <Input
+                            type="select"
+                            name="profileType"
+                            id="profileType"
+                            value={item.profileType}
+                            onChange={this.handleChange}
+                        >
+                            {profileTypes.map((type) => (
+                                <option key={type} value={type}>
+                                    {type}
+                                </option>
+                            ))}
+                        </Input>
                     </FormGroup>
                     <FormGroup>
                         <div className="options-row">

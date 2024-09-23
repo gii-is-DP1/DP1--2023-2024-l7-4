@@ -42,7 +42,7 @@ export default function PlayerDetails() {
     }
 
     return (
-        <div className="auth-page-container3">
+        <div className="auth-page-container5">
             <div className="hero-div">
                 <h1>{playerDetails.nickname || "Player"}</h1>
                 <Form className='western-form-container2'>
@@ -88,6 +88,12 @@ export default function PlayerDetails() {
                             <FormGroup>
                                 <Label for="favoriteSagas">Favorite Sagas</Label>
                                 <Input type="text" name="favoriteSagas" id="favoriteSagas" value={playerDetails.favoriteSagas} readOnly />
+                            </FormGroup>
+                        )}
+                        {playerDetails.profileType && (
+                            <FormGroup>
+                                <Label for="profileType">Profile Type</Label>
+                                <Input type="text" name="profileType" id="profileType" value={playerDetails.profileType} readOnly />
                             </FormGroup>
                         )}
                     </div>

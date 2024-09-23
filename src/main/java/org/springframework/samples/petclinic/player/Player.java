@@ -5,6 +5,8 @@ import org.springframework.samples.petclinic.user.User;
 import java.time.LocalDate;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
@@ -68,5 +70,9 @@ public class Player extends User {
     @Column(name = "favorite_sagas")
     @Size(max=50)
     String favoriteSagas;
+
+    @Column(name = "profile_type")
+    @Enumerated(EnumType.STRING)
+    ProfileType profileType;
     
 }

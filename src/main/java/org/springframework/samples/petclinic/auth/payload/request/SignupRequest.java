@@ -2,6 +2,8 @@ package org.springframework.samples.petclinic.auth.payload.request;
 
 import java.time.LocalDate;
 
+import org.springframework.samples.petclinic.player.ProfileType;
+
 import jakarta.validation.constraints.NotBlank;
 
 
@@ -36,6 +38,8 @@ public class SignupRequest {
 
 	@NotBlank
 	private String location;
+
+	private ProfileType profileType;
 
 	private String biography;
 

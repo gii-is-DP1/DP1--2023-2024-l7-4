@@ -42,6 +42,7 @@ public class AuthService {
 		player.setFavoriteGenres(request.getFavoriteGenres());
 		player.setFavoritePlatforms(request.getFavoritePlatforms());
 		player.setFavoriteSagas(request.getFavoriteSagas());
+		player.setProfileType(request.getProfileType());
 		player.setPassword(encoder.encode(request.getPassword()));
 		player.setAuthority(role);
 		playerService.savePlayer(player);
