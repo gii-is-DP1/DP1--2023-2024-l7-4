@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.HashSet;
+
+import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +27,7 @@ public class RequestService {
     }
 
     @Transactional(readOnly = true)
-    public Request findRequestById(int id) throws DataAccessException {
+    public Request findRequestById(int id) throws ResourceNotFoundException {
         return this.requestRepository.findById(id).orElseThrow(null);
     }
 
