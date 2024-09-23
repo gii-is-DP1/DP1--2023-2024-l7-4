@@ -59,6 +59,11 @@ public class MatchService {
         return (List<Match>) matchRepository.findAllOpen();
     }
 
+    @Transactional(readOnly = true)
+    public List<Match> findAllInprogressList() throws DataAccessException {
+        return (List<Match>) matchRepository.findAllInProgress();
+    }
+
     @Transactional
     public void deleteMatch(int id) throws DataAccessException {
         Match toDelete = findMatchById(id);

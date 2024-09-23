@@ -24,13 +24,11 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES
 INSERT INTO players(id, name, surname, avatar, nickname, email, online) VALUES 
 (9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'false');
 
-INSERT INTO matches (id, name, match_state, winner) VALUES (1, 'Match 1', 'IN_PROGRESS', null);
 INSERT INTO matches (id, name, match_state, winner) VALUES (2, 'Match 2', 'CLOSED', null);
 INSERT INTO matches (id, name, match_state, winner) VALUES (3, 'DO_NOT_ENTRY', 'OPEN', null);
 
 
-INSERT INTO joined_players (match_id, player) VALUES (1, 'player1');
-INSERT INTO joined_players (match_id, player) VALUES (1, 'player2');
+
 INSERT INTO joined_players (match_id, player) VALUES (2, 'player1');
 INSERT INTO joined_players (match_id, player) VALUES (2, 'player2');
 INSERT INTO joined_players (match_id, player) VALUES (3, 'player1');

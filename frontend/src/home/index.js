@@ -4,7 +4,7 @@ import tokenService from "../services/token.service";
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
 import jwtDecode from 'jwt-decode';
-import { Table } from 'reactstrap';
+import { Button, Table } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ImageButton from '../components/buttons/imageButton';
@@ -19,9 +19,17 @@ export default function Home() {
   const [message, setMessage] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [matches, setMatches] = useFetchState(
+  const [openMatches, setOpenMatches] = useFetchState(
     [],
     `/api/v1/matches?open=true`,
+    jwt,
+    setMessage,
+    setVisible
+  );
+
+  const [inProgressMatches, setInProgressMatches] = useFetchState(
+    [],
+    `/api/v1/matches?inProgress=true`,
     jwt,
     setMessage,
     setVisible
@@ -67,7 +75,7 @@ export default function Home() {
 
   async function handleUpdateMatches() {
     try {
-      const response = await fetch(`/api/v1/matches?open=true`, {
+      let response = await fetch(`/api/v1/matches?open=true`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -75,8 +83,18 @@ export default function Home() {
           "Content-Type": "application/json",
         },
       });
-      const newMatches = await response.json();
-      setMatches(newMatches);
+      let newMatches = await response.json();
+      setOpenMatches(newMatches);
+      response = await fetch(`/api/v1/matches?inProgress=true`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      newMatches = await response.json();
+      setInProgressMatches(newMatches);
     } catch (error) {
       console.error("Error fetching matches:", error);
     }
@@ -115,7 +133,6 @@ export default function Home() {
       })
     );
   }
-  
 
   if (!jwt) {
     return (
@@ -128,7 +145,7 @@ export default function Home() {
       </div>
     );
   } else {
-    const matchesList = matches.map((m) => {
+    const matchesList = openMatches.map((m) => {
       return (
         <tr key={m.id}>
           <td className="table-western td">{m.name}</td>
@@ -164,7 +181,24 @@ export default function Home() {
             Online Friends
             <div>
               {friendsOnline.map((f) => (
-                <div key={f.id}>{f.nickname}</div>
+                <div key={f.id}>{f.nickname}
+                  {console.log(inProgressMatches)}
+                  {inProgressMatches.map((match) => {
+                    const allFriendsInMatch = match.joinedPlayers.includes(f.username) && match.joinedPlayers.every(player =>
+                      friendsOnline.some(friend => friend.username === player)
+                    );
+
+                    if (allFriendsInMatch) {
+                      return (
+                        <Link key={match.id} to={`/game/${match.id}`}>
+                          Espectar
+                        </Link>
+                      );
+                    }
+
+                    return null;
+                  })}
+                </div>
               ))}
             </div>
           </div>

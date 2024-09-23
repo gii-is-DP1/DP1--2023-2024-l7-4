@@ -57,16 +57,21 @@ public class MatchRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
-        if (sorted)
+    public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted,
+            @RequestParam(required = false, name = "inProgress") boolean inProgress) {
+        if (sorted){
             return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
-        return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
+        }else if (inProgress)
+            return new ResponseEntity<>((List<Match>) matchService.findAllInprogressList(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Match> findById(@PathVariable(name = "id") int id) {
         return new ResponseEntity<>(matchService.findMatchById(id), HttpStatus.OK);
     }
+
 
     @GetMapping("/player/{username}")
     public ResponseEntity<List<Match>> findAllByUsername(@PathVariable(name = "username") String username) {
@@ -247,7 +252,7 @@ public class MatchRestController {
                     matchService.actionCards(match, gunfighter0, gunfighter1);
                     gunfighterService.resetPartialState(gunfighter1);
                     gunfighterService.save(gunfighter0);
-                    
+
                 } else {
                     if ((gunfighter0.getCardPlayedBefore() != 41 && gunfighter0.getInsidious() > 0)
                             || (gunfighter1.getCardPlayedBefore() != 41 && gunfighter1.getInsidious() > 0)) {
