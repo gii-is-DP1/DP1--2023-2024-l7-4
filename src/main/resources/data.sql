@@ -24,14 +24,14 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, biography, locat
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas) VALUES 
 (9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars');
 
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (1, 'Match 1',null,null, 'IN_PROGRESS', null);
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (2, 'Match 2',null,null, 'CLOSED', null);
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (3, 'DO_NOT_ENTRY',null,null, 'OPEN', null);
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (4, 'Match 3','2024-09-11T17:59:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (5, 'Match 4','2024-09-11T17:43:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (6, 'Match 5','2024-09-11T17:46:36','2024-09-11T17:40:53', 'CLOSED', 'player2');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (7, 'Match 6','2024-09-11T18:00:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (8, 'Match 7','2024-09-11T17:49:36','2024-09-11T17:40:53', 'CLOSED', 'player3');
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (1, 'Match 1',null,null, 'IN_PROGRESS', null,null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (2, 'Match 2',null,null, 'CLOSED', null,null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (3, 'DO_NOT_ENTRY',null,null, 'OPEN', null,null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (4, 'Match 3','2024-09-11T17:59:36','2024-09-11T17:40:53', 'CLOSED', 'player1',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (5, 'Match 4','2024-09-11T17:43:36','2024-09-11T17:40:53', 'CLOSED', 'player1',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (6, 'Match 5','2024-09-11T17:46:36','2024-09-11T17:40:53', 'CLOSED', 'player2',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (7, 'Match 6','2024-09-11T18:00:36','2024-09-11T17:40:53', 'CLOSED', 'player1',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (8, 'Match 7','2024-09-11T17:49:36','2024-09-11T17:40:53', 'CLOSED', 'player3',null,null);
 
 
 INSERT INTO joined_players (match_id, player) VALUES (1, 'player1');

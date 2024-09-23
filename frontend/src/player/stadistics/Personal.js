@@ -19,6 +19,7 @@ export default function PlayerStadisticPersonal(){
   const [maxMinutesPlayed, setMaxMinutesPlayed] = useState(null);
   const [minMinutesPlayed, setMinMinutesPlayed] = useState(null);
   const [avgMinutesPlayed, setAvgMinutesPlayed] = useState(null);
+  const [maxCardPlayed, setMaxCardPlayed]= useState(null)
   const [playerList, setPlayers] = useState(null);
   const [maxPlayerPlayed, setMaxPlayerPlayed] = useState(null);
 
@@ -134,6 +135,23 @@ export default function PlayerStadisticPersonal(){
       console.error(error.message);
     }
   };  
+  const maxCard = async () => {
+    try {
+      const response = await fetch(`/api/v1/matches/maxCardPlayed/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error   ${userId}`);
+      }
+      const result = await response.json();
+      setMaxCardPlayed(result.maxCard);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };  
+
   useEffect(() => {
     avgMinutes();
     minMinutes();
@@ -141,6 +159,7 @@ export default function PlayerStadisticPersonal(){
     listMinutes();
     listWinMatches();
     maxPlayer();
+    maxCard();
   }, [jwt, userId]);
 
   useEffect(() => {
@@ -150,14 +169,16 @@ export default function PlayerStadisticPersonal(){
 
 
   const KhakiBox = ({ children }) => (
-    <div style={{ backgroundColor: "khaki", padding: "15px", borderRadius: "8px", width: "80%", margin: "0 auto" }}>
+    <div style={{ backgroundColor: "khaki", padding: "15px", borderRadius: "8px", width: "100%", margin: "0 auto", textAlign:"left" }}>
       {children}
     </div>
 );
 
 return (
-  <div className="auth-page-purple">
+  <div className='admin-page-container'>
+          <div className="hero-div">
       <Container style={{ marginTop: "15px" }} fluid>
+
           <h1 className="text-center">Statistics</h1>
           <div className="auth-page-yellow d-flex justify-content-center">
             <Button
@@ -188,22 +209,25 @@ return (
               Ranking
             </Button>
           </div>
+ 
         </Container>
 
     <Container style={{ marginTop: "5px" }} fluid>
-      <h1 className="text-center">Estadísticas Personales</h1>
+      <h1 className="text-center">Personal Statistics</h1>
     </Container>
 
     <KhakiBox>
-      <div><strong>Número de partidas jugadas:</strong> {matchesList ? matchesList.length : 0}</div>
-      <div><strong>Número de partidas ganadas:</strong> {winMatchesList ? winMatchesList : 0}</div>
-      <div><strong>Minutos jugados:</strong> {minutesPlayed ? minutesPlayed : 0}</div>
-      <div><strong>Máximo minutos jugados:</strong> {maxMinutesPlayed ? maxMinutesPlayed : 0}</div>
-      <div><strong>Mínimo minutos jugados:</strong> {minMinutesPlayed ? minMinutesPlayed : 0}</div>
-      <div><strong>Media de minutos jugados por partida:</strong> {avgMinutesPlayed ? avgMinutesPlayed : 0}</div>
-      <div><strong>Tu rival favorito:</strong> {maxPlayerPlayed ? maxPlayerPlayed : 0}</div>
+      <div><strong>• Matches played:</strong> {matchesList ? matchesList.length : 0}</div>
+      <div><strong>• Matches won:</strong> {winMatchesList ? winMatchesList : 0}</div>
+      <div><strong>• Played time:</strong> {minutesPlayed ? minutesPlayed+" m" : 0}</div>
+      <div><strong>• Your match with more time played was about:</strong> {maxMinutesPlayed ? maxMinutesPlayed+" m" : 0}</div>
+      <div><strong>• Your match with less time played was about:</strong> {minMinutesPlayed ? minMinutesPlayed+" m" : 0}</div>
+      <div><strong>• Your games usually last:</strong> {avgMinutesPlayed ? avgMinutesPlayed+" m" : 0}</div>
+      <div><strong>• Your most played enemy:</strong> {maxPlayerPlayed ? maxPlayerPlayed : "You need to play"}</div>
+      <div><strong>• Your favorite card:</strong> {maxCardPlayed ? (<img src={`${process.env.PUBLIC_URL}/cards/card${maxCardPlayed}.png`} />) : "You need to play"}</div>
 
     </KhakiBox>
+  </div>
   </div>
 );
 }

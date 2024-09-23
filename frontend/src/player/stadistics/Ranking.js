@@ -9,8 +9,9 @@ export default function PlayerStadisticList() {
   const username = user.username;
   const userId = user.id;
 
-  // Asegúrate de que el estado inicial es un arreglo vacío.
+
   const [rankingData, setRankingData] = useState([]);
+
 
   const listPlayers = async () => {
     try {
@@ -23,18 +24,68 @@ export default function PlayerStadisticList() {
         throw new Error(`Error fetching winners for user ${userId}`);
       }
       const result = await response.json();
+
+   
       const transformedData = Object.entries(result).map(([name, matchesWon]) => ({
         name,
         matchesWon
       }));
-      setRankingData(transformedData); // Aquí deberías obtener un arreglo del servidor
+
+      return transformedData;
     } catch (error) {
       console.error(error.message);
+      return [];
     }
   };
 
+
+  const listTimesPlayed = async () => {
+    try {
+      const response = await fetch(`/api/v1/matches/timePlayed`, {
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`Error fetching time played for user ${userId}`);
+      }
+      const result = await response.json();
+
+
+      const transformedData = Object.entries(result).map(([name, timePlayed]) => ({
+        name,
+        timePlayed
+      }));
+
+      return transformedData;
+    } catch (error) {
+      console.error(error.message);
+      return [];
+    }
+  };
+
+  const combineData = async () => {
+    const playersData = await listPlayers();
+    const timesData = await listTimesPlayed();
+
+
+    const timesMap = timesData.reduce((acc, curr) => {
+      acc[curr.name] = curr.timePlayed;
+      return acc;
+    }, {});
+
+
+    const combinedData = playersData.map(playerData => ({
+      ...playerData,
+      timePlayed: timesMap[playerData.name] || 0 
+    }));
+
+    setRankingData(combinedData);
+  };
+
+
   useEffect(() => {
-    listPlayers();
+    combineData();
   }, [jwt, username]);
 
   const [sortConfig, setSortConfig] = useState({ key: "matchesWon", direction: "desc" });
@@ -67,67 +118,72 @@ export default function PlayerStadisticList() {
   };
 
   return (
-    <div className="auth-page-purple">
-      <Container style={{ marginTop: "15px" }} fluid>
-        <h1 className="text-center">Statistics</h1>
-        <div className="auth-page-yellow d-flex justify-content-center">
-          <Button
-            size="md"
-            color="warning"
-            tag={Link}
-            to={`/statistics/personal`}
-            className="mx-2"
-          >
-            Personal statistics
-          </Button>
-          <Button
-            size="md"
-            color="warning"
-            tag={Link}
-            to={`/statistics/achievements`}
-            className="mx-2"
-          >
-            Achievements
-          </Button>
-          <Button
-            size="md"
-            color="warning"
-            tag={Link}
-            to={`/statistics/ranking`}
-            className="mx-2"
-          >
-            Ranking
-          </Button>
-        </div>
-      </Container>
+    <div className='admin-page-container'>
+      <div className="hero-div">
+        <Container style={{ marginTop: "15px" }} fluid>
+          <h1 className="text-center">Statistics</h1>
+          <div className="auth-page-yellow d-flex justify-content-center">
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/personal`}
+              className="mx-2"
+            >
+              Personal statistics
+            </Button>
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/achievements`}
+              className="mx-2"
+            >
+              Achievements
+            </Button>
+            <Button
+              size="md"
+              color="warning"
+              tag={Link}
+              to={`/statistics/ranking`}
+              className="mx-2"
+            >
+              Ranking
+            </Button>
+          </div>
+        </Container>
 
-      {/* Tabla del ranking */}
-      <Container style={{ marginTop: "30px" }} fluid>
-        <h2 className="text-center">Ranking del Juego</h2>
-        <Table bordered responsive>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }}>
-                Jugador {getSortArrow("name")}
-              </th>
-              <th onClick={() => handleSort("matchesWon")} style={{ cursor: "pointer" }}>
-                Partidas Ganadas {getSortArrow("matchesWon")}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Iteramos directamente sobre rankingData, que debería ser un arreglo de objetos */}
-            {rankingData.map((playerData, index) => (
-              <tr key={index}>
-                <th scope="row">{index + 1}</th>
-                <td>{playerData.name}</td>
-                <td>{playerData.matchesWon}</td>
+        {/* Tabla del ranking */}
+        <Container style={{ marginTop: "30px" }} fluid>
+          <h1 className="text-center">Ranking</h1>
+          <Table bordered responsive>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }}>
+                  Player {getSortArrow("name")}
+                </th>
+                <th onClick={() => handleSort("matchesWon")} style={{ cursor: "pointer" }}>
+                  Win Matches {getSortArrow("matchesWon")}
+                </th>
+                <th onClick={() => handleSort("timePlayed")} style={{ cursor: "pointer" }}>
+                 Played Time (min) {getSortArrow("timePlayed")}
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      </Container>
+            </thead>
+            <tbody>
+              {rankingData.map((playerData, index) => (
+                <tr key={index}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{playerData.name}</td>
+                  <td>{playerData.matchesWon}</td>
+                  <td>{playerData.timePlayed}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Container>
+      </div>
     </div>
   );
 }

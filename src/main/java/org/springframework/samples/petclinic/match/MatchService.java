@@ -309,20 +309,66 @@ public class MatchService {
 
     return response;
     }
+
     @Transactional(readOnly = true)
-        public Map<String, Integer> maxWinnerPlayer() throws DataAccessException {
-            Collection<Match> closedMatches=matchRepository.findMatchsClosed();
-            Map<String, Integer> winnerCountMap = new HashMap<>();
-            for (Match match : closedMatches) {
-                 String winner = match.getWinner();
-                 if (winner != null) { 
-                    winnerCountMap.put(winner, winnerCountMap.getOrDefault(winner, 0) + 1);
+    public Map<String, Integer> maxCardPlayedByUserName(Integer u) throws DataAccessException {
+        String userName= userRepository.findById(u).get().getUsername();
+        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+        Map<Integer, Integer> cardCount  = new HashMap<>();
+         for (Match match : closedMatches) {
+            List<String> players = match.getJoinedPlayers();
+                if(players.get(0).equals(userName)){
+                    List<Integer> playedCards = match.getPlayedCards0();
+                    if (playedCards != null){
+                        for (Integer card : playedCards) {
+                            cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
+                        }
+                    }
+                 } else {
+                    List<Integer> playedCards = match.getPlayedCards1();
+                    if (playedCards != null){
+                        for (Integer card : playedCards) {
+                            cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
+                        }
+                    }
                 }
         }
-    
+        Integer maxCard= cardCount.entrySet()
+        .stream()
+        .max(Map.Entry.comparingByValue())
+        .orElse(null)
+        .getKey();
+        Map<String, Integer> response = new HashMap<>();
+        response.put("maxCard", maxCard);
 
+    return response;
+    }
+    @Transactional(readOnly = true)
+    public Map<String, Integer> maxWinnerPlayer() throws DataAccessException {
+        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+        Map<String, Integer> winnerCountMap = new HashMap<>();
+        for (Match match : closedMatches) {
+             String winner = match.getWinner();
+             if (winner != null) { 
+                winnerCountMap.put(winner, winnerCountMap.getOrDefault(winner, 0) + 1);
+            }
+        }
     return winnerCountMap;
     }
 
-  
+    @Transactional(readOnly = true)
+    public Map<String, Double> maxTimePlayer() throws DataAccessException {
+        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+        Map<String, Double> timeCountMap = new HashMap<>();
+        for (Match match : closedMatches) {
+            if (match.getStartDate() != null && match.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(match.getStartDate(), match.getFinishDateTime()) + 0.;
+                List<String> players = match.getJoinedPlayers();
+                for (String player : players) {
+                    timeCountMap.put(player, timeCountMap.getOrDefault(player, 0.0) + tiempo);
+                }
+            }
+        }
+    return timeCountMap;
+    }
 }

@@ -164,9 +164,9 @@ export default function PlayerStadisticLogros() {
   );
 
   return (
-    <div className="auth-page-purple">
+    <div className='admin-page-container'>
       <Container style={{ marginTop: "5px" }} fluid>
-        <h1 className="text-center">Achievements</h1>
+        <h1 className="text-center" >Achievements</h1>
         <Row>
           {achievements.length > 0 ? (
             achievements.map((achievement) => (
