@@ -253,12 +253,6 @@ public class MatchRestController {
 
     }
 
-    @MessageMapping("/match/{id}/chat")
-    @SendTo("/topic/match/{id}/chat")
-    public MatchChatMessage particularMatchChatMessage(@DestinationVariable int id, MatchChatMessage message) {
-        return new MatchChatMessage(message.getMessage(), message.getPlayerNumber());
-    }
-
     // LOGROS
 
     @GetMapping("/juegaTuPrimeraPartida/{id}")

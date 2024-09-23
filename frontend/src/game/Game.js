@@ -12,6 +12,8 @@ import {
   Card,
   // Add Text import here
 } from "reactstrap";
+import axios from "axios";
+
 import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 import getIdFromUrl from "../util/getIdFromUrl";
@@ -277,16 +279,41 @@ const WebSocketComponent = () => {
           playedCard1: -1,
         })
       );
-    } else {
-      stompClient.send(
-        `/app/match/${matchId}/chat`,
-        {},
-        JSON.stringify({
-          message: type,
-          playerNumber: playerNumber,
-        })
-      );
     }
+  };
+
+  const handleSendChatMessage = async (message) => {
+    await axios
+      .post(
+        `/api/v1/chats`,
+        {
+          message: message,
+          playerNumber: playerNumber,
+          date: Date.now(),
+          matchId: parseInt(matchId),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        if (!response.status === 201) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        } else {
+          stompClient.send(
+            `/app/chat/${matchId}`,
+            {},
+            JSON.stringify({
+              message: "newMessage",
+              type: "CREATED",
+            })
+          );
+        }
+        setMessageTerm("");
+      });
   };
 
   const handleGoToLobby = () => {
@@ -365,6 +392,7 @@ const WebSocketComponent = () => {
         setWaiting={setWaiting}
         setStompClient={setStompClient}
         setChatMessages={setChatMessages}
+        chatMessages={chatMessages}
         setChooseCard={setChooseCard}
         setShowConfirmationModal={setShowConfirmationModal}
         tempCardPlayed={tempCardPlayed}
@@ -396,7 +424,10 @@ const WebSocketComponent = () => {
           {chatMessages && (
             <div className="hero-div">
               {chatMessages.slice(-3).map((message, index) => (
-                <h3 key={index}>{message}</h3>
+                <h3 key={index}>
+                  {message.playerNumber === playerNumber ? "You" : "Enemy"}:
+                  {message.message}
+                </h3>
               ))}
 
               <input
@@ -408,7 +439,7 @@ const WebSocketComponent = () => {
               />
               <Button
                 color="primary"
-                onClick={() => handleSendDeckMessage(messageTerm)}
+                onClick={() => handleSendChatMessage(messageTerm)}
               >
                 Send
               </Button>
@@ -440,7 +471,10 @@ const WebSocketComponent = () => {
           {chatMessages && (
             <div className="hero-div">
               {chatMessages.slice(-3).map((message, index) => (
-                <h3 key={index}>{message}</h3>
+                <h3 key={index}>
+                  {message.playerNumber === playerNumber ? "You" : "Enemy"}:
+                  {message.message}
+                </h3>
               ))}
               <input
                 type="text"
@@ -451,7 +485,7 @@ const WebSocketComponent = () => {
               />
               <Button
                 color="primary"
-                onClick={() => handleSendDeckMessage(messageTerm)}
+                onClick={() => handleSendChatMessage(messageTerm)}
               >
                 Send
               </Button>

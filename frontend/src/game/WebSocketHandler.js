@@ -17,6 +17,7 @@ const WebSocketHandler = ({
   setWaiting,
   setStompClient,
   setChatMessages,
+  chatMessages,
   setChooseCard,
   setShowConfirmationModal,
   tempCardPlayed,
@@ -114,7 +115,7 @@ const WebSocketHandler = ({
                   ? body.player0Cards
                   : prevState.cards,
             }));
-            if (playerNumber == 0 && body.player0Cards.length === 8) {
+            if (playerNumber === 0 && body.player0Cards.length === 8) {
               setReadyForDiscard(true);
               setReceived(true);
             } else if (playerNumber == 1 && body.player1Cards.length === 8) {
@@ -171,9 +172,8 @@ const WebSocketHandler = ({
         }
       });
 
-      client.subscribe(`/topic/match/{id}/chat`, (message) => {
-        const body = JSON.parse(message.body);
-        setChatMessages((prevState) => [...prevState, body.message]);
+      client.subscribe(`/topic/chat/${matchId}`, (message) => {
+        fetchChatMessages();
       });
 
       setStompClient(client);
@@ -239,6 +239,29 @@ const WebSocketHandler = ({
       })
       .catch((error) => {
         console.error("Error fetching gunfighter:", error);
+      });
+  };
+
+  const fetchChatMessages = async () => {
+    await fetch(`/api/v1/chats/${matchId}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((chatMessages) => {
+        setChatMessages(chatMessages);
+      })
+      .catch((error) => {
+        console.error("Error fetching the chat:", error);
       });
   };
 
