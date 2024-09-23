@@ -17,7 +17,6 @@ const WebSocketHandler = ({
   setWaiting,
   setStompClient,
   setChatMessages,
-  chatMessages,
   setChooseCard,
   setShowConfirmationModal,
   tempCardPlayed,

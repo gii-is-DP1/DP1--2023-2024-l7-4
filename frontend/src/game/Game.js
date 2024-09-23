@@ -370,6 +370,7 @@ const WebSocketComponent = () => {
         setPlayed={setPlayed}
         setWaiting={setWaiting}
         setStompClient={setStompClient}
+        setChatMessages={setChatMessages}
         setChooseCard={setChooseCard}
         setShowConfirmationModal={setShowConfirmationModal}
         tempCardPlayed={tempCardPlayed}
