@@ -49,43 +49,45 @@ export default function CreateMatch() {
 
 
   function handleSubmit({ values }) {
-
     if (!creationFormRef.current.validate()) return;
 
     const request = {
-      name: values.name,
-      joinedPlayers: ([username]),
+        name: values.name,
+        joinedPlayers: [username],
     };
 
     fetch("/api/v1/matches", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request),
-    }).then(function (response) {
-      if (response.status === 201) {
-        return response.json();
-      } else {
-        throw new Error(`Error en la solicitud: ${response.status}`);
-      }
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    }).then(async (response) => {
+        if (response.status === 201) {
+            return response.json();
+        } else if (response.status === 403) {
+            const errorMessage = await response.text(); // Obtiene el mensaje del cuerpo de la respuesta
+            throw new Error(errorMessage || "Límite de partidas diarias alcanzado. Prueba a convertirte en HARDCORE para jugar sin limitaciones!!");
+        } else {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
     })
-      .then(function (data) {
+    .then((data) => {
         const id = data.id;
         if (stompClient && stompClient.connected) {
-          stompClient.send('/app/match/messages', {}, JSON.stringify({
-            type: 'CREATED',
-            message: 'Match created'
-          }));
+            stompClient.send('/app/match/messages', {}, JSON.stringify({
+                type: 'CREATED',
+                message: 'Match created'
+            }));
         }
         window.location.href = (`/match/${id}/waitingRoom`);
-      })
-      .catch((message) => {
-        alert(message);
-      });
-  }
+    })
+    .catch((error) => {
+        alert(error.message); // Muestra el mensaje adecuado
+    });
+}
 
   useEffect(() => {
   });

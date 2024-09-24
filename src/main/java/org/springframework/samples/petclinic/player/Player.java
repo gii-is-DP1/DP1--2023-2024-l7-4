@@ -74,5 +74,11 @@ public class Player extends User {
     @Column(name = "profile_type")
     @Enumerated(EnumType.STRING)
     ProfileType profileType;
+
+    @Column(name = "games_played_today")
+    Integer gamesPlayedToday;
+
+    @Column(name = "last_game_date")
+    LocalDate lastGameDate;
     
 }
