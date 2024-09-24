@@ -3,24 +3,24 @@ import SockJS from "sockjs-client";
 import Stomp from "stompjs";
 
 const WebSocketHandler = ({
-  username,
-  jwt,
-  matchId,
-  playerNumber,
-  setPlayerNumber,
-  setDeckOfCards,
-  setStatePlayer0,
-  setStatePlayer1,
-  setReadyForDiscard,
-  setReceived,
-  setShowCards,
-  setWaiting,
-  setStompClient,
-  setChatMessages,
-  setChooseCard,
-  setShowConfirmationModal,
-  tempCardPlayed,
-  setTempCardPlayed,
+    username,
+    jwt,
+    matchId,
+    playerNumber,
+    setPlayerNumber,
+    setDeckOfCards,
+    setStatePlayer0,
+    setStatePlayer1,
+    setReadyForDiscard,
+    setReceived,
+    setShowCards,
+    setWaiting,
+    setStompClient,
+    setChatMessages,
+    setChooseCard,
+    setShowConfirmationModal,
+    tempCardPlayed,
+    setTempCardPlayed,
     setPlayed,
 }) => {
 
@@ -73,10 +73,10 @@ const WebSocketHandler = ({
                 });
         };
 
-    if (matchId) handleAssignPlayers();
+        if (matchId) handleAssignPlayers();
 
-    const socket = new SockJS("http://localhost:8080/ws");
-    const client = Stomp.over(socket);
+        const socket = new SockJS("http://localhost:8080/ws");
+        const client = Stomp.over(socket);
 
         client.connect({}, () => {
             client.subscribe(`/topic/match/${matchId}/cards`, (message) => {
@@ -115,9 +115,19 @@ const WebSocketHandler = ({
                     case 'PLAYEDCARD':
                         if (playerNumber === 0 && body.playedCard1 !== -1) {
                             setTempCardPlayed(body.playedCard1);
+                        } else if (playerNumber !== 1 && body.playedCard1 !== -1) {
+                            setStatePlayer1(prevState => ({
+                                ...prevState,
+                                cardPlayed: body.playedCard1
+                            }))
                         }
                         if (playerNumber === 1 && body.playedCard0 !== -1) {
                             setTempCardPlayed(body.playedCard0);
+                        } else if (playerNumber !== 0 && body.playedCard0 !== -1) {
+                            setStatePlayer0(prevState => ({
+                                ...prevState,
+                                cardPlayed: body.playedCard0
+                            }))
                         }
                         break;
                     case 'CHOOSE':
@@ -138,17 +148,17 @@ const WebSocketHandler = ({
 
             client.subscribe(`/topic/chat/${matchId}`, (message) => {
                 fetchChatMessages();
-              });
+            });
 
-      setStompClient(client);
-    });
+            setStompClient(client);
+        });
 
-    return () => {
-      if (client && client.connected) {
-        client.disconnect();
-      }
-    };
-  }, [matchId, playerNumber]);
+        return () => {
+            if (client && client.connected) {
+                client.disconnect();
+            }
+        };
+    }, [matchId, playerNumber]);
 
     const updatePlayers = async () => {
         await fetch(`/api/v1/gunfighters/${matchId}/0`, {
@@ -209,7 +219,7 @@ const WebSocketHandler = ({
                 if (playerNumber === 1 && player1.cardPlayed === -1) {
                     setShowConfirmationModal(true);
                     setPlayed(false);
-                    
+
                 }
             })
             .catch(error => {
@@ -217,30 +227,30 @@ const WebSocketHandler = ({
             });
     };
 
-  const fetchChatMessages = async () => {
-    await fetch(`/api/v1/chats/${matchId}`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((chatMessages) => {
-        setChatMessages(chatMessages);
-      })
-      .catch((error) => {
-        console.error("Error fetching the chat:", error);
-      });
-  };
+    const fetchChatMessages = async () => {
+        await fetch(`/api/v1/chats/${matchId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((chatMessages) => {
+                setChatMessages(chatMessages);
+            })
+            .catch((error) => {
+                console.error("Error fetching the chat:", error);
+            });
+    };
 
-  return null;
+    return null;
 };
 
 export default WebSocketHandler;

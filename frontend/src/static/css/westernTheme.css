@@ -29,6 +29,12 @@ body {
     text-shadow: 1px 1px #8b4513;
 }
 
+.hero-div h2 {
+    font-family: 'Almendra SC', serif;
+    font-size: 1.0rem;
+    text-shadow: 1px 1px #8b4513;
+}
+
 .button-container {
 
     background-color: #8b4513 !important;

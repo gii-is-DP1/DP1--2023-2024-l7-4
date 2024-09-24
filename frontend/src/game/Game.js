@@ -11,7 +11,6 @@ import TopRow from '../components/modals/TopRow';
 import PlayerStats from '../util/game/playerStatsModal';
 import GameModals from '../components/modals/GameModals';
 import WebSocketHandler from './WebSocketHandler';
-import { useLocation } from 'react-router-dom';
 import { Button } from 'reactstrap';
 
 
@@ -64,9 +63,11 @@ const WebSocketComponent = () => {
 
   //UseEffect inicial para recibir las cartas
   useEffect(() => {
-    if (!received)
+    if (!received && (playerNumber === 1 || playerNumber === 0))
       handleSendDeckMessage('READY');
-  }, [stompClient, received]);
+    else
+      setShowCards(true)
+  }, [stompClient, received, playerNumber]);
 
 
   useEffect(() => {
@@ -377,23 +378,28 @@ const WebSocketComponent = () => {
         setTempCardPlayed={setTempCardPlayed}
       />
       <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
+      {playerNumber !== 1 && playerNumber !== 0 &&
+        <div>
+          Player 0
+        </div>}
       {playerNumber === 0 ?
-
         (intimidationCardInHand(statePlayer1.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
-        :
-        (intimidationCardInHand(statePlayer0.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
-
+        : playerNumber === 1 ?
+          (intimidationCardInHand(statePlayer0.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+          : ''
       }
-      <TopRow />
-      {playerNumber === 0 &&
+      {(playerNumber !== 0 && playerNumber !== 1) ?
+        <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer1.cards : statePlayer0.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
+        : <TopRow />}
+      {playerNumber === 0 ?
         <div className="middle-row">
           {chatMessages && (
             <div className="hero-div">
-              {chatMessages.slice(-3).map((message, index) => (
-                <h3 key={index}>
+              {chatMessages.slice(-5).map((message, index) => (
+                <h2 key={index}>
                   {message.playerNumber === playerNumber ? "You" : "Enemy"}:
                   {message.message}
-                </h3>
+                </h2>
               ))}
 
               <input
@@ -404,6 +410,7 @@ const WebSocketComponent = () => {
                 className="search-input"
               />
               <Button
+              className='button-container'
                 color="primary"
                 onClick={() => handleSendChatMessage(messageTerm)}
               >
@@ -415,39 +422,47 @@ const WebSocketComponent = () => {
           <CardButton className="middleright-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
           <CardButton className="right-button" imgSrc={rightButtonImg} />
         </div>
-      }
-      {playerNumber === 1 &&
-        <div className="middle-row">
-          {chatMessages && (
-            <div className="hero-div">
-              {chatMessages.slice(-3).map((message, index) => (
-                <h3 key={index}>
-                  {message.playerNumber === playerNumber ? "You" : "Enemy"}:
-                  {message.message}
-                </h3>
-              ))}
+        : playerNumber === 1 ?
+          <div className="middle-row">
+            {chatMessages && (
+              <div className="hero-div">
+                {chatMessages.slice(-5).map((message, index) => (
+                  <h2 key={index}>
+                    {message.playerNumber === playerNumber ? "You" : "Enemy"}:
+                    {message.message}
+                  </h2>
+                ))}
 
-              <input
-                type="text"
-                placeholder="Write a message..."
-                value={messageTerm}
-                onChange={handleMessageChange}
-                className="search-input"
-              />
-              <Button
-                color="primary"
-                onClick={() => handleSendChatMessage(messageTerm)}
-              >
-                Send
-              </Button>
-            </div>
-          )}
-          <CardButton className="middleleft-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-          <CardButton className="middleright-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
-          <CardButton className="right-button" imgSrc={rightButtonImg} />
-        </div>
+                <input
+                  type="text"
+                  placeholder="Write a message..."
+                  value={messageTerm}
+                  onChange={handleMessageChange}
+                  className="search-input"
+                />
+                <Button
+                  color="primary"
+                  onClick={() => handleSendChatMessage(messageTerm)}
+                  className='button-container'
+                >
+                  Send
+                </Button>
+              </div>
+            )}
+            <CardButton className="middleleft-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+            <CardButton className="middleright-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+            <CardButton className="right-button" imgSrc={rightButtonImg} />
+          </div> :
+          <div>
+            <CardButton className="middleleft-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+            <CardButton className="middleright-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+          </div>
       }
       <PlayerStats health={playerNumber === 0 ? statePlayer0.health : statePlayer1.health} bullets={playerNumber === 0 ? statePlayer0.bullets : statePlayer1.bullets} precision={playerNumber === 0 ? statePlayer0.precision : statePlayer1.precision} />
+      {playerNumber !== 1 && playerNumber !== 0 &&
+        <div>
+          Player 1
+        </div>}
       <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer0.cards : statePlayer1.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
       <GameModals
         showConfirmationModal={showConfirmationModal && chooseCard === 0}

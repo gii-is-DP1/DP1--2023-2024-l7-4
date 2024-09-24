@@ -80,7 +80,8 @@ const GameModals = ({
             <Modal isOpen={showEndModal}>
                 <ModalHeader>THE GAME HAS ENDED</ModalHeader>
                 <ModalBody>
-                    {(playerNumber === 0 && statePlayer0.health > 0) || (playerNumber === 1 && statePlayer1.health > 0) ? 'YOU WON!!' : 'YOU LOST :('}
+                    {(playerNumber === 0 && statePlayer0.health > 0) || (playerNumber === 1 && statePlayer1.health > 0) ? 'YOU WON!!' : 
+                    playerNumber !== 1 && playerNumber !== 0?(statePlayer0.health < 0? 'PLAYER 0 LOST': 'PLAYER 1 LOST'): 'YOU LOST :('}
                 </ModalBody>
                 <ModalFooter>
                     <Button color="danger" onClick={handleGoToLobby}>Go to lobby</Button>
