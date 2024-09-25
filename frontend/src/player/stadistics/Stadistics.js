@@ -1,9 +1,8 @@
-import {Button,Container,Row,Col} from "reactstrap";
+import {Button,Container} from "reactstrap";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
 export default function PlayerStadisticList() {
-  const [, set] = useState([]);
 
   return (
     <div className='admin-page-container'>
