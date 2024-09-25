@@ -69,7 +69,7 @@ export default function CreateMatch() {
             return response.json();
         } else if (response.status === 403) {
             const errorMessage = await response.text(); // Obtiene el mensaje del cuerpo de la respuesta
-            throw new Error(errorMessage || "Límite de partidas diarias alcanzado. Prueba a convertirte en HARDCORE para jugar sin limitaciones!!");
+            throw new Error(errorMessage || "Daily game limit reached. Try becoming HARDCORE to play without limitations!!");
         } else {
             throw new Error(`Error en la solicitud: ${response.status}`);
         }
