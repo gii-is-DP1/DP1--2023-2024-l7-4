@@ -55,6 +55,10 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink className='western-navlink' tag={Link} to="/players">Players</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/myFriends">Friends</NavLink>
+
+                    </NavItem>
                 </>
             )
         }

@@ -15,7 +15,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -42,7 +41,7 @@ public class Match extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MatchState matchState;
 
-    @Column(name="deck")
+    @Column(name = "deck")
     private List<Integer> deck;
     
     @Column(name="playedCards1")
@@ -55,10 +54,10 @@ public class Match extends BaseEntity {
     private String winner;
 
     @Column(name = "start_date")
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
     private LocalDateTime startDate;
 
     @Column(name = "finish_date")
-	@DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
+    @DateTimeFormat(pattern = "yyyy/MM/dd HH/mm/ss")
     private LocalDateTime finishDateTime;
 }

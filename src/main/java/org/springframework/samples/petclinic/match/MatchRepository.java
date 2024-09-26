@@ -26,4 +26,7 @@ public interface MatchRepository extends CrudRepository<Match, Integer> {
     @Query("SELECT m FROM Match m WHERE m.matchState IN (OPEN)")
     public Collection<Match> findAllOpen();
 
+    @Query("SELECT m FROM Match m WHERE m.matchState IN (IN_PROGRESS)")
+    public Collection<Match> findAllInProgress();
+
 }

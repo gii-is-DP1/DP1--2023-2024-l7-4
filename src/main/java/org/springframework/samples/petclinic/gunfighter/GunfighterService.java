@@ -32,10 +32,19 @@ public class GunfighterService {
         gunfighter.setPrecisionChange(true);
         gunfighter.setBulletsChange(true);
         gunfighter.setIntimidationCardInHand(gunfighter.getCards().contains(45));
+        gunfighter.setInsidious(
+                gunfighter.getInsidious() > 0 ? gunfighter.getInsidious() - 1 : gunfighter.getInsidious());
         gunfighter.setFailing(gunfighter.getFailing() > 0 ? gunfighter.getFailing() - 1 : gunfighter.getFailing());
         gunfighter.setWinPrecision(
                 gunfighter.getWinPrecision() > 0 ? gunfighter.getWinPrecision() - 1 : gunfighter.getWinPrecision());
         this.save(gunfighter);
-            }
-    
+    }
+
+    @Transactional
+    public void resetPartialState(Gunfighter gunfighter) {
+        gunfighter.setCardPlayedBefore(gunfighter.getCardPlayed());
+        gunfighter.setCardPlayed(-1);
+        this.save(gunfighter);
+    }
+
 }
