@@ -261,20 +261,7 @@ public class MatchService {
         return res;
     }
 
-    // Tiempo medio jugado
-    @Transactional(readOnly = true)
-    public Double averageTimePlayedByUserName(Integer u) throws DataAccessException {
-        String userName = userRepository.findById(u).get().getUsername();
-        List<Double> timePlayedForMatchesByPlayer = new ArrayList<>();
-        List<Match> matches = findMatchsByPlayer(userName);
-        for (Match m : matches) {
-            Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
-            timePlayedForMatchesByPlayer.add(tiempo);
-        }
-        Double res = timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
-        return res / matches.size();
-    }
-            //Tiempo medio jugado
+    //Tiempo medio jugado
      @Transactional(readOnly = true)
      public Double averageTimePlayedByUserName(Integer u) throws DataAccessException {
          String userName= userRepository.findById(u).get().getUsername();
@@ -289,6 +276,7 @@ public class MatchService {
          Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
          return res/matches.size();
      }
+
      @Transactional(readOnly = true)
      public Map<String, String> maxPlayerPlayedByUserName(Integer u) throws DataAccessException {
          String userName= userRepository.findById(u).get().getUsername();
@@ -314,6 +302,8 @@ public class MatchService {
 
     return response;
     }
+
+    
     @Transactional(readOnly = true)
         public Map<String, Integer> maxWinnerPlayer() throws DataAccessException {
             Collection<Match> closedMatches=matchRepository.findMatchsClosed();

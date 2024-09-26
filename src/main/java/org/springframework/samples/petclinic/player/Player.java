@@ -69,4 +69,6 @@ public class Player extends User {
     @Size(max=50)
     String favoriteSagas;
     
+    Boolean online = false;
+
 }
