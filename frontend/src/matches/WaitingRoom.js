@@ -38,6 +38,8 @@ export default function WaitingRoom() {
   const [match, setMatch] = useState([]);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
+  const [selectedMode, setSelectedMode] = useState(null);
+
   const [friendsOnline, setFriendsOnline] = useFetchState(
     [],
     `/api/v1/players/${playerId}/friends/online`,
@@ -286,7 +288,7 @@ export default function WaitingRoom() {
   const handleCancelLeave = () => {
     setShowConfirmationModal(false);
   };
-  async function handleSendGameRequest(friend) {
+  async function handleSendGameRequest(friend, selectedMode) {
     try {
       const id = getIdFromUrl(2);
 
@@ -295,6 +297,7 @@ export default function WaitingRoom() {
         matchId: id,
         playerOne: String(playerId),
         playerTwo: friend,
+        type: selectedMode,
       };
 
       const response = await axios.post(`/api/v1/gameRequests`, gamerequest, {
@@ -369,15 +372,33 @@ export default function WaitingRoom() {
                                 </option>
                               ))}
                             </select>
+
                             {selectedFriend && (
-                              <button
-                                onClick={() =>
-                                  handleSendGameRequest(selectedFriend) &&
-                                  setShowDropdown(null)
-                                }
-                              >
-                                Send
-                              </button>
+                              <>
+                                <select
+                                  onChange={(e) =>
+                                    setSelectedMode(e.target.value)
+                                  } // Nuevo estado para guardar el modo
+                                >
+                                  <option value="">Select Mode</option>
+                                  <option value="player">Player</option>
+                                  <option value="spectator">Spectator</option>
+                                </select>
+                                {console.log(selectedMode)}
+                                {selectedMode && ( // Mostrar el botón solo si se ha seleccionado el modo
+                                  <button
+                                    onClick={() => {
+                                      handleSendGameRequest(
+                                        selectedFriend,
+                                        selectedMode
+                                      ); // Enviar el modo también
+                                      setShowDropdown(null);
+                                    }}
+                                  >
+                                    Send
+                                  </button>
+                                )}
+                              </>
                             )}
                           </>
                         )}

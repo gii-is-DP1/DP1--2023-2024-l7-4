@@ -50,38 +50,6 @@ public class RequestRestController {
         return new ResponseEntity<>(pendingRequests, HttpStatus.OK);
     }
 
-    // @PostMapping()
-    // @ResponseStatus(HttpStatus.CREATED)
-    // public ResponseEntity<Request> create(@RequestBody @Valid Request request)
-    // throws URISyntaxException {
-    // System.out.println("------------------------------------ Request: " +
-    // request);
-
-    // if (request.getPlayerOne() == null || request.getPlayerTwo() == null) {
-    // return ResponseEntity.badRequest().body(null);
-    // }
-
-    // Player playerOne =
-    // playerService.findByUsername(request.getPlayerOne().getUsername());
-    // Player playerTwo =
-    // playerService.findByUsername(request.getPlayerTwo().getUsername());
-
-    // System.out.println("Player One: " + playerOne);
-    // System.out.println("Player Two: " + playerTwo);
-
-    // if (playerOne == null || playerTwo == null) {
-    // return ResponseEntity.badRequest().body(null);
-    // }
-
-    // Request newRequest = new Request();
-    // newRequest.setPlayerOne(playerOne);
-    // newRequest.setPlayerTwo(playerTwo);
-    // newRequest.setStatus(RequestState.PENDING);
-
-    // Request savedRequest = requestService.saveRequest(newRequest);
-    // return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
-    // }
-
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Request> create(@RequestBody @Valid RequestDTO requestDTO) throws URISyntaxException {
@@ -123,17 +91,7 @@ public class RequestRestController {
         return new ResponseEntity<>(this.requestService.acceptRequest(updatedRequest, requestId), HttpStatus.OK);
     }
 
-    // @DeleteMapping(value = "{requestId}")
-    // @ResponseStatus(HttpStatus.OK)
-    // public ResponseEntity<MessageResponse> delete(@PathVariable("requestId")
-    // Integer requestId) {
-    // RestPreconditions.checkNotNull(requestService.findRequestById(requestId),
-    // "Request", "ID", requestId);
-    // requestService.rejectRequest(requestService.findRequestById(requestId));
-
-    // return new ResponseEntity<>(new MessageResponse("Request deleted!"),
-    // HttpStatus.OK);
-    // }
+    
 
     @DeleteMapping(value = "{requestId}")
     public ResponseEntity<Void> delete(@PathVariable("requestId") Integer requestId) {

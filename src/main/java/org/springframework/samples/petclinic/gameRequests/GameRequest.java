@@ -32,4 +32,8 @@ public class GameRequest extends BaseEntity {
 
     Integer matchId;
 
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    GameRequestType type = GameRequestType.PLAYER;
+
 }

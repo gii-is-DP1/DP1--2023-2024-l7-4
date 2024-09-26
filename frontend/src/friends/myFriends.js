@@ -99,6 +99,23 @@ export default function MyFriends() {
     }
   }
 
+  async function updateRequests() {
+    try {
+      const response = await fetch(`/api/v1/requests`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const newRequests = await response.json();
+      setRequests(newRequests);
+    } catch (error) {
+      console.error("Error fetching new requests:", error);
+    }
+  }
+
   async function updatePendingGameRequests() {
     try {
       const response = await fetch(
@@ -141,11 +158,13 @@ export default function MyFriends() {
       setFriends([]);
       setMyGamesRequests([]);
       setPendingRequests([]);
+      setRequests([]);
 
       const updateAll = () => {
         updateFriends();
         updatePendingGameRequests();
         updatePendingRequests();
+        updateRequests();
       };
 
       const intervalId = setInterval(updateAll, 5000);
@@ -289,6 +308,7 @@ export default function MyFriends() {
         matchId: gameRequest.matchId,
         playerOne: gameRequest.playerOne,
         playerTwo: gameRequest.playerTwo,
+        type: gameRequest.type,
       };
 
       const response = await axios.put(
@@ -307,29 +327,34 @@ export default function MyFriends() {
         setMyGamesRequests((prevRequest) =>
           prevRequest.filter((gamerequest) => gamerequest.id !== gameRequest.id)
         );
-        console.log(gameRequest.playerOne.username);
-        // Hacer join a la partida con el ID proporcionado
-        const joinResponse = await axios.put(
-          `/api/v1/matches/${gameRequest.matchId}/join`,
-          // gameRequest.playerOne.username,
-          gameRequest.playerTwo.username,
 
-          {
-            headers: {
-              Authorization: `Bearer ${jwt}`,
-              "Content-Type": "application/json",
-            },
+        if (gameRequest.type === "PLAYER") {
+          // Hacer join a la partida con el ID proporcionado
+          const joinResponse = await axios.put(
+            `/api/v1/matches/${gameRequest.matchId}/join`,
+            // gameRequest.playerOne.username,
+            gameRequest.playerTwo.username,
+
+            {
+              headers: {
+                Authorization: `Bearer ${jwt}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          console.log(joinResponse);
+          if (joinResponse.status === 201) {
+            window.location.href = `/match/${gameRequest.matchId}/waitingRoom`;
+            console.log("Successfully joined the match!");
+          } else {
+            throw new Error("Hubo un error al unirte a la partida.");
           }
-        );
-        console.log(joinResponse);
-        if (joinResponse.status === 201) {
-          window.location.href = `/match/${gameRequest.matchId}/waitingRoom`;
-          console.log("Successfully joined the match!");
         } else {
-          throw new Error("Hubo un error al unirte a la partida.");
+          window.location.href = `/game/${gameRequest.matchId}`;
         }
-      } else {
-        throw new Error("Hubo un error al actualizar la solicitud.");
+        // else {
+        //   throw new Error("Hubo un error al actualizar la solicitud.");
+        // }}
       }
     } catch (error) {
       console.error(error);
@@ -363,6 +388,8 @@ export default function MyFriends() {
 
   const handleRemoveFriend = async (friendId) => {
     try {
+      updateFriends();
+      updateRequests();
       const request = requests.find(
         (request) =>
           (request.playerOne.id === playerId &&
@@ -468,6 +495,7 @@ export default function MyFriends() {
             {myGamesRequests.map((myGameRequest) => (
               <div className="list-friends" key={myGameRequest.id}>
                 {myGameRequest.playerOne.name}
+                <div className="list-friends"> Mode: {myGameRequest.type}</div>
                 <div>
                   <Button
                     onClick={() => handleAcceptGameRequest(myGameRequest)}

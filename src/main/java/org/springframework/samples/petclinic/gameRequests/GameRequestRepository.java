@@ -15,4 +15,7 @@ public interface GameRequestRepository extends CrudRepository<GameRequest, Integ
     @Query("SELECT g FROM GameRequest g WHERE g.playerTwo.id = :id AND g.status = 'PENDING'")
     public List<GameRequest> findReceivedGameRequest(Integer id);
 
+    @Query("SELECT g FROM GameRequest g WHERE g.id = :id")
+    public GameRequest findById(int id);
+
 }
