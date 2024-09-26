@@ -1,6 +1,8 @@
 package org.springframework.samples.petclinic.match;
 
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -15,6 +17,7 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.player.Player;
@@ -87,11 +90,13 @@ public class MatchServiceTests {
 		gunfighter1.setId(1);
 		gunfighter1.setMatch(match1);
 		gunfighter1.setPlayer(player1);
+		gunfighter1.setCardPlayed(28);
 
 		gunfighter2 = new Gunfighter();
 		gunfighter2.setId(2);
 		gunfighter2.setMatch(match2);
 		gunfighter2.setPlayer(player2);
+		gunfighter2.setCardPlayed(51);
 
 	}
 
@@ -155,12 +160,22 @@ public class MatchServiceTests {
 	}
 
 	@Test
-	@Transactional
 	void shouldDealInitialCards() {
 		matchService.initialDeal(match1, gunfighter1, gunfighter2);
 
 		assertEquals(8, gunfighter2.getCards().size());
 		assertEquals(8, gunfighter1.getCards().size());
+	}
+
+	@Test 
+	@Transactional
+	void shouldActionSingleCard(){
+		Integer prevBullets = gunfighter1.getBullets();
+		matchService.initialDeal(match1, gunfighter1, gunfighter2);
+
+		matchService.actionSingleCard(match1, gunfighter1, gunfighter2);
+
+		assertNotEquals(prevBullets, gunfighter1.getBullets());
 	}
 
 }

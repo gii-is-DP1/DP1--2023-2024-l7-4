@@ -190,8 +190,8 @@ export default function Home() {
 
                     if (allFriendsInMatch) {
                       return (
-                        <Link key={match.id} to={`/game/${match.id}`}>
-                          Espectar
+                        <Link className='button-container' key={match.id} to={`/game/${match.id}`}>
+                          Spectate game
                         </Link>
                       );
                     }
