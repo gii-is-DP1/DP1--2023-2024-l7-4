@@ -27,9 +27,10 @@ public class RequestService {
     }
 
     @Transactional(readOnly = true)
-    public Request findRequestById(int id) throws ResourceNotFoundException {
-        return this.requestRepository.findById(id).orElseThrow(null);
-    }
+	public Request findRequestById(int id) throws DataAccessException {
+    		return requestRepository.findById(id)
+        		.orElseThrow(() -> new ResourceNotFoundException("Request with ID " + id + " not found"));
+}
 
     @Transactional(readOnly = true)
     public List<Request> findRecievedRequest(Integer id) throws DataAccessException {
