@@ -395,7 +395,7 @@ const WebSocketComponent = () => {
         <div className="middle-row">
           {chatMessages && (
             <div className="hero-div">
-              {chatMessages.slice(-10).map((message, index) => (
+              {chatMessages.slice(-7).map((message, index) => (
                 <h2 key={index}>
                   {message.playerNumber === playerNumber ? "You" : "Enemy"}:
                   {message.message}
@@ -426,7 +426,7 @@ const WebSocketComponent = () => {
           <div className="middle-row">
             {chatMessages && (
               <div className="hero-div">
-                {chatMessages.slice(-10).map((message, index) => (
+                {chatMessages.slice(-7).map((message, index) => (
                   <h2 key={index}>
                     {message.playerNumber === playerNumber ? "You" : "Enemy"}:
                     {message.message}
