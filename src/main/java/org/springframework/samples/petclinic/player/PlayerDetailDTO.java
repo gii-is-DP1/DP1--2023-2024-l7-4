@@ -18,4 +18,5 @@ public class PlayerDetailDTO {
     private String favoriteGenres;
     private String favoritePlatforms;
     private String favoriteSagas;
+    private ProfileType profileType;
 }

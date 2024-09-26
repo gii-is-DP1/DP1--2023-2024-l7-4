@@ -63,7 +63,7 @@ export default function Register() {
   });
 
   return (
-    <div className="auth-page-container">
+    <div className="auth-page-container5">
       <div className="hero-div">
         <h1 className="text-center">Register</h1>
         <div className="western-form-container2">

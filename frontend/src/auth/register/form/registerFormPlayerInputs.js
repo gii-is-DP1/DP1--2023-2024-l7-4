@@ -1,8 +1,7 @@
 import { formValidators } from "../../../validators/formValidators";
 
 export const registerFormPlayerInputs = [
-
-    {
+  {
     tag: "Name",
     name: "name",
     type: "text",
@@ -27,6 +26,30 @@ export const registerFormPlayerInputs = [
     validators: [formValidators.notEmptyValidator],
   },
   {
+    tag: "Email",
+    name: "email",
+    type: "text",
+    defaultValue: "",
+    isRequired: true,
+    validators: [formValidators.notEmptyValidator],
+  },
+  {
+    tag: "Username",
+    name: "username",
+    type: "text",
+    defaultValue: "",
+    isRequired: true,
+    validators: [formValidators.notEmptyValidator],
+  },
+  {
+    tag: "Password",
+    name: "password",
+    type: "password",
+    defaultValue: "",
+    isRequired: true,
+    validators: [formValidators.notEmptyValidator],
+  },
+  {
     tag: "Avatar",
     name: "avatar",
     type: "text",
@@ -35,27 +58,60 @@ export const registerFormPlayerInputs = [
     validators: [formValidators.notEmptyValidator],
   },
   {
-    tag: "Email",
-    name: "email",
+    tag: "Biography",
+    name: "biography",
     type: "text",
     defaultValue: "",
-    isRequired: true,
-    validators: [formValidators.notEmptyValidator]
+    isRequired: false, 
+    validators: [],
   },
   {
-    tag: "Username",
-    name: "username",
+    tag: "Location",
+    name: "location",
     type: "text",
     defaultValue: "",
-    isRequired: true,
-    validators: [formValidators.notEmptyValidator]
+    isRequired: true, 
+    validators: [formValidators.notEmptyValidator],
   },
   {
-    tag: "Password",
-    name: "password",
-    type: "password",
+    tag: "Birthdate",
+    name: "birthdate",
+    type: "date",
     defaultValue: "",
+    isRequired: false, 
+    validators: [],
+  },
+  {
+    tag: "Favorite Genres",
+    name: "favoriteGenres",
+    type: "text",
+    defaultValue: "",
+    isRequired: false, 
+    validators: [],
+  },
+  {
+    tag: "Favorite Platforms",
+    name: "favoritePlatforms",
+    type: "text",
+    defaultValue: "",
+    isRequired: false, 
+    validators: [],
+  },
+  {
+    tag: "Favorite Sagas",
+    name: "favoriteSagas",
+    type: "text",
+    defaultValue: "",
+    isRequired: false, 
+    validators: [],
+  },
+  {
+    tag: "Profile Type",
+    name: "profileType",
+    type: "select", 
+    values: ["CASUAL", "HARDCORE"],
+    defaultValue: "CASUAL", 
     isRequired: true,
-    validators: [formValidators.notEmptyValidator]
+    validators: [formValidators.notEmptyValidator],
   }
 ];
