@@ -317,6 +317,7 @@ public class MatchService {
         Map<Integer, Integer> cardCount  = new HashMap<>();
          for (Match match : closedMatches) {
             List<String> players = match.getJoinedPlayers();
+            if(players.contains(userName)){
                 if(players.get(0).equals(userName)){
                     List<Integer> playedCards = match.getPlayedCards0();
                     if (playedCards != null){
@@ -330,6 +331,7 @@ public class MatchService {
                         for (Integer card : playedCards) {
                             cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
                         }
+                     }
                     }
                 }
         }
@@ -343,6 +345,7 @@ public class MatchService {
 
     return response;
     }
+    
     @Transactional(readOnly = true)
     public Map<String, Integer> maxWinnerPlayer() throws DataAccessException {
         Collection<Match> closedMatches=matchRepository.findMatchsClosed();
