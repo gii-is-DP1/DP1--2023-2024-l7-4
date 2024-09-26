@@ -12,17 +12,17 @@ INSERT INTO appusers(id, username, password, authority) VALUES (8, 'player5', '$
 INSERT INTO appusers(id, username, password, authority) VALUES (9, 'player6', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
 
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date) VALUES 
-(4, 'Daniel', 'Fernandez Caballero', 'https://pbs.twimg.com/profile_images/1875354853/actor_400x400.jpg', 'sudani', 'danifercaba@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars', 'CASUAL', null, null);
+(4, 'Daniel', 'Fernandez Caballero', 'https://pbs.twimg.com/profile_images/1875354853/actor_400x400.jpg', 'sudani', 'danifercaba@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', null, 'CASUAL', null, null);
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date) VALUES 
-(5, 'Francisco', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sucapo', 'capot@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars', 'HARDCORE', null, null);
+(5, 'Francisco', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sucapo', 'capot@gmail.com', 'I like football.', 'Sevilla', '2003-06-17', 'Comedia', null, 'Harry Potter, Dune', 'HARDCORE', null, null);
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date) VALUES 
-(6, 'Alvaro', 'Martin Muñoz', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sualva', 'alvaro@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars', 'HARDCORE', null, null);
+(6, 'Alvaro', 'Martin Muñoz', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sualva', 'alvaro@gmail.com', null, 'Badajoz', '1998-01-12', 'Accion, Aventuras', 'HBO', 'Piratas del Caribe', 'HARDCORE', null, null);
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date) VALUES 
-(7, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars', 'HARDCORE', null, null);
+(7, 'Pepe', 'Fernandez Caballero', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'supepe', 'total_score@gmail.com', 'I am studying PE', 'Barcelona', null, 'Terror', 'Prime Video, IMDB', 'El Senor de los Anillos', 'HARDCORE', null, null);
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date) VALUES 
-(8, 'Conrado', 'Menendez Marquez', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars', 'HARDCORE', null, null);
+(8, 'Conrado', 'Menendez Marquez', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'suconra', 'conrado@gmail.com', 'I have four cats', 'Valencia', '2000-01-28', null, 'Netflix', 'Star Wars', 'HARDCORE', null, null);
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date) VALUES 
-(9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', 'Star Wars', 'HARDCORE', null, null);
+(9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'I do not know what is this', 'Don Benito', '2012-02-13', 'Drama', 'Disney Plus', null, 'HARDCORE', null, null);
 
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (1, 'Match 1',null,null, 'IN_PROGRESS', null);
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (2, 'Match 2',null,null, 'CLOSED', null);
