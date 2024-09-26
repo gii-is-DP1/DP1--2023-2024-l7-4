@@ -379,7 +379,7 @@ const WebSocketComponent = () => {
       />
       <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
       {playerNumber !== 1 && playerNumber !== 0 &&
-        <div>
+        <div className='western-message2'>
           Player 0
         </div>}
       {playerNumber === 0 ?
@@ -410,7 +410,7 @@ const WebSocketComponent = () => {
                 className="search-input"
               />
               <Button
-              className='button-container'
+                className='button-container'
                 color="primary"
                 onClick={() => handleSendChatMessage(messageTerm)}
               >
@@ -460,7 +460,7 @@ const WebSocketComponent = () => {
       }
       <PlayerStats health={playerNumber === 0 ? statePlayer0.health : statePlayer1.health} bullets={playerNumber === 0 ? statePlayer0.bullets : statePlayer1.bullets} precision={playerNumber === 0 ? statePlayer0.precision : statePlayer1.precision} />
       {playerNumber !== 1 && playerNumber !== 0 &&
-        <div>
+        <div className='western-message2'>
           Player 1
         </div>}
       <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer0.cards : statePlayer1.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
