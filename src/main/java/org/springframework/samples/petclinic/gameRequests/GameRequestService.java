@@ -23,7 +23,7 @@ public class GameRequestService {
 
     @Transactional(readOnly = true)
     public GameRequest findById(int id) {
-        return gameRequestRepository.findById(id).orElse(null);
+        return gameRequestRepository.findById(id);
     }
 
     @Transactional(readOnly = true)

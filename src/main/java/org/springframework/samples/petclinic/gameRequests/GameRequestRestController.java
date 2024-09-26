@@ -76,11 +76,13 @@ public class GameRequestRestController {
         if (playerOne == null || playerTwo == null) {
             return ResponseEntity.badRequest().body(null);
         }
-
+        System.out.println("------------" + gameRequestDTO.getType());
         GameRequest newRequest = new GameRequest();
         newRequest.setPlayerOne(playerOne);
         newRequest.setPlayerTwo(playerTwo);
         newRequest.setStatus(GameRequestStatus.PENDING);
+        newRequest.setType(
+                gameRequestDTO.getType().contains("player") ? GameRequestType.PLAYER : GameRequestType.ESPECTATOR);
         newRequest.setMatchId(m.getId());
 
         GameRequest savedRequest = gameRequestService.saveRequest(newRequest);
@@ -97,6 +99,7 @@ public class GameRequestRestController {
         updatedGameRequest.setPlayerOne(g.getPlayerOne());
         updatedGameRequest.setPlayerTwo(g.getPlayerTwo());
         updatedGameRequest.setStatus(GameRequestStatus.ACCEPTED);
+        updatedGameRequest.setType(g.getType());
         return new ResponseEntity<>(this.gameRequestService.acceptRequest(updatedGameRequest, gameRequestId),
                 HttpStatus.OK);
     }

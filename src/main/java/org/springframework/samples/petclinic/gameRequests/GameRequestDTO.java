@@ -15,6 +15,9 @@ public class GameRequestDTO {
     @NotNull
     private String matchId;
 
+    @NotNull
+    private String type;
+
     // Getters y setters
 
     public String getPlayerOne() {
@@ -45,8 +48,16 @@ public class GameRequestDTO {
         return matchId;
     }
 
-    public void setMathId(String matchId) {
+    public void setMatchId(String matchId) {
         this.matchId = matchId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
