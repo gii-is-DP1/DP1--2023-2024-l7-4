@@ -133,6 +133,7 @@ public class PlayerRestController {
     	dto.setFavoriteGenres(player.getFavoriteGenres());
     	dto.setFavoritePlatforms(player.getFavoritePlatforms());
     	dto.setFavoriteSagas(player.getFavoriteSagas());
+		dto.setProfileType(player.getProfileType());
 
     	return new ResponseEntity<>(dto, HttpStatus.OK);
 	}

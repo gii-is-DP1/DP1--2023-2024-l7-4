@@ -18,6 +18,7 @@ export default function PlayerEditAdmin() {
     username: "",
     password: "",
     authority: "PLAYER",
+    profileType: "CASUAL",  
   };
   const id = getIdFromUrl(2);
   const [message, setMessage] = useState(null);
@@ -32,14 +33,11 @@ export default function PlayerEditAdmin() {
     id
   );
 
-
-
   useEffect(() => {
     if (!visible && isSuccessful) {
       window.location.href = "/players";
     }
   }, [visible, isSuccessful]);
-
 
   function handleChange(event) {
     const target = event.target;
@@ -77,7 +75,7 @@ export default function PlayerEditAdmin() {
   const modal = getErrorModal(setVisible, visible, message);
 
   return (
-    <div className="auth-page-container3">
+    <div className="auth-page-container5">
       <div className="hero-div">
         {<h1>{player.id ? "Edit" : "New"}</h1>}
         {modal}
@@ -153,6 +151,13 @@ export default function PlayerEditAdmin() {
                 <Label for="favoriteSagas">Favorite Sagas</Label>
                 <Input type="text" name="favoriteSagas" id="favoriteSagas" value={player.favoriteSagas || ""}
                   onChange={handleChange} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="profileType">Profile Type</Label>
+                <Input type="select" required name="profileType" id="profileType" value={player.profileType || "CASUAL"} onChange={handleChange}>
+                  <option value="HARDCORE">HARDCORE</option>
+                  <option value="CASUAL">CASUAL</option>
+                </Input>
               </FormGroup>
             </div>
           </div>

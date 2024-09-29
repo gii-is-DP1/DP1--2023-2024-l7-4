@@ -1,6 +1,7 @@
 package org.springframework.samples.petclinic.match;
 
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,9 @@ import org.springframework.samples.petclinic.gunfighter.GunfighterService;
 import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
 import org.springframework.samples.petclinic.match.messages.MatchMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
+import org.springframework.samples.petclinic.player.ProfileType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -82,6 +85,29 @@ public class MatchRestController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> create(@RequestBody @Valid Match match) throws URISyntaxException {
+        String username = match.getJoinedPlayers().get(0);
+        Player player = playerService.findByUsername(username);
+
+        if (player.getProfileType() == ProfileType.CASUAL) {
+            LocalDate today = LocalDate.now();
+
+            if (player.getLastGameDate() == null || !player.getLastGameDate().isEqual(today)) {
+                player.setGamesPlayedToday(0);
+                player.setLastGameDate(today);
+            }
+
+            if (player.getGamesPlayedToday() == null) {
+                player.setGamesPlayedToday(0);
+            }
+
+            if (player.getGamesPlayedToday() >= 2) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+
+            player.setGamesPlayedToday(player.getGamesPlayedToday() + 1);
+            playerService.savePlayer(player);
+        }
+
         Match newMatch = new Match();
         BeanUtils.copyProperties(match, newMatch, "id", "matchState");
         newMatch.setMatchState(MatchState.OPEN);
@@ -89,6 +115,7 @@ public class MatchRestController {
 
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
     // FUNCION PARA JOIN
 
     @PutMapping("/{id}/join")
@@ -119,6 +146,7 @@ public class MatchRestController {
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
 
     @PatchMapping("/{id}/winner")
     @ResponseStatus(HttpStatus.CREATED)
@@ -168,9 +196,18 @@ public class MatchRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable(name = "id") int id) {
+        Match match = matchService.findMatchById(id);
+        if (match == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+        String creator = match.getJoinedPlayers().get(0);
+        Player player = playerService.findByUsername(creator);
+        player.setGamesPlayedToday(player.getGamesPlayedToday() - 1);
+        playerService.savePlayer(player); 
         matchService.deleteMatch(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
     @MessageMapping("/match/messages")
     @SendTo("/topic/match/messages")

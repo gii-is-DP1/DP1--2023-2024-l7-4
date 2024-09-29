@@ -22,6 +22,7 @@ const WebSocketHandler = ({
     tempCardPlayed,
     setTempCardPlayed,
     setPlayed,
+    setTypePlayer
 }) => {
 
 
@@ -47,6 +48,24 @@ const WebSocketHandler = ({
         }
     }, [tempCardPlayed, playerNumber]);
 
+    const handleAssignTypePlayer = async (username) => {
+       const player = await fetch(`/api/v1/players/username/${username}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+        return player;
+    }
+
     useEffect(() => {
         const handleAssignPlayers = async () => {
             await fetch(`/api/v1/matches/${matchId}`, {
@@ -67,7 +86,10 @@ const WebSocketHandler = ({
                 .then(matchPlayerList => {
                     if (matchPlayerList.includes(username))
                         setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
-                })
+                    return matchPlayerList;
+                }).then(matchPlayerList => {
+                    return handleAssignTypePlayer(matchPlayerList[playerNumber]);
+                }).then(player => setTypePlayer(player.profileType))
                 .catch(error => {
                     console.error('Error fetching match:', error);
                 });
