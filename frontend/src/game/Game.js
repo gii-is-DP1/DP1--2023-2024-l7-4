@@ -15,21 +15,22 @@ import { Button } from 'reactstrap';
 
 
 const WebSocketComponent = () => {
-    const jwt = tokenService.getLocalAccessToken();
-    const username = jwt ? jwtDecode(jwt).sub : "null";
-    const [playerNumber, setPlayerNumber] = useState(null);
-    const [received, setReceived] = useState(false);
-    const [rightButtonImg, setRightButtonImg] = useState('');
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-    const [showCards, setShowCards] = useState(false);
-    const [showEndModal, setShowEndModal] = useState(false);
-    const [chooseCard, setChooseCard] = useState(0);
-    const [tempCardPlayed, setTempCardPlayed] = useState(0);
-    const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
-    const [messageTerm, setMessageTerm] = useState("");
-    const [chatMessages, setChatMessages] = useState([]);
-    const [timeElapsed, setTimeElapsed] = useState(0);
-
+  const jwt = tokenService.getLocalAccessToken();
+  const username = jwt ? jwtDecode(jwt).sub : "null";
+  const [playerNumber, setPlayerNumber] = useState(null);
+  const [received, setReceived] = useState(false);
+  const [rightButtonImg, setRightButtonImg] = useState('');
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [showCards, setShowCards] = useState(false);
+  const [showEndModal, setShowEndModal] = useState(false);
+  const [chooseCard, setChooseCard] = useState(0);
+  const [tempCardPlayed, setTempCardPlayed] = useState(0);
+  const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
+  const [messageTerm, setMessageTerm] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [showAbandonedModal, setShowAbandonedModal] = useState(false);
+  const [matchPlayerList, setMatchPlayerList] = useState([])
 
   const [statePlayer0, setStatePlayer0] = useState({
     health: 2,
@@ -65,17 +66,33 @@ const WebSocketComponent = () => {
     setMessageTerm(e.target.value);
   };
 
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setTimeElapsed(prev => prev + 1);
-        }, 1000); // Incrementar cada segundo
+  useEffect(() => {
+    if (typePlayer === 'CASUAL') {
+      const timer = setInterval(() => {
+        setTimeElapsed(prev => {
+          console.log(prev + 1);
+          return prev + 1;
+        });
+      }, 1000);
 
-        return () => clearInterval(timer); // Limpiar el temporizador al desmontar
-    }, []);
+      return () => clearInterval(timer);
+    }
+  }, [typePlayer]);
 
-    useEffect(() => {
+  useEffect(() => {
+    if (timeElapsed >= 240) {
+      if (playerNumber === 0)
+        handleSetMatchWinner(matchPlayerList[1]);
+      else if (playerNumber === 1)
+        handleSetMatchWinner(matchPlayerList[0])
+    }
+  }, [timeElapsed])
 
-    }, [timeElapsed])
+  useEffect(() => {
+    return () => {
+      handleSendDeckMessage('END');
+    };
+  }, []);
 
   //UseEffect inicial para recibir las cartas
   useEffect(() => {
@@ -273,6 +290,20 @@ const WebSocketComponent = () => {
         })
       );
     }
+    else if (type === "END") {
+      stompClient.send(
+        `/app/match/${matchId}/cards`,
+        {},
+        JSON.stringify({
+          type: "END",
+          deckCards: deckOfCards,
+          player0Cards: playerNumber === 0 ? statePlayer0.cards : Array.of(),
+          player1Cards: playerNumber === 1 ? statePlayer1.cards : Array.of(),
+          playedCard0: -1,
+          playedCard1: -1,
+        })
+      );
+    }
   };
 
   const handleSendChatMessage = async (message) => {
@@ -331,7 +362,7 @@ const WebSocketComponent = () => {
 
   const handleSetMatchWinner = async (playerUsername) => {
     try {
-      const response = await fetch(`/api/v1/matches/${matchId}/winner`, {
+      await fetch(`/api/v1/matches/${matchId}/winner`, {
         method: 'PATCH',
         headers: {
           "Authorization": `Bearer ${jwt}`,
@@ -339,11 +370,12 @@ const WebSocketComponent = () => {
           'Content-Type': 'application/json'
         },
         body: `${playerUsername}`
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      window.location.href = '/';
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }).then(handleSendDeckMessage('END')).then(window.location.href = '/')
+
     } catch (error) {
       console.error('Error setting the winner:', error);
     }
@@ -392,7 +424,9 @@ const WebSocketComponent = () => {
         setShowConfirmationModal={setShowConfirmationModal}
         tempCardPlayed={tempCardPlayed}
         setTempCardPlayed={setTempCardPlayed}
-                setTypePlayer={setTypePlayer}
+        setTypePlayer={setTypePlayer}
+        setShowAbandonedModal={setShowAbandonedModal}
+        setMatchPlayerList={setMatchPlayerList}
       />
       <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
       {playerNumber !== 1 && playerNumber !== 0 &&
@@ -503,6 +537,7 @@ const WebSocketComponent = () => {
         handleSendDeckMessage={handleSendDeckMessage}
         showConfirmationDiscardToPrevent={showConfirmationDiscardToPrevent}
         setShowConfirmationDiscardToPrevent={setShowConfirmationDiscardToPrevent}
+        showAbandonedModal={showAbandonedModal}
       />
     </div>
   );

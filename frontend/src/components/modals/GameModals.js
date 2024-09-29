@@ -24,7 +24,8 @@ const GameModals = ({
     setDeckOfCards,
     handleSendDeckMessage,
     showConfirmationDiscardToPrevent,
-    setShowConfirmationDiscardToPrevent
+    setShowConfirmationDiscardToPrevent,
+    showAbandonedModal
 }) => {
 
     const handleCancelActionCard30 = () => {
@@ -35,6 +36,10 @@ const GameModals = ({
     const handleConfirmActionCard30 = () => {
         handleSendDeckMessage('PLAYEDCARD30', 30)
         setShowConfirmationDiscardToPrevent(false);
+    };
+
+    const handleLeave = () => {
+        window.location.href = "/";
     };
     return (
         <>
@@ -85,6 +90,15 @@ const GameModals = ({
                 </ModalBody>
                 <ModalFooter>
                     <Button color="danger" onClick={handleGoToLobby}>Go to lobby</Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={showAbandonedModal}>
+                <ModalHeader>PLAYER LEFT</ModalHeader>
+                <ModalBody>
+                    The enemy has left the game, you won it!!!
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleLeave}>Go to lobby</Button>
                 </ModalFooter>
             </Modal>
             <ChooseCardModal
