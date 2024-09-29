@@ -30,7 +30,8 @@ const WebSocketComponent = () => {
   const [chatMessages, setChatMessages] = useState([]);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [showAbandonedModal, setShowAbandonedModal] = useState(false);
-  const [matchPlayerList, setMatchPlayerList] = useState([])
+  const [matchPlayerList, setMatchPlayerList] = useState([]);
+  const [advertiseTimeLimit, setAdvertiseTimeLimit] = useState(0);
 
   const [statePlayer0, setStatePlayer0] = useState({
     health: 2,
@@ -71,6 +72,7 @@ const WebSocketComponent = () => {
       const timer = setInterval(() => {
         setTimeElapsed(prev => {
           console.log(prev + 1);
+          console.log(advertiseTimeLimit)
           return prev + 1;
         });
       }, 1000);
@@ -81,11 +83,9 @@ const WebSocketComponent = () => {
 
   useEffect(() => {
     if (timeElapsed >= 240) {
-      if (playerNumber === 0)
-        handleSetMatchWinner(matchPlayerList[1]);
-      else if (playerNumber === 1)
-        handleSetMatchWinner(matchPlayerList[0])
-    }
+      setAdvertiseTimeLimit(2);
+    } else if (timeElapsed === 200)
+      setAdvertiseTimeLimit(1);
   }, [timeElapsed])
 
   useEffect(() => {
@@ -107,8 +107,6 @@ const WebSocketComponent = () => {
     if (waiting)
       setShowCards(false);
   }, [waiting])
-
-
 
   //Acciones 
   useEffect(() => {
@@ -354,6 +352,16 @@ const WebSocketComponent = () => {
     }
   };
 
+  const handleCasualLeaves = () => {
+    if (advertiseTimeLimit === 2) {
+      if (playerNumber === 0)
+        handleSetMatchWinner(matchPlayerList[1]);
+      else if (playerNumber === 1)
+        handleSetMatchWinner(matchPlayerList[0]);
+    }else if(advertiseTimeLimit === 1)
+      setAdvertiseTimeLimit(0)
+  }
+
   const intimidationCardInHand = (cards) => {
     if (cards.includes(45)) {
       return true;
@@ -538,6 +546,8 @@ const WebSocketComponent = () => {
         showConfirmationDiscardToPrevent={showConfirmationDiscardToPrevent}
         setShowConfirmationDiscardToPrevent={setShowConfirmationDiscardToPrevent}
         showAbandonedModal={showAbandonedModal}
+        advertiseTimeLimit={advertiseTimeLimit}
+        handleCasualLeaves={handleCasualLeaves}
       />
     </div>
   );

@@ -25,7 +25,10 @@ const GameModals = ({
     handleSendDeckMessage,
     showConfirmationDiscardToPrevent,
     setShowConfirmationDiscardToPrevent,
-    showAbandonedModal
+    showAbandonedModal,
+    advertiseTimeLimit,
+    handleCasualLeaves,
+    
 }) => {
 
     const handleCancelActionCard30 = () => {
@@ -85,8 +88,8 @@ const GameModals = ({
             <Modal isOpen={showEndModal}>
                 <ModalHeader>THE GAME HAS ENDED</ModalHeader>
                 <ModalBody>
-                    {(playerNumber === 0 && statePlayer0.health > 0) || (playerNumber === 1 && statePlayer1.health > 0) ? 'YOU WON!!' : 
-                    playerNumber !== 1 && playerNumber !== 0?(statePlayer0.health < 0? 'PLAYER 0 LOST': 'PLAYER 1 LOST'): 'YOU LOST :('}
+                    {(playerNumber === 0 && statePlayer0.health > 0) || (playerNumber === 1 && statePlayer1.health > 0) ? 'YOU WON!!' :
+                        playerNumber !== 1 && playerNumber !== 0 ? (statePlayer0.health < 0 ? 'PLAYER 0 LOST' : 'PLAYER 1 LOST') : 'YOU LOST :('}
                 </ModalBody>
                 <ModalFooter>
                     <Button color="danger" onClick={handleGoToLobby}>Go to lobby</Button>
@@ -99,6 +102,17 @@ const GameModals = ({
                 </ModalBody>
                 <ModalFooter>
                     <Button color="danger" onClick={handleLeave}>Go to lobby</Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={advertiseTimeLimit > 0}>
+                <ModalHeader>{advertiseTimeLimit === 1 ? "TIME LIMIT CLOSE!!" : "TIME'S UP"}</ModalHeader>
+                <ModalBody>
+                    {advertiseTimeLimit === 1 ? "You have only 40 seconds to play " : "TIME'S UP"}               
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleCasualLeaves}>
+                    {advertiseTimeLimit === 1?"Accept":"Go to lobby"}
+                    </Button>
                 </ModalFooter>
             </Modal>
             <ChooseCardModal
