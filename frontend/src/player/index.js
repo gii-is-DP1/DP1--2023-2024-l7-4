@@ -75,22 +75,22 @@ class PlayerEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit} className='western-form-container2'>
                     <FormGroup>
-                        <Label for="name">Name</Label>
+                        <Label for="name">Name<span className="required-asterisk">*</span></Label>
                         <Input type="text" required name="name" id="name" value={item.name}
                             onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="surname">Surname</Label>
+                        <Label for="surname">Surname<span className="required-asterisk">*</span></Label>
                         <Input type="text" required name="surname" id="surname" value={item.surname}
                             onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="nickname">Nickname</Label>
+                        <Label for="nickname">Nickname<span className="required-asterisk">*</span></Label>
                         <Input type="text" required name="nickname" id="nickname" value={item.nickname}
                             onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="nickname">Email</Label>
+                        <Label for="nickname">Email<span className="required-asterisk">*</span></Label>
                         <Input type="text" required name="email" id="email" value={item.email}
                             onChange={this.handleChange} />
                     </FormGroup>

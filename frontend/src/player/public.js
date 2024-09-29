@@ -76,7 +76,7 @@ class PublicProfileEdit extends Component {
                 {title}
                 <Form onSubmit={this.handleSubmit} className='western-form-container2'>
                     <FormGroup>
-                        <Label for="avatar">Avatar</Label>
+                        <Label for="avatar">Avatar<span className="required-asterisk">*</span></Label>
                         <Input type="text" required name="avatar" id="avatar" value={item.avatar}
                             onChange={this.handleChange} />
                     </FormGroup>
@@ -86,7 +86,7 @@ class PublicProfileEdit extends Component {
                             onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="location">Location</Label>
+                        <Label for="location">Location<span className="required-asterisk">*</span></Label>
                         <Input type="text" required name="location" id="location" value={item.location}
                             onChange={this.handleChange} />
                     </FormGroup>
@@ -111,7 +111,7 @@ class PublicProfileEdit extends Component {
                             onChange={this.handleChange} />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="profileType">Profile Type</Label>
+                        <Label for="profileType">Profile Type<span className="required-asterisk">*</span></Label>
                         <Input
                             type="select"
                             name="profileType"
