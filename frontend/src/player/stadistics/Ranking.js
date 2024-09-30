@@ -156,17 +156,17 @@ export default function PlayerStadisticList() {
         {/* Tabla del ranking */}
         <Container style={{ marginTop: "30px" }} fluid>
           <h1 className="text-center">Ranking</h1>
-          <Table bordered responsive>
+          <Table className="table-western">
             <thead>
               <tr>
-                <th>#</th>
-                <th onClick={() => handleSort("name")} style={{ cursor: "pointer" }}>
+                <th className="table-western">#</th>
+                <th className="table-western" onClick={() => handleSort("name")} style={{ cursor: "pointer" }}>
                   Player {getSortArrow("name")}
                 </th>
-                <th onClick={() => handleSort("matchesWon")} style={{ cursor: "pointer" }}>
+                <th className="table-western" onClick={() => handleSort("matchesWon")} style={{ cursor: "pointer" }}>
                   Win Matches {getSortArrow("matchesWon")}
                 </th>
-                <th onClick={() => handleSort("timePlayed")} style={{ cursor: "pointer" }}>
+                <th className="table-western" onClick={() => handleSort("timePlayed")} style={{ cursor: "pointer" }}>
                  Played Time (min) {getSortArrow("timePlayed")}
                 </th>
               </tr>
@@ -174,10 +174,10 @@ export default function PlayerStadisticList() {
             <tbody>
               {rankingData.map((playerData, index) => (
                 <tr key={index}>
-                  <th scope="row">{index + 1}</th>
-                  <td>{playerData.name}</td>
-                  <td>{playerData.matchesWon}</td>
-                  <td>{playerData.timePlayed}</td>
+                  <th className="table-western" scope="row">{index + 1}</th>
+                  <td className="table-western">{playerData.name}</td>
+                  <td className="table-western">{playerData.matchesWon}</td>
+                  <td className="table-western">{playerData.timePlayed}</td>
                 </tr>
               ))}
             </tbody>
