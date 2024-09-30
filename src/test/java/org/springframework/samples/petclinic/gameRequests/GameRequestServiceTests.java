@@ -101,7 +101,10 @@ public class GameRequestServiceTests {
 
     @Test
     void testRejectRequest() {
+        when(gameRequestRepository.findById(1)).thenReturn(gameRequest1);
+        when(gameRequestRepository.save(gameRequest1)).thenReturn(gameRequest1);
         gameRequestService.rejectRequest(gameRequest1);
+
     }
 
 }
