@@ -3,6 +3,8 @@ package org.springframework.samples.petclinic.request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.gameRequests.GameRequest;
+import org.springframework.samples.petclinic.gameRequests.GameRequestStatus;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.samples.petclinic.util.RestPreconditions;
@@ -86,8 +88,11 @@ public class RequestRestController {
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<Request> update(@PathVariable("requestId") Integer requestId,
             @RequestBody @Valid Request updatedRequest) throws URISyntaxException {
-
+        Request g = requestService.findRequestById(requestId);
         RestPreconditions.checkNotNull(requestService.findRequestById(requestId), "Request", "ID", requestId);
+        updatedRequest.setPlayerOne(g.getPlayerOne());
+        updatedRequest.setPlayerTwo(g.getPlayerTwo());
+        updatedRequest.setStatus(RequestState.ACCEPTED);
         return new ResponseEntity<>(this.requestService.acceptRequest(updatedRequest, requestId), HttpStatus.OK);
     }
 
