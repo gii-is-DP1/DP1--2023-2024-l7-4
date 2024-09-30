@@ -59,7 +59,7 @@ export default function PlayerDetails() {
                         {playerDetails.biography && (
                             <FormGroup>
                                 <Label for="biography">Biography</Label>
-                                <Input type="textarea" name="biography" id="biography" value={playerDetails.biography} readOnly />
+                                <Input type="text" name="biography" id="biography" value={playerDetails.biography} readOnly />
                             </FormGroup>
                         )}
                         <FormGroup>
