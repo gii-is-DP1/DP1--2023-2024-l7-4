@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +18,11 @@ import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
+import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.player.Player;
+import org.springframework.samples.petclinic.player.ProfileType;
 import org.springframework.samples.petclinic.user.Authorities;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +37,9 @@ public class MatchServiceTests {
 
 	@InjectMocks
 	private MatchService matchService;
+
+	@InjectMocks
+	private CardService cardService;
 
 	private Match match1;
 	private Match match2;
@@ -73,6 +79,8 @@ public class MatchServiceTests {
 		player1.setAvatar("avatar.png");
 		player1.setNickname("player1doe");
 		player1.setEmail("player1.doe@example.com");
+		player1.setLocation("London");
+        player1.setProfileType(ProfileType.HARDCORE);
 
 		player2 = new Player();
 		player2.setId(2);
@@ -84,6 +92,8 @@ public class MatchServiceTests {
 		player2.setAvatar("avatar.png");
 		player2.setNickname("player2doe");
 		player2.setEmail("player2.doe@example.com");
+		player2.setLocation("Madrid");
+        player2.setProfileType(ProfileType.CASUAL);
 
 		gunfighter1 = new Gunfighter();
 		gunfighter1.setId(1);
@@ -166,15 +176,101 @@ public class MatchServiceTests {
 		assertEquals(8, gunfighter1.getCards().size());
 	}
 
-	@Test 
+	@Test
 	@Transactional
-	void shouldActionSingleCard(){
+	void shouldActionSingleCard() {
 		Integer prevBullets = gunfighter1.getBullets();
 		matchService.initialDeal(match1, gunfighter1, gunfighter2);
 
 		matchService.actionSingleCard(match1, gunfighter1, gunfighter2);
 
 		assertNotEquals(prevBullets, gunfighter1.getBullets());
+	}
+
+	@Test
+	@Transactional
+	void shouldCountWinningMatchesForPlayer() {
+
+		match1.setWinner(player1.getUsername());
+		match2.setWinner(player2.getUsername());
+
+		when(matchRepository.findMatchsByPlayer("player1.doe")).thenReturn(List.of(match1, match2));
+
+		Integer winningMatchesCount = matchService.findWinMatchsPublic("player1.doe");
+
+		assertEquals(1, winningMatchesCount);
+	}
+
+	@Test
+	@Transactional
+	void shouldCalculateTotalTimePlayedForPlayer() {
+
+		match1.setStartDate(LocalDateTime.now().minusMinutes(30));
+		match1.setFinishDateTime(LocalDateTime.now());
+
+		match2.setStartDate(LocalDateTime.now().minusMinutes(20));
+		match2.setFinishDateTime(LocalDateTime.now());
+
+		when(matchRepository.findMatchsByPlayer("player1.doe")).thenReturn(List.of(match1, match2));
+
+		Double totalTimePlayed = matchService.timePlayedPublic("player1.doe");
+
+		Double expectedTime = 30.0 + 20.0;
+		assertEquals(expectedTime, totalTimePlayed, 0.001);
+	}
+
+	@Test
+	@Transactional
+	void shouldCalculateMaxTimePlayedForPlayer() {
+
+		match1.setStartDate(LocalDateTime.now().minusMinutes(40));
+		match1.setFinishDateTime(LocalDateTime.now());
+
+		match2.setStartDate(LocalDateTime.now().minusMinutes(20));
+		match2.setFinishDateTime(LocalDateTime.now());
+
+		when(matchRepository.findMatchsByPlayer("player1.doe")).thenReturn(List.of(match1, match2));
+
+		Double maxTimePlayed = matchService.maxTimePlayedPublic("player1.doe");
+
+		Double expectedMaxTime = 40.0;
+		assertEquals(expectedMaxTime, maxTimePlayed, 0.001);
+	}
+
+	@Test
+	@Transactional
+	void shouldCalculateMinTimePlayedForPlayer() {
+
+		match1.setStartDate(LocalDateTime.now().minusMinutes(40));
+		match1.setFinishDateTime(LocalDateTime.now());
+
+		match2.setStartDate(LocalDateTime.now().minusMinutes(10));
+		match2.setFinishDateTime(LocalDateTime.now());
+
+		when(matchRepository.findMatchsByPlayer("player1.doe")).thenReturn(List.of(match1, match2));
+
+		Double minTimePlayed = matchService.minTimePlayedPublic("player1.doe");
+
+		Double expectedMinTime = 10.0;
+		assertEquals(expectedMinTime, minTimePlayed, 0.001);
+	}
+
+	@Test
+	@Transactional
+	void shouldCalculateAverageTimePlayedForPlayer() {
+		
+		match1.setStartDate(LocalDateTime.now().minusMinutes(30));
+		match1.setFinishDateTime(LocalDateTime.now());
+
+		match2.setStartDate(LocalDateTime.now().minusMinutes(20));
+		match2.setFinishDateTime(LocalDateTime.now());
+
+		when(matchRepository.findMatchsByPlayer("player1.doe")).thenReturn(List.of(match1, match2));
+
+		Double averageTimePlayed = matchService.averageTimePlayedPublic("player1.doe");
+
+		Double expectedAverageTime = (30.0 + 20.0) / 2; 
+		assertEquals(expectedAverageTime, averageTimePlayed, 0.001); 
 	}
 
 }

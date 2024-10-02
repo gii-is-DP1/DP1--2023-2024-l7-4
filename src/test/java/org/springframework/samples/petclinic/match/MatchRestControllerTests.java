@@ -1,7 +1,10 @@
 package org.springframework.samples.petclinic.match;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,8 +12,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,6 +35,7 @@ import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
+import org.springframework.samples.petclinic.player.ProfileType;
 import org.springframework.samples.petclinic.user.Authorities;
 import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -67,6 +73,8 @@ class MatchRestControllerTests {
 
     private Match match;
 
+    private Match match2;
+
     private Player player1;
 
     private Player player2;
@@ -80,6 +88,13 @@ class MatchRestControllerTests {
         match.setMatchState(MatchState.OPEN);
         match.setJoinedPlayers(joinedPlayers);
 
+        List<String> joinedPlayers2 = new ArrayList<>();
+        joinedPlayers2.add("player2");
+        match2 = new Match();
+        match2.setId(2);
+        match2.setMatchState(MatchState.OPEN);
+        match2.setJoinedPlayers(joinedPlayers2);
+
         player1 = new Player();
         player1.setUsername("player1");
         player1.setPassword("player1");
@@ -88,6 +103,8 @@ class MatchRestControllerTests {
         player1.setNickname("nickname1");
         player1.setAvatar("avatar.png");
         player1.setEmail("player1@gmail.com");
+        player1.setLocation("Madrid");
+        player1.setProfileType(ProfileType.CASUAL);
 
         player2 = new Player();
         player2.setUsername("player2");
@@ -97,6 +114,8 @@ class MatchRestControllerTests {
         player2.setNickname("nickname2");
         player2.setAvatar("avatar.png");
         player2.setEmail("player2@gmail.com");
+        player2.setLocation("London");
+        player2.setProfileType(ProfileType.HARDCORE);
 
         Authorities playerAuth = new Authorities();
         playerAuth.setId(2);
@@ -139,15 +158,65 @@ class MatchRestControllerTests {
 
     @Test
     @WithMockUser("admin")
-    void testCreateMatch() throws Exception {
-        List<String> joinedPlayers = new ArrayList<>();
-        joinedPlayers.add("player1");
-        Match match = new Match();
-        match.setName("Prueba");
-        match.setJoinedPlayers(joinedPlayers);
+    void testCreateMatchWithCasualPlayer() throws Exception {
 
-        mockMvc.perform(post(BASE_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(match))).andExpect(status().isCreated());
+        player1.setGamesPlayedToday(1);
+        player1.setLastGameDate(LocalDate.now());
+
+        when(playerService.findByUsername("player1")).thenReturn(player1);
+        when(matchService.saveMatch(any(Match.class))).thenReturn(match);
+
+        match.setName("New Match");
+
+        mockMvc.perform(post(BASE_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(match)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1));
+
+        assertEquals(2, player1.getGamesPlayedToday());
+        verify(playerService).savePlayer(player1);
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testCreateMatchWithTooManyGamesToday() throws Exception {
+
+        player1.setGamesPlayedToday(2);
+        player1.setLastGameDate(LocalDate.now());
+
+        when(playerService.findByUsername("player1")).thenReturn(player1);
+
+        match.setName("New Match");
+        match.setJoinedPlayers(List.of("player1"));
+
+        mockMvc.perform(post(BASE_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(match)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testCreateMatchWithHardcorePlayerWithTwoGamesCreated() throws Exception {
+
+        player2.setGamesPlayedToday(2);
+        player2.setLastGameDate(LocalDate.now());
+
+        when(playerService.findByUsername("player2")).thenReturn(player2);
+        when(matchService.saveMatch(any(Match.class))).thenReturn(match2);
+
+        match2.setName("New Match");
+        match2.setJoinedPlayers(List.of("player2"));
+
+        mockMvc.perform(post(BASE_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(match2)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(2));
     }
 
     @Test
@@ -224,10 +293,119 @@ class MatchRestControllerTests {
     @Test
     @WithMockUser("admin")
     void testDeleteMatch() throws Exception {
-        when(this.matchService.findMatchById(1)).thenReturn(match);
 
-        doNothing().when(this.matchService).deleteMatch(1);
+        player1.setGamesPlayedToday(1);
+
+        when(matchService.findMatchById(1)).thenReturn(match);
+        when(playerService.findByUsername("player1")).thenReturn(player1);
+        doNothing().when(matchService).deleteMatch(1);
+
         mockMvc.perform(delete(BASE_URL + "/{id}", 1).with(csrf()))
                 .andExpect(status().isNoContent());
+
+        assertEquals(0, player1.getGamesPlayedToday());
+        verify(playerService).savePlayer(player1);
+        verify(matchService).deleteMatch(1);
     }
+
+    @Test
+    @WithMockUser("admin")
+    void testDeleteMatchNotFound() throws Exception {
+
+        when(matchService.findMatchById(1)).thenReturn(null);
+
+        mockMvc.perform(delete(BASE_URL + "/{id}", 1).with(csrf()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testFindWinMatchesPublic() throws Exception {
+
+        Integer winMatches = 5;
+
+        when(matchService.findWinMatchsPublic("player1")).thenReturn(winMatches);
+
+        mockMvc.perform(get(BASE_URL + "/winMatchesPublic/{username}", "player1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("5"));
+
+        verify(matchService).findWinMatchsPublic("player1");
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testTimePlayedPublic() throws Exception {
+
+        Double timePlayed = 120.5;
+
+        when(matchService.timePlayedPublic("player1")).thenReturn(timePlayed);
+
+        mockMvc.perform(get(BASE_URL + "/timePlayedPublic/{username}", "player1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("120.5"));
+
+        verify(matchService).timePlayedPublic("player1");
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testMaxTimePlayedPublic() throws Exception {
+
+        Double maxTimePlayed = 150.0;
+
+        when(matchService.maxTimePlayedPublic("player1")).thenReturn(maxTimePlayed);
+
+        mockMvc.perform(get(BASE_URL + "/maxTimePlayedPublic/{username}", "player1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("150.0"));
+
+        verify(matchService).maxTimePlayedPublic("player1");
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testMinTimePlayedPublic() throws Exception {
+
+        Double minTimePlayed = 45.0;
+
+        when(matchService.minTimePlayedPublic("player1")).thenReturn(minTimePlayed);
+
+        mockMvc.perform(get(BASE_URL + "/minTimePlayedPublic/{username}", "player1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("45.0"));
+
+        verify(matchService).minTimePlayedPublic("player1");
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testAverageTimePlayedPublic() throws Exception {
+    
+        Double avgTimePlayed = 30.0;
+
+        when(matchService.averageTimePlayedPublic("player1")).thenReturn(avgTimePlayed);
+
+        mockMvc.perform(get(BASE_URL + "/avgTimePlayedPublic/{username}", "player1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("30.0"));
+
+        verify(matchService).averageTimePlayedPublic("player1");
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testAverageTimePlayedPublic1() throws Exception {
+    
+        Double avgTimePlayed = 30.0;
+
+        when(matchService.averageTimePlayedPublic("player1")).thenReturn(avgTimePlayed);
+
+        mockMvc.perform(get(BASE_URL + "/avgTimePlayedPublic/{username}", "player1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("30.0"));
+
+        verify(matchService).averageTimePlayedPublic("player1");
+    }
+
 }
