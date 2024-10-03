@@ -180,7 +180,7 @@ export default function Home() {
           <div className="hero-div">
             Online Friends
             <div>
-              {friendsOnline.map((f) => (
+              {Array.isArray(friendsOnline) && friendsOnline.map((f) => (
                 <div key={f.id}>{f.nickname}
                   {console.log(inProgressMatches)}
                   {inProgressMatches.map((match) => {
