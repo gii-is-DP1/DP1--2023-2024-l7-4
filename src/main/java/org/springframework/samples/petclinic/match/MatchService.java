@@ -284,31 +284,34 @@ public class MatchService {
          Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
          return res/matches.size();
      }
+     
      @Transactional(readOnly = true)
      public Map<String, String> maxPlayerPlayedByUserName(Integer u) throws DataAccessException {
-         String userName= userRepository.findById(u).get().getUsername();
-         Collection<Match> closedMatches=matchRepository.findMatchsClosedByPlayer(userName);
+         String userName = userRepository.findById(u).get().getUsername();
+         Collection<Match> closedMatches = matchRepository.findMatchsClosedByPlayer(userName);
          Map<String, Integer> rivalMatchCount = new HashMap<>();
+     
          for (Match match : closedMatches) {
-            List<String> players = match.getJoinedPlayers();
-            for (String player : players) {
-                if (!player.equals(userName)) {
-                    rivalMatchCount.put(player, rivalMatchCount.getOrDefault(player, 0) + 1);
-                }
-
-        
-            }
-        }
-        String maxPlayer= rivalMatchCount.entrySet()
-                          .stream()
-                          .max(Map.Entry.comparingByValue())
-                          .orElse(null)
-                          .getKey();
-    Map<String, String> response = new HashMap<>();
-    response.put("maxPlayer", maxPlayer);
-
-    return response;
-    }
+             List<String> players = match.getJoinedPlayers();
+             for (String player : players) {
+                 if (!player.equals(userName)) {
+                     rivalMatchCount.put(player, rivalMatchCount.getOrDefault(player, 0) + 1);
+                 }
+             }
+         }
+     
+         Map.Entry<String, Integer> maxEntry = rivalMatchCount.entrySet()
+                 .stream()
+                 .max(Map.Entry.comparingByValue())
+                 .orElse(null);
+     
+         String maxPlayer = (maxEntry != null) ? maxEntry.getKey() : null; 
+     
+         Map<String, String> response = new HashMap<>();
+         response.put("maxPlayer", maxPlayer);
+     
+         return response;
+     }
 
     @Transactional(readOnly = true)
     public Map<String, Integer> maxCardPlayedByUserName(Integer u) throws DataAccessException {

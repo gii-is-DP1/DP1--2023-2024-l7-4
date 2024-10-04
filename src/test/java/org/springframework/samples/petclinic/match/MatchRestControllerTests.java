@@ -236,123 +236,105 @@ class MatchRestControllerTests {
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testFindWinMatchByPlayer() throws Exception {
-        // Suponiendo que el jugador con id 1 ha ganado 3 partidas
         when(matchService.findWinMatchsByPlayer(1)).thenReturn(3);
     
-        // Realiza una solicitud GET al endpoint
         mockMvc.perform(get(BASE_URL + "/winMatches/1"))
-                .andExpect(status().isOk()) // Verifica que la respuesta es 200 OK
-                .andExpect(jsonPath("$").value(3)); // Verifica que el valor devuelto es 3
+                .andExpect(status().isOk()) 
+                .andExpect(jsonPath("$").value(3)); 
     }
     
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testTimePlayedByUserName() throws Exception {
-    // Suponiendo que el jugador "player1" ha jugado 120 minutos
     when(matchService.timePlayedByUserName(1)).thenReturn(120.);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/timePlayed/1"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$").value(120.)); // Verifica que el valor devuelto es 120 minutos
+            .andExpect(status().isOk()) 
+            .andExpect(jsonPath("$").value(120.)); 
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testMaxTimePlayedByUserName() throws Exception {
-    // Suponiendo que el jugador "player1" ha jugado un máximo de 300 minutos en una sola partida
     when(matchService.maxTimePlayedByUserName(1)).thenReturn(300.);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/maxTimePlayed/1"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$").value(300.)); // Verifica que el valor devuelto es 300 minutos
+            .andExpect(status().isOk()) 
+            .andExpect(jsonPath("$").value(300.)); 
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testMinTimePlayedByUserName() throws Exception {
-    // Suponiendo que el jugador "player1" ha jugado un mínimo de 30 minutos en una sola partida
     when(matchService.minTimePlayedByUserName(1)).thenReturn(30.);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/minTimePlayed/1"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$").value(30.)); // Verifica que el valor devuelto es 30 minutos
+            .andExpect(status().isOk()) 
+            .andExpect(jsonPath("$").value(30.));
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testAverageTimePlayedByUserName() throws Exception {
-    // Suponiendo que el jugador "player1" ha jugado un promedio de 150 minutos
     when(matchService.averageTimePlayedByUserName(1)).thenReturn(150.0);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/averageTimePlayed/1"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$").value(150.0)); // Verifica que el valor devuelto es 150 minutos (promedio)
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").value(150.0)); 
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testMaxPlayerPlayed() throws Exception {
-    // Simulamos que el jugador "player1" es quien ha jugado más partidas
     String maxPlayer = "player2";
     Map<String, String> response = new HashMap<>();
     response.put("maxPlayer", maxPlayer);
     when(matchService.maxPlayerPlayedByUserName(1)).thenReturn(response);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/maxPlayerPlayed/1"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
+            .andExpect(status().isOk()) 
             .andExpect(jsonPath("$.maxPlayer").value("player2"));         
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testMaxCardPlayed() throws Exception {
-    // Simulamos que la carta "Ace of Spades" es la que ha sido jugada más veces
     Integer maxCard = 1;
     Map<String, Integer> response = new HashMap<>();
     response.put("maxCard", maxCard);
     when(matchService.maxCardPlayedByUserName(1)).thenReturn(response);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/maxCardPlayed/1"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$.maxCard").value(1)); // Acceso correcto a maxCard
+            .andExpect(status().isOk()) 
+            .andExpect(jsonPath("$.maxCard").value(1)); 
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testMaxWinnerPlayer() throws Exception {
-    // Simulamos que el jugador "player3" es quien ha ganado más partidas
     Integer maxWinnerPlayer = 1;
     Map<String, Integer> response = new HashMap<>();
     response.put("maxWinnerPlayer", maxWinnerPlayer);
     
     when(matchService.maxWinnerPlayer()).thenReturn(response);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/winners"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$.maxWinnerPlayer").value(1)); // Acceso correcto a maxWinnerPlayer
+            .andExpect(status().isOk()) 
+            .andExpect(jsonPath("$.maxWinnerPlayer").value(1)); 
     }
 
     @Test
     @WithMockUser(value = "player", authorities = { "PLAYER" })
     void testMaxTimePlayer() throws Exception {
-    // Simulamos que el jugador "player4" ha jugado el máximo tiempo
-    Double maxTime = 120.; // Tiempo en minutos, por ejemplo
+    Double maxTime = 120.; 
     Map<String, Double> response = new HashMap<>();
     response.put("maxTimePlayer", maxTime);
     
     when(matchService.maxTimePlayer()).thenReturn(response);
 
-    // Realiza una solicitud GET al endpoint correspondiente
     mockMvc.perform(get(BASE_URL + "/timePlayed"))
-            .andExpect(status().isOk()) // Verifica que el código de estado es 200 OK
-            .andExpect(jsonPath("$.maxTimePlayer").value(120.)); // Acceso correcto a maxTimePlayer
+            .andExpect(status().isOk()) 
+            .andExpect(jsonPath("$.maxTimePlayer").value(120.)); 
 }
 
 
