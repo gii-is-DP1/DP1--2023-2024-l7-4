@@ -103,11 +103,10 @@ public class MatchRestController {
             if (player.getGamesPlayedToday() >= 2) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
-
-            player.setGamesPlayedToday(player.getGamesPlayedToday() + 1);
-            playerService.savePlayer(player);
         }
 
+        player.setGamesPlayedToday(player.getGamesPlayedToday() + 1);
+        playerService.savePlayer(player);
         Match newMatch = new Match();
         BeanUtils.copyProperties(match, newMatch, "id", "matchState");
         newMatch.setMatchState(MatchState.OPEN);

@@ -11,7 +11,9 @@ const Logout = () => {
     const jwt = window.localStorage.getItem("jwt");
     if (jwt || typeof jwt === "undefined") {
       const username = jwt ? jwtDecode(jwt).sub : "null";
-      sendOnlineFalse(username, jwt);
+      if (username !== "admin1"){
+        sendOnlineFalse(username, jwt);
+      }
       tokenService.removeUser();
       window.location.href = "/";
     } else {

@@ -93,10 +93,10 @@ class PlayerRestControllerTests {
     void shouldFindAllPlayers() throws Exception {
         when(playerService.findAll()).thenReturn(List.of(john));
         mockMvc.perform(get(BASE_URL))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.size()").value(1))
-               .andExpect(jsonPath("$[0].name").value(john.getName()))
-               .andExpect(jsonPath("$[0].username").value(john.getUsername()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(1))
+                .andExpect(jsonPath("$[0].name").value(john.getName()))
+                .andExpect(jsonPath("$[0].username").value(john.getUsername()));
     }
 
     @Test
@@ -104,10 +104,10 @@ class PlayerRestControllerTests {
     void shouldFindPlayerById() throws Exception {
         when(playerService.findPlayer(TEST_PLAYER_ID)).thenReturn(john);
         mockMvc.perform(get(BASE_URL + "/{id}", TEST_PLAYER_ID))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.id").value(TEST_PLAYER_ID))
-               .andExpect(jsonPath("$.name").value(john.getName()))
-               .andExpect(jsonPath("$.username").value(john.getUsername()));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(TEST_PLAYER_ID))
+                .andExpect(jsonPath("$.name").value(john.getName()))
+                .andExpect(jsonPath("$.username").value(john.getUsername()));
     }
 
     @Test
@@ -126,11 +126,11 @@ class PlayerRestControllerTests {
         when(playerService.savePlayer(any(Player.class))).thenReturn(newPlayer);
 
         mockMvc.perform(post(BASE_URL).with(csrf())
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(newPlayer)))
-               .andExpect(status().isCreated())
-               .andExpect(jsonPath("$.name").value("Jane"))
-               .andExpect(jsonPath("$.username").value("jane.doe"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newPlayer)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.name").value("Jane"))
+                .andExpect(jsonPath("$.username").value("jane.doe"));
     }
 
     @Test
@@ -142,11 +142,11 @@ class PlayerRestControllerTests {
         when(playerService.updatePlayer(any(Player.class), any(Integer.class))).thenReturn(john);
 
         mockMvc.perform(put(BASE_URL + "/{playerId}", TEST_PLAYER_ID).with(csrf())
-               .contentType(MediaType.APPLICATION_JSON)
-               .content(objectMapper.writeValueAsString(john)))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.name").value("UpdatedName"))
-               .andExpect(jsonPath("$.surname").value("UpdatedSurname"));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(john)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("UpdatedName"))
+                .andExpect(jsonPath("$.surname").value("UpdatedSurname"));
     }
 
     @Test
@@ -157,8 +157,8 @@ class PlayerRestControllerTests {
         doNothing().when(matchService).deleteMatches(any(List.class));
 
         mockMvc.perform(delete(BASE_URL + "/{username}", "johndoe").with(csrf()))
-               .andExpect(status().isOk())
-               .andExpect(jsonPath("$.message").value("Player deleted!"));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("Player deleted!"));
     }
 
     @Test
@@ -181,8 +181,19 @@ class PlayerRestControllerTests {
 
     @Test
     @WithMockUser("admin")
-    void shouldGetPlayerDetails() throws Exception {
+    void shouldReturnEmptyListWhenNoPlayersExist() throws Exception {
         
+        when(playerService.findAll()).thenReturn(List.of());
+
+        mockMvc.perform(get(BASE_URL + "/public"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isEmpty()); 
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void shouldGetPlayerDetails() throws Exception {
+
         when(playerService.findByUsername(john.getUsername())).thenReturn(john);
 
         mockMvc.perform(get(BASE_URL + "/public/{username}", john.getUsername()))
@@ -196,5 +207,17 @@ class PlayerRestControllerTests {
                 .andExpect(jsonPath("$.favoritePlatforms").value(john.getFavoritePlatforms()))
                 .andExpect(jsonPath("$.favoriteSagas").value(john.getFavoriteSagas()))
                 .andExpect(jsonPath("$.profileType").value(john.getProfileType().toString()));
-}
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void shouldReturnNotFoundWhenPlayerDoesNotExist() throws Exception {
+        String nonExistentUsername = "nonexistentuser";
+
+        when(playerService.findByUsername(nonExistentUsername)).thenReturn(null);
+
+        mockMvc.perform(get(BASE_URL + "/public/{username}", nonExistentUsername))
+                .andExpect(status().isNotFound());
+    }
+
 }

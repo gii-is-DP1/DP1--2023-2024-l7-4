@@ -217,6 +217,24 @@ class MatchRestControllerTests {
                 .content(objectMapper.writeValueAsString(match2)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(2));
+
+        assertEquals(3, player2.getGamesPlayedToday());
+        verify(playerService).savePlayer(player2);
+    }
+
+    @Test
+    @WithMockUser("admin")
+    void testCreateMatchWithInvalidMatchData() throws Exception {
+
+        match.setName(null);
+
+        when(playerService.findByUsername("player1")).thenReturn(player1);
+
+        mockMvc.perform(post(BASE_URL)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(match)))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -381,7 +399,7 @@ class MatchRestControllerTests {
     @Test
     @WithMockUser("admin")
     void testAverageTimePlayedPublic() throws Exception {
-    
+
         Double avgTimePlayed = 30.0;
 
         when(matchService.averageTimePlayedPublic("player1")).thenReturn(avgTimePlayed);
@@ -396,7 +414,7 @@ class MatchRestControllerTests {
     @Test
     @WithMockUser("admin")
     void testAverageTimePlayedPublic1() throws Exception {
-    
+
         Double avgTimePlayed = 30.0;
 
         when(matchService.averageTimePlayedPublic("player1")).thenReturn(avgTimePlayed);

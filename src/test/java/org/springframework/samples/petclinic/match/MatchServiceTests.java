@@ -189,7 +189,7 @@ public class MatchServiceTests {
 
 	@Test
 	@Transactional
-	void shouldCountWinningMatchesForPlayer() {
+	void shouldCountWinningMatchesForPlayerPublic() {
 
 		match1.setWinner(player1.getUsername());
 		match2.setWinner(player2.getUsername());
@@ -203,7 +203,7 @@ public class MatchServiceTests {
 
 	@Test
 	@Transactional
-	void shouldCalculateTotalTimePlayedForPlayer() {
+	void shouldCalculateTotalTimePlayedForPlayerPublic() {
 
 		match1.setStartDate(LocalDateTime.now().minusMinutes(30));
 		match1.setFinishDateTime(LocalDateTime.now());
@@ -221,7 +221,7 @@ public class MatchServiceTests {
 
 	@Test
 	@Transactional
-	void shouldCalculateMaxTimePlayedForPlayer() {
+	void shouldCalculateMaxTimePlayedForPlayerPublic() {
 
 		match1.setStartDate(LocalDateTime.now().minusMinutes(40));
 		match1.setFinishDateTime(LocalDateTime.now());
@@ -239,7 +239,7 @@ public class MatchServiceTests {
 
 	@Test
 	@Transactional
-	void shouldCalculateMinTimePlayedForPlayer() {
+	void shouldCalculateMinTimePlayedForPlayerPublic() {
 
 		match1.setStartDate(LocalDateTime.now().minusMinutes(40));
 		match1.setFinishDateTime(LocalDateTime.now());
@@ -257,7 +257,7 @@ public class MatchServiceTests {
 
 	@Test
 	@Transactional
-	void shouldCalculateAverageTimePlayedForPlayer() {
+	void shouldCalculateAverageTimePlayedForPlayerPublic() {
 		
 		match1.setStartDate(LocalDateTime.now().minusMinutes(30));
 		match1.setFinishDateTime(LocalDateTime.now());
