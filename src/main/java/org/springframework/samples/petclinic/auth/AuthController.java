@@ -63,12 +63,11 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
-			if (!roles.contains("ADMIN")){
+			if (!roles.contains("ADMIN")) {
 				Player p = playerService.findByUsername(userDetails.getUsername());
 				p.setOnline(true);
 				playerService.savePlayer(p);
 			}
-
 			return ResponseEntity.ok()
 					.body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
 		} catch (BadCredentialsException exception) {

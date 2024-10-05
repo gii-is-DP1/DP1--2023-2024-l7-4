@@ -31,14 +31,15 @@ export default function PlayerEditAdmin() {
   const playerList = currentPlayers.map((player) => {
     return (
       <tr key={player.id}>
-        <td>{player.nickname}</td>
-        <td>{player.username}</td>
-        <td>{player.authority.authority}</td>
-        <td>
+        <td className='table-western'>{player.nickname}</td>
+        <td className='table-western'>{player.username}</td>
+        <td className='table-western'>{player.authority.authority}</td>
+        <td className='table-western'>
           <ButtonGroup>
             <Button
+              className="button-container-secondary"
               size="sm"
-              color="primary"
+              color="secondary"
               aria-label={"edit-" + player.id}
               tag={Link}
               to={"/players/" + player.id}
@@ -46,6 +47,7 @@ export default function PlayerEditAdmin() {
               Edit
             </Button>
             <Button
+              className="button-container-bad"
               size="sm"
               color="danger"
               aria-label={"delete-" + player.id}

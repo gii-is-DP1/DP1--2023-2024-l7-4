@@ -76,7 +76,7 @@ public class Player extends User {
     ProfileType profileType;
 
     @Column(name = "games_played_today")
-    Integer gamesPlayedToday;
+    Integer gamesPlayedToday = 0;
 
     @Column(name = "last_game_date")
     LocalDate lastGameDate;

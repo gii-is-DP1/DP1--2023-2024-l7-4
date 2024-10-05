@@ -43,8 +43,6 @@ export default function Home() {
     setVisible
   );
 
-  console.log(friendsOnline);
-
   useEffect(() => {
     setFriendsOnline([]);
     const intervalId = setInterval(updateFriendsOnline, 5000); // Actualiza cada 5 segundos
@@ -54,49 +52,54 @@ export default function Home() {
   }, [playerId, jwt]);
 
   async function updateFriendsOnline() {
-    try {
-      const response = await fetch(
-        `/api/v1/players/${playerId}/friends/online`,
-        {
+    if (jwt) {
+      try {
+        const response = await fetch(
+          `/api/v1/players/${playerId}/friends/online`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const newFriendsOnline = await response.json();
+        console.log("newFriendsOnline", newFriendsOnline);
+        setFriendsOnline(newFriendsOnline);
+      } catch (error) {
+        console.error("Error fetching new friends online:", error);
+      }
+    }
+  }
+
+  async function handleUpdateMatches() {
+    if (jwt) {
+      try {
+        let response = await fetch(`/api/v1/matches?open=true`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-        }
-      );
-      const newFriendsOnline = await response.json();
-      setFriendsOnline(newFriendsOnline);
-    } catch (error) {
-      console.error("Error fetching new friends online:", error);
-    }
-  }
-
-  async function handleUpdateMatches() {
-    try {
-      let response = await fetch(`/api/v1/matches?open=true`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      let newMatches = await response.json();
-      setOpenMatches(newMatches);
-      response = await fetch(`/api/v1/matches?inProgress=true`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      newMatches = await response.json();
-      setInProgressMatches(newMatches);
-    } catch (error) {
-      console.error("Error fetching matches:", error);
+        });
+        let newMatches = await response.json();
+        setOpenMatches(newMatches);
+        response = await fetch(`/api/v1/matches?inProgress=true`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        });
+        newMatches = await response.json();
+        setInProgressMatches(newMatches);
+      } catch (error) {
+        console.error("Error fetching matches:", error);
+      }
     }
   }
 
@@ -180,9 +183,8 @@ export default function Home() {
           <div className="hero-div">
             Online Friends
             <div>
-              {Array.isArray(friendsOnline) && friendsOnline.map((f) => (
+              {jwt && Array.isArray(friendsOnline) && friendsOnline.map((f) => (
                 <div key={f.id}>{f.nickname}
-                  {console.log(inProgressMatches)}
                   {inProgressMatches.map((match) => {
                     const allFriendsInMatch = match.joinedPlayers.includes(f.username) && match.joinedPlayers.every(player =>
                       friendsOnline.some(friend => friend.username === player)

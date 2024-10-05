@@ -29,6 +29,9 @@ const WebSocketComponent = () => {
   const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
   const [messageTerm, setMessageTerm] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
+  const [showAbandonedModal, setShowAbandonedModal] = useState(false);
+  const [matchPlayerList, setMatchPlayerList] = useState([]);
+  const [advertiseTimeLimit, setAdvertiseTimeLimit] = useState(0);
 
   const [statePlayer0, setStatePlayer0] = useState({
     health: 2,
@@ -72,6 +75,33 @@ const WebSocketComponent = () => {
     setMessageTerm(e.target.value);
   };
 
+  useEffect(() => {
+    if (typePlayer === 'CASUAL') {
+      const timer = setInterval(() => {
+        setTimeElapsed(prev => {
+          console.log(prev + 1);
+          console.log(advertiseTimeLimit)
+          return prev + 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [typePlayer]);
+
+  useEffect(() => {
+    if (timeElapsed >= 240) {
+      setAdvertiseTimeLimit(2);
+    } else if (timeElapsed === 200)
+      setAdvertiseTimeLimit(1);
+  }, [timeElapsed])
+
+  useEffect(() => {
+    return () => {
+      handleSendDeckMessage('END');
+    };
+  }, []);
+
   //UseEffect inicial para recibir las cartas
   useEffect(() => {
     if (!received && (playerNumber === 1 || playerNumber === 0))
@@ -85,8 +115,6 @@ const WebSocketComponent = () => {
     if (waiting)
       setShowCards(false);
   }, [waiting])
-
-
 
   //Acciones 
   useEffect(() => {
@@ -268,6 +296,20 @@ const WebSocketComponent = () => {
         })
       );
     }
+    else if (type === "END") {
+      stompClient.send(
+        `/app/match/${matchId}/cards`,
+        {},
+        JSON.stringify({
+          type: "END",
+          deckCards: deckOfCards,
+          player0Cards: playerNumber === 0 ? statePlayer0.cards : Array.of(),
+          player1Cards: playerNumber === 1 ? statePlayer1.cards : Array.of(),
+          playedCard0: -1,
+          playedCard1: -1,
+        })
+      );
+    }
   };
 
   const handleSendChatMessage = async (message) => {
@@ -318,6 +360,16 @@ const WebSocketComponent = () => {
     }
   };
 
+  const handleCasualLeaves = () => {
+    if (advertiseTimeLimit === 2) {
+      if (playerNumber === 0)
+        handleSetMatchWinner(matchPlayerList[1]);
+      else if (playerNumber === 1)
+        handleSetMatchWinner(matchPlayerList[0]);
+    }else if(advertiseTimeLimit === 1)
+      setAdvertiseTimeLimit(0)
+  }
+
   const intimidationCardInHand = (cards) => {
     if (cards.includes(45)) {
       return true;
@@ -326,7 +378,7 @@ const WebSocketComponent = () => {
 
   const handleSetMatchWinner = async (playerUsername) => {
     try {
-      const response = await fetch(`/api/v1/matches/${matchId}/winner`, {
+      await fetch(`/api/v1/matches/${matchId}/winner`, {
         method: 'PATCH',
         headers: {
           "Authorization": `Bearer ${jwt}`,
@@ -334,11 +386,12 @@ const WebSocketComponent = () => {
           'Content-Type': 'application/json'
         },
         body: `${playerUsername}`
-      })
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      window.location.href = '/';
+      }).then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+      }).then(handleSendDeckMessage('END')).then(window.location.href = '/')
+
     } catch (error) {
       console.error('Error setting the winner:', error);
     }
@@ -387,6 +440,9 @@ const WebSocketComponent = () => {
         setShowConfirmationModal={setShowConfirmationModal}
         tempCardPlayed={tempCardPlayed}
         setTempCardPlayed={setTempCardPlayed}
+        setTypePlayer={setTypePlayer}
+        setShowAbandonedModal={setShowAbandonedModal}
+        setMatchPlayerList={setMatchPlayerList}
       />
       <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
       {playerNumber !== 1 && playerNumber !== 0 &&
@@ -497,7 +553,9 @@ const WebSocketComponent = () => {
         handleSendDeckMessage={handleSendDeckMessage}
         showConfirmationDiscardToPrevent={showConfirmationDiscardToPrevent}
         setShowConfirmationDiscardToPrevent={setShowConfirmationDiscardToPrevent}
-        setTypePlayer={setTypePlayer}
+        showAbandonedModal={showAbandonedModal}
+        advertiseTimeLimit={advertiseTimeLimit}
+        handleCasualLeaves={handleCasualLeaves}
       />
     </div>
   );

@@ -22,7 +22,9 @@ const WebSocketHandler = ({
     tempCardPlayed,
     setTempCardPlayed,
     setPlayed,
-    setTypePlayer
+    setTypePlayer,
+    setShowAbandonedModal,
+    setMatchPlayerList
 }) => {
 
 
@@ -84,8 +86,9 @@ const WebSocketHandler = ({
                 })
                 .then(match => match.joinedPlayers)
                 .then(matchPlayerList => {
+                    setMatchPlayerList(matchPlayerList)
                     if (matchPlayerList.includes(username))
-                    setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
+                        setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
                     return matchPlayerList;
                 }).then(matchPlayerList => {
                     return handleAssignTypePlayer(matchPlayerList[playerNumber]);
@@ -162,6 +165,9 @@ const WebSocketHandler = ({
                     case 'PLAYERINFO':
                         setDeckOfCards(body.deckCards);
                         updatePlayers();
+                        break;
+                    case 'END':
+                        setShowAbandonedModal(true);
                         break;
                     default:
                         break;
