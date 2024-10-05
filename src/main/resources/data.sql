@@ -2,14 +2,14 @@
 INSERT INTO authorities(id,authority) VALUES (1,'ADMIN');
 INSERT INTO appusers(id,username,password,authority) VALUES (1,'admin1','$2a$10$nMmTWAhPTqXqLDJTag3prumFrAJpsYtroxf0ojesFYq0k4PmcbWUS',1);
 
--- Ten player user, named owner1 with passwor 0wn3r
+-- Ten player user, named owner1 with passwor pl4y3r
 INSERT INTO authorities(id, authority) VALUES (2, 'PLAYER');
-INSERT INTO appusers(id, username, password, authority) VALUES (4, 'player1', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
-INSERT INTO appusers(id, username, password, authority) VALUES (5, 'player2', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
-INSERT INTO appusers(id, username, password, authority) VALUES (6, 'player3', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
-INSERT INTO appusers(id, username, password, authority) VALUES (7, 'player4', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
-INSERT INTO appusers(id, username, password, authority) VALUES (8, 'player5', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
-INSERT INTO appusers(id, username, password, authority) VALUES (9, 'player6', '$2a$10$DaS6KIEfF5CRTFrxIoGc7emY3BpZZ0.fVjwA3NiJ.BjpGNmocaS3e', 2);
+INSERT INTO appusers(id, username, password, authority) VALUES (4, 'player1', '$2a$10$byH.Cnnm5dYaHOpaZh0CFubYf03fDoGl1ZAnCjY/aMLU1wu7IeMZy', 2);
+INSERT INTO appusers(id, username, password, authority) VALUES (5, 'player2', '$2a$10$byH.Cnnm5dYaHOpaZh0CFubYf03fDoGl1ZAnCjY/aMLU1wu7IeMZy', 2);
+INSERT INTO appusers(id, username, password, authority) VALUES (6, 'player3', '$2a$10$byH.Cnnm5dYaHOpaZh0CFubYf03fDoGl1ZAnCjY/aMLU1wu7IeMZy', 2);
+INSERT INTO appusers(id, username, password, authority) VALUES (7, 'player4', '$2a$10$byH.Cnnm5dYaHOpaZh0CFubYf03fDoGl1ZAnCjY/aMLU1wu7IeMZy', 2);
+INSERT INTO appusers(id, username, password, authority) VALUES (8, 'player5', '$2a$10$byH.Cnnm5dYaHOpaZh0CFubYf03fDoGl1ZAnCjY/aMLU1wu7IeMZy', 2);
+INSERT INTO appusers(id, username, password, authority) VALUES (9, 'player6', '$2a$10$byH.Cnnm5dYaHOpaZh0CFubYf03fDoGl1ZAnCjY/aMLU1wu7IeMZy', 2);
 
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date, online) VALUES 
 (4, 'Daniel', 'Fernandez Caballero', 'https://pbs.twimg.com/profile_images/1875354853/actor_400x400.jpg', 'sudani', 'danifercaba@gmail.com', 'Avid gamer and tech enthusiast.', 'Madrid', '1990-05-15', 'Accion', 'Netflix', null, 'CASUAL', 0, null, 'false');
@@ -24,7 +24,6 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, biography, locat
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date, online) VALUES 
 (9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'I do not know what is this', 'Don Benito', '2012-02-13', 'Drama', 'Disney Plus', null, 'HARDCORE', 0, null, 'false');
 
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (1, 'Match 1',null,null, 'IN_PROGRESS', null);
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (2, 'Match 2',null,null, 'CLOSED', null);
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (3, 'DO_NOT_ENTRY',null,null, 'OPEN', null);
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (4, 'Match 3','2024-09-11T17:59:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
@@ -34,8 +33,7 @@ INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUE
 INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (8, 'Match 7','2024-09-11T17:49:36','2024-09-11T17:40:53', 'CLOSED', 'player3');
 
 
-INSERT INTO joined_players (match_id, player) VALUES (1, 'player1');
-INSERT INTO joined_players (match_id, player) VALUES (1, 'player2');
+
 INSERT INTO joined_players (match_id, player) VALUES (2, 'player1');
 INSERT INTO joined_players (match_id, player) VALUES (2, 'player2');
 INSERT INTO joined_players (match_id, player) VALUES (3, 'player1');
