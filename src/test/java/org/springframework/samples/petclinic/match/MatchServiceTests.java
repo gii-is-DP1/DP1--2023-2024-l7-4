@@ -68,7 +68,6 @@ public class MatchServiceTests {
 		match1.setStartDate(LocalDateTime.of(2024, 9, 11, 17, 40, 53));
 		match1.setFinishDateTime(LocalDateTime.of(2024, 9, 11, 17, 59, 36));
 
-
 		match2 = new Match();
 		match2.setId(2);
 		match2.setName("partida2");
@@ -78,7 +77,6 @@ public class MatchServiceTests {
 		match2.setWinner("player1");
 		match2.setStartDate(LocalDateTime.of(2024, 9, 11, 17, 40, 53));
 		match2.setFinishDateTime(LocalDateTime.of(2024, 9, 11, 17, 59, 36));
-
 
 		player1 = new Player();
 		player1.setId(1);
@@ -182,169 +180,167 @@ public class MatchServiceTests {
 		assertEquals(8, gunfighter1.getCards().size());
 	}
 
-	
-	/* 
 	@Test
-    void shouldReturnMatchesWonByPlayer() {
+	void shouldReturnMatchesWonByPlayer() {
 
-		List<Match> matches = List.of(match1,match2);
-        // Simular que el repositorio devuelve las partidas ganadas por el jugador
-        when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(matches);
-		
+		when(matchRepository.findWinMatchsByPlayer(player1.getUsername())).thenReturn(2);
+
 		// Simular que el repositorio devuelve el jugador
 		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
-        
-		// Llamar al servicio para buscar las partidas ganadas por el jugador
-        List<Match> wonMatches = matchService.findWinMatchsByPlayer(player1.getId());
 
-        // Verificar que la lista contiene exactamente las partidas simuladas
-        assertEquals(2, wonMatches.size());
-        assertEquals(match1.getId(), wonMatches.get(0).getId());
-        assertEquals(match2.getId(), wonMatches.get(1).getId());
-    }
-	*/
+		// Llamar al servicio para buscar las partidas ganadas por el jugador
+		Integer wonMatches = matchService.findWinMatchsByPlayer(player1.getId());
+
+		// Verificar que la lista contiene exactamente las partidas simuladas
+		assertEquals(2, wonMatches);
+		// assertEquals(match1.getId(), wonMatches.get(0).getId());
+		// assertEquals(match2.getId(), wonMatches.get(1).getId());
+	}
+
 	@Test
 	void shouldReturnTotalTimePlayedByUser() {
 		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
-		
+
 		when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
-	
+
 		Double totalTimePlayed = matchService.timePlayedByUserName(player1.getId());
-	
-		Double expectedTotalDuration = 36.; 
+
+		Double expectedTotalDuration = 36.;
 		assertEquals(expectedTotalDuration, totalTimePlayed);
 	}
-	
-	
+
 	@Test
 	void shouldReturnZeroWhenNoMatchesPlayed() {
 		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
 
 		when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList());
-	
+
 		Double totalTimePlayed = matchService.timePlayedByUserName(player1.getId());
-	
+
 		Double expectedTotalDuration = 0.;
 		assertEquals(expectedTotalDuration, totalTimePlayed);
 	}
-	 @Test
-    void shouldReturnMaxTimePlayedByUser() {
-        when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
-
-        when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
-
-        Double maxTimePlayed = matchService.maxTimePlayedByUserName(player1.getId());
-
-		Double expectedMaxDuration = (double) ChronoUnit.MINUTES.between(match1.getStartDate(), match1.getFinishDateTime());
-        assertEquals(expectedMaxDuration, maxTimePlayed);
-    }
 
 	@Test
-    void shouldReturnMinTimePlayedByUser() {
-        when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
+	void shouldReturnMaxTimePlayedByUser() {
+		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
 
-        when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
+		when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
 
-        Double minTimePlayed = matchService.minTimePlayedByUserName(player1.getId());
+		Double maxTimePlayed = matchService.maxTimePlayedByUserName(player1.getId());
 
-        Double expectedMinDuration = (double) ChronoUnit.MINUTES.between(match2.getStartDate(), match2.getFinishDateTime());
-        assertEquals(expectedMinDuration, minTimePlayed);
-    }
-	@Test
-    void shouldReturnAverageTimePlayedByUser() {
-        when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
-
-        when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
-
-        Double averageTimePlayed = matchService.averageTimePlayedByUserName(player1.getId());
-
-        Double expectedAverageDuration = (18.0 + 18.0) / 2; 
-        assertEquals(expectedAverageDuration, averageTimePlayed);
-    }
+		Double expectedMaxDuration = (double) ChronoUnit.MINUTES.between(match1.getStartDate(),
+				match1.getFinishDateTime());
+		assertEquals(expectedMaxDuration, maxTimePlayed);
+	}
 
 	@Test
-    void shouldReturnMaxPlayerPlayedByUser() {
-        when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
+	void shouldReturnMinTimePlayedByUser() {
+		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
 
-        when(matchRepository.findMatchsClosedByPlayer(player1.getUsername()))
-                .thenReturn(Arrays.asList(match1, match2));
+		when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
 
-        Map<String, String> maxPlayerResponse = matchService.maxPlayerPlayedByUserName(player1.getId());
+		Double minTimePlayed = matchService.minTimePlayedByUserName(player1.getId());
 
-        String expectedMaxPlayer = "Player2"; 
-        assertEquals(expectedMaxPlayer, maxPlayerResponse.get("maxPlayer"));
-    }
+		Double expectedMinDuration = (double) ChronoUnit.MINUTES.between(match2.getStartDate(),
+				match2.getFinishDateTime());
+		assertEquals(expectedMinDuration, minTimePlayed);
+	}
 
-    @Test
+	@Test
+	void shouldReturnAverageTimePlayedByUser() {
+		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
+
+		when(matchRepository.findMatchsByPlayer(player1.getUsername())).thenReturn(Arrays.asList(match1, match2));
+
+		Double averageTimePlayed = matchService.averageTimePlayedByUserName(player1.getId());
+
+		Double expectedAverageDuration = (18.0 + 18.0) / 2;
+		assertEquals(expectedAverageDuration, averageTimePlayed);
+	}
+
+	@Test
+	void shouldReturnMaxPlayerPlayedByUser() {
+		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
+
+		when(matchRepository.findMatchsClosedByPlayer(player1.getUsername()))
+				.thenReturn(Arrays.asList(match1, match2));
+
+		Map<String, String> maxPlayerResponse = matchService.maxPlayerPlayedByUserName(player1.getId());
+
+		String expectedMaxPlayer = "Player2";
+		assertEquals(expectedMaxPlayer, maxPlayerResponse.get("maxPlayer"));
+	}
+
+	@Test
 	void shouldReturnNullWhenNoClosedMatchesPlayed() {
-    when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
+		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
 
-    when(matchRepository.findMatchsClosedByPlayer(player1.getUsername()))
-            .thenReturn(Collections.emptyList());
+		when(matchRepository.findMatchsClosedByPlayer(player1.getUsername()))
+				.thenReturn(Collections.emptyList());
 
-    Map<String, String> maxPlayerResponse = matchService.maxPlayerPlayedByUserName(player1.getId());
+		Map<String, String> maxPlayerResponse = matchService.maxPlayerPlayedByUserName(player1.getId());
 
-    assertEquals(null, maxPlayerResponse.get("maxPlayer"));
-}	
+		assertEquals(null, maxPlayerResponse.get("maxPlayer"));
+	}
 
 	@Test
 	void shouldReturnMaxCardPlayedByUser() {
-    when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
-    
-    Match match = new Match();
-    match.setJoinedPlayers(List.of("player1.doe", "player2.doe"));
-    match.setPlayedCards0(List.of(1, 2, 2, 3)); 
-    match.setPlayedCards1(List.of(4, 5)); 
+		when(userRepository.findById(player1.getId())).thenReturn(Optional.of(player1));
 
-    when(matchRepository.findMatchsClosed()).thenReturn(Collections.singletonList(match));
+		Match match = new Match();
+		match.setJoinedPlayers(List.of("player1.doe", "player2.doe"));
+		match.setPlayedCards0(List.of(1, 2, 2, 3));
+		match.setPlayedCards1(List.of(4, 5));
 
-    Map<String, Integer> maxCardResponse = matchService.maxCardPlayedByUserName(player1.getId());
+		when(matchRepository.findMatchsClosed()).thenReturn(Collections.singletonList(match));
 
-    assertEquals(Integer.valueOf(2), maxCardResponse.get("maxCard"));
-	}	
+		Map<String, Integer> maxCardResponse = matchService.maxCardPlayedByUserName(player1.getId());
+
+		assertEquals(Integer.valueOf(2), maxCardResponse.get("maxCard"));
+	}
+
 	@Test
 	void shouldReturnWinnerCountMap() {
-    
-    List<Match> closedMatches = Arrays.asList(match1, match2);
-    
-    when(matchRepository.findMatchsClosed()).thenReturn(closedMatches);
 
-    Map<String, Integer> winnerCount = matchService.maxWinnerPlayer();
+		List<Match> closedMatches = Arrays.asList(match1, match2);
 
-    assertEquals(2, winnerCount.get("player1").intValue()); 
+		when(matchRepository.findMatchsClosed()).thenReturn(closedMatches);
+
+		Map<String, Integer> winnerCount = matchService.maxWinnerPlayer();
+
+		assertEquals(2, winnerCount.get("player1").intValue());
 	}
 
 	@Test
 	void shouldReturnEmptyMapWhenNoClosedMatches() {
-    when(matchRepository.findMatchsClosed()).thenReturn(Collections.emptyList());
+		when(matchRepository.findMatchsClosed()).thenReturn(Collections.emptyList());
 
-    Map<String, Integer> winnerCount = matchService.maxWinnerPlayer();
+		Map<String, Integer> winnerCount = matchService.maxWinnerPlayer();
 
-    assertTrue(winnerCount.isEmpty());
+		assertTrue(winnerCount.isEmpty());
 	}
 
 	@Test
 	void shouldReturnTotalTimePlayedByEachPlayer() {
-    Match match1 = new Match();
-    match1.setStartDate(LocalDateTime.of(2024, 9, 11, 17, 40, 53));
-    match1.setFinishDateTime(LocalDateTime.of(2024, 9, 11, 17, 59, 36));
-    match1.setJoinedPlayers(Arrays.asList("player1", "player2"));
+		Match match1 = new Match();
+		match1.setStartDate(LocalDateTime.of(2024, 9, 11, 17, 40, 53));
+		match1.setFinishDateTime(LocalDateTime.of(2024, 9, 11, 17, 59, 36));
+		match1.setJoinedPlayers(Arrays.asList("player1", "player2"));
 
-    Match match2 = new Match();
-    match2.setStartDate(LocalDateTime.of(2024, 9, 11, 18, 00, 00));
-    match2.setFinishDateTime(LocalDateTime.of(2024, 9, 11, 18, 30, 00));
-    match2.setJoinedPlayers(Arrays.asList("player1", "player3"));
+		Match match2 = new Match();
+		match2.setStartDate(LocalDateTime.of(2024, 9, 11, 18, 00, 00));
+		match2.setFinishDateTime(LocalDateTime.of(2024, 9, 11, 18, 30, 00));
+		match2.setJoinedPlayers(Arrays.asList("player1", "player3"));
 
-    List<Match> closedMatches = Arrays.asList(match1, match2);
+		List<Match> closedMatches = Arrays.asList(match1, match2);
 
-    when(matchRepository.findMatchsClosed()).thenReturn(closedMatches);
+		when(matchRepository.findMatchsClosed()).thenReturn(closedMatches);
 
-    Map<String, Double> timeCount = matchService.maxTimePlayer();
+		Map<String, Double> timeCount = matchService.maxTimePlayer();
 
-    assertEquals(48.0, timeCount.get("player1")); 
-    assertEquals(18.0, timeCount.get("player2")); 
+		assertEquals(48.0, timeCount.get("player1"));
+		assertEquals(18.0, timeCount.get("player2"));
 	}
 
-
-   
 }

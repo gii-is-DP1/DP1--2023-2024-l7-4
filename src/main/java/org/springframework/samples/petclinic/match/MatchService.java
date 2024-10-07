@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.match;
 
 import java.time.temporal.ChronoUnit;
@@ -122,7 +123,7 @@ public class MatchService {
 
     @Transactional
     public void actionCards(Match match, Gunfighter gunfighter0, Gunfighter gunfighter1) {
-        
+
         if (gunfighter0.getBullets() > gunfighter1.getBullets()) {
             cardService.executeActionsInOrder(gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed(), gunfighter0,
                     gunfighter1, match);
@@ -139,7 +140,6 @@ public class MatchService {
                     gunfighter0, match);
         }
 
-      
     }
 
     @Transactional
@@ -210,15 +210,8 @@ public class MatchService {
 
     @Transactional(readOnly = true)
     public Integer findWinMatchsByPlayer(Integer u) throws DataAccessException {
-        Integer count = 0;
         String userName = userRepository.findById(u).get().getUsername();
-        List<Match> matches = findMatchsByPlayer(userName);
-        for (Match m : matches) {
-            if (m.getWinner() == userName) {
-                count++;
-            }
-        }
-        return count;
+        return matchRepository.findWinMatchsByPlayer(userName);
     }
 
     @Transactional(readOnly = true)
@@ -226,145 +219,144 @@ public class MatchService {
         String userName = userRepository.findById(u).get().getUsername();
         List<Double> timePlayedForGamesByPlayer = new ArrayList<>();
         List<Match> matches = findMatchsByPlayer(userName);
-        
+
         for (Match m : matches) {
             if (m.getStartDate() != null && m.getFinishDateTime() != null) {
                 Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
                 timePlayedForGamesByPlayer.add(tiempo);
             }
         }
-        
+
         Double res = timePlayedForGamesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
         return res;
     }
-    
-     
-     @Transactional(readOnly = true)
-        public Double maxTimePlayedByUserName(Integer u) throws DataAccessException {
-            String userName= userRepository.findById(u).get().getUsername();
-            List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
-            List<Match> matches= findMatchsByPlayer(userName);
-            for (Match m : matches) {
-                if (m.getStartDate() != null && m.getFinishDateTime() != null) {
-                    Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
-                    timePlayedForMatchesByPlayer.add(tiempo);
-                }
-            }
-            Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
-            return res;
-        }
 
-         @Transactional(readOnly = true)
-         public Double minTimePlayedByUserName(Integer u) throws DataAccessException {
-             String userName= userRepository.findById(u).get().getUsername();
-             List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
-             List<Match> matches= findMatchsByPlayer(userName);
-             for (Match m : matches) {
-                if (m.getStartDate() != null && m.getFinishDateTime() != null) {
-                    Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
-                    timePlayedForMatchesByPlayer.add(tiempo);
-                }
-             }
-             Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).min().getAsDouble();
-             return res;
-         }
-
-            //Tiempo medio jugado
-     @Transactional(readOnly = true)
-     public Double averageTimePlayedByUserName(Integer u) throws DataAccessException {
-         String userName= userRepository.findById(u).get().getUsername();
-         List<Double> timePlayedForMatchesByPlayer= new ArrayList<>();
-         List<Match> matches= findMatchsByPlayer(userName);
-         for (Match m : matches) {
+    @Transactional(readOnly = true)
+    public Double maxTimePlayedByUserName(Integer u) throws DataAccessException {
+        String userName = userRepository.findById(u).get().getUsername();
+        List<Double> timePlayedForMatchesByPlayer = new ArrayList<>();
+        List<Match> matches = findMatchsByPlayer(userName);
+        for (Match m : matches) {
             if (m.getStartDate() != null && m.getFinishDateTime() != null) {
                 Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
                 timePlayedForMatchesByPlayer.add(tiempo);
             }
-         }
-         Double res= timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
-         return res/matches.size();
-     }
-     
-     @Transactional(readOnly = true)
-     public Map<String, String> maxPlayerPlayedByUserName(Integer u) throws DataAccessException {
-         String userName = userRepository.findById(u).get().getUsername();
-         Collection<Match> closedMatches = matchRepository.findMatchsClosedByPlayer(userName);
-         Map<String, Integer> rivalMatchCount = new HashMap<>();
-     
-         for (Match match : closedMatches) {
-             List<String> players = match.getJoinedPlayers();
-             for (String player : players) {
-                 if (!player.equals(userName)) {
-                     rivalMatchCount.put(player, rivalMatchCount.getOrDefault(player, 0) + 1);
-                 }
-             }
-         }
-     
-         Map.Entry<String, Integer> maxEntry = rivalMatchCount.entrySet()
-                 .stream()
-                 .max(Map.Entry.comparingByValue())
-                 .orElse(null);
-     
-         String maxPlayer = (maxEntry != null) ? maxEntry.getKey() : null; 
-     
-         Map<String, String> response = new HashMap<>();
-         response.put("maxPlayer", maxPlayer);
-     
-         return response;
-     }
+        }
+        Double res = timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).max().getAsDouble();
+        return res;
+    }
+
+    @Transactional(readOnly = true)
+    public Double minTimePlayedByUserName(Integer u) throws DataAccessException {
+        String userName = userRepository.findById(u).get().getUsername();
+        List<Double> timePlayedForMatchesByPlayer = new ArrayList<>();
+        List<Match> matches = findMatchsByPlayer(userName);
+        for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForMatchesByPlayer.add(tiempo);
+            }
+        }
+        Double res = timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).min().getAsDouble();
+        return res;
+    }
+
+    // Tiempo medio jugado
+    @Transactional(readOnly = true)
+    public Double averageTimePlayedByUserName(Integer u) throws DataAccessException {
+        String userName = userRepository.findById(u).get().getUsername();
+        List<Double> timePlayedForMatchesByPlayer = new ArrayList<>();
+        List<Match> matches = findMatchsByPlayer(userName);
+        for (Match m : matches) {
+            if (m.getStartDate() != null && m.getFinishDateTime() != null) {
+                Double tiempo = ChronoUnit.MINUTES.between(m.getStartDate(), m.getFinishDateTime()) + 0.;
+                timePlayedForMatchesByPlayer.add(tiempo);
+            }
+        }
+        Double res = timePlayedForMatchesByPlayer.stream().mapToDouble(Double::doubleValue).sum();
+        return res / matches.size();
+    }
+
+    @Transactional(readOnly = true)
+    public Map<String, String> maxPlayerPlayedByUserName(Integer u) throws DataAccessException {
+        String userName = userRepository.findById(u).get().getUsername();
+        Collection<Match> closedMatches = matchRepository.findMatchsClosedByPlayer(userName);
+        Map<String, Integer> rivalMatchCount = new HashMap<>();
+
+        for (Match match : closedMatches) {
+            List<String> players = match.getJoinedPlayers();
+            for (String player : players) {
+                if (!player.equals(userName)) {
+                    rivalMatchCount.put(player, rivalMatchCount.getOrDefault(player, 0) + 1);
+                }
+            }
+        }
+
+        Map.Entry<String, Integer> maxEntry = rivalMatchCount.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .orElse(null);
+
+        String maxPlayer = (maxEntry != null) ? maxEntry.getKey() : null;
+
+        Map<String, String> response = new HashMap<>();
+        response.put("maxPlayer", maxPlayer);
+
+        return response;
+    }
 
     @Transactional(readOnly = true)
     public Map<String, Integer> maxCardPlayedByUserName(Integer u) throws DataAccessException {
-        String userName= userRepository.findById(u).get().getUsername();
-        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
-        Map<Integer, Integer> cardCount  = new HashMap<>();
-         for (Match match : closedMatches) {
+        String userName = userRepository.findById(u).get().getUsername();
+        Collection<Match> closedMatches = matchRepository.findMatchsClosed();
+        Map<Integer, Integer> cardCount = new HashMap<>();
+        for (Match match : closedMatches) {
             List<String> players = match.getJoinedPlayers();
-            if(players.contains(userName)){
-                if(players.get(0).equals(userName)){
+            if (players.contains(userName)) {
+                if (players.get(0).equals(userName)) {
                     List<Integer> playedCards = match.getPlayedCards0();
-                    if (playedCards != null){
+                    if (playedCards != null) {
                         for (Integer card : playedCards) {
                             cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
                         }
                     }
-                 } else {
+                } else {
                     List<Integer> playedCards = match.getPlayedCards1();
-                    if (playedCards != null){
+                    if (playedCards != null) {
                         for (Integer card : playedCards) {
                             cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
                         }
-                     }
                     }
                 }
+            }
         }
-        Integer maxCard= cardCount.entrySet()
-        .stream()
-        .max(Map.Entry.comparingByValue())
-        .orElse(null)
-        .getKey();
+        Integer maxCard = cardCount.entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue())
+                .orElse(null)
+                .getKey();
         Map<String, Integer> response = new HashMap<>();
         response.put("maxCard", maxCard);
 
-    return response;
+        return response;
     }
-    
+
     @Transactional(readOnly = true)
     public Map<String, Integer> maxWinnerPlayer() throws DataAccessException {
-        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+        Collection<Match> closedMatches = matchRepository.findMatchsClosed();
         Map<String, Integer> winnerCountMap = new HashMap<>();
         for (Match match : closedMatches) {
-             String winner = match.getWinner();
-             if (winner != null) { 
+            String winner = match.getWinner();
+            if (winner != null) {
                 winnerCountMap.put(winner, winnerCountMap.getOrDefault(winner, 0) + 1);
             }
         }
-    return winnerCountMap;
+        return winnerCountMap;
     }
 
     @Transactional(readOnly = true)
     public Map<String, Double> maxTimePlayer() throws DataAccessException {
-        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+        Collection<Match> closedMatches = matchRepository.findMatchsClosed();
         Map<String, Double> timeCountMap = new HashMap<>();
         for (Match match : closedMatches) {
             if (match.getStartDate() != null && match.getFinishDateTime() != null) {
@@ -375,6 +367,6 @@ public class MatchService {
                 }
             }
         }
-    return timeCountMap;
+        return timeCountMap;
     }
 }
