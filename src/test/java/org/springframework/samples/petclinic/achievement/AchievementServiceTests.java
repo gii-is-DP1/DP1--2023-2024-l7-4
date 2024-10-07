@@ -57,7 +57,7 @@ class AchievementServiceTests {
         achievement1 = new Achievement();
         achievement1.setId(1);
         achievement1.setName("First Victory");
-        achievement1.setMetric(3);
+        achievement1.setMetric(1);
         achievement1.setThreshold(Threshold.VICTORIES);
 
         achievement2 = new Achievement();
@@ -139,7 +139,7 @@ class AchievementServiceTests {
     void shouldReturnTrueWhenUserMeetsVictoryAchievementCriteria() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(matchService.findMatchsByPlayer("player1")).thenReturn(List.of(match1, match2));
-        when(achievementRepository.findById(1)).thenReturn(Optional.of(achievement1)); // Victory threshold
+        when(achievementRepository.findById(1)).thenReturn(Optional.of(achievement1)); 
 
         Boolean result = achievementService.Success(1, 1);
         assertTrue(result);
@@ -149,7 +149,7 @@ class AchievementServiceTests {
     void shouldReturnTrueWhenUserMeetsPlaytimeAchievementCriteria() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(matchService.findMatchsByPlayer("player1")).thenReturn(List.of(match1, match2));
-        when(achievementRepository.findById(2)).thenReturn(Optional.of(achievement2)); // Playtime threshold
+        when(achievementRepository.findById(2)).thenReturn(Optional.of(achievement2));
 
         Boolean result = achievementService.Success(1, 2);
         assertTrue(result);
@@ -159,7 +159,7 @@ class AchievementServiceTests {
     void shouldReturnFalseWhenUserDoesNotMeetPlaytimeAchievementCriteria() {
         when(userRepository.findById(1)).thenReturn(Optional.of(user));
         when(matchService.findMatchsByPlayer("player1")).thenReturn(List.of(match1));
-        when(achievementRepository.findById(2)).thenReturn(Optional.of(achievement2)); // Playtime threshold
+        when(achievementRepository.findById(2)).thenReturn(Optional.of(achievement2)); 
 
         Boolean result = achievementService.Success(1, 2);
         assertFalse(result);

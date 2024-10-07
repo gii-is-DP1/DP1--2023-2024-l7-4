@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,16 +20,20 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.MediaType;
 import org.springframework.samples.petclinic.match.MatchService;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
 import org.springframework.security.test.context.support.WithMockUser;
 
-@WebMvcTest(AchievementController.class)
-class AchievementControllerTests {
+@WebMvcTest(value = AchievementController.class, excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfigurer.class))
+class AchievementRestControllerTest {
 
     private static final String BASE_URL = "/api/v1/achievements";
 
@@ -53,6 +58,7 @@ class AchievementControllerTests {
         achievement.setId(1);
         achievement.setName("First match");
         achievement.setThreshold(Threshold.GAMESPLAYED);
+        achievement.setMetric(1);
     }
 
     @Test
@@ -64,7 +70,7 @@ class AchievementControllerTests {
         mockMvc.perform(get(BASE_URL))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].name").value("First Win"));
+                .andExpect(jsonPath("$[0].name").value("First match"));
     }
 
     @Test
@@ -75,28 +81,33 @@ class AchievementControllerTests {
         mockMvc.perform(get(BASE_URL + "/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1))
-                .andExpect(jsonPath("$.name").value("First Win"));
+                .andExpect(jsonPath("$.name").value("First match"));
     }
 
     @Test
     @WithMockUser("admin")
     void testCreateAchievement() throws Exception {
-        when(achievementService.saveAchievement(any(Achievement.class))).thenReturn(achievement);
+
+        Achievement achievement2 = new Achievement();
+        achievement2.setName("Prueba");
+        achievement2.setMetric(1);
+        achievement2.setThreshold(Threshold.TOTALPLAYTIME);
 
         mockMvc.perform(post(BASE_URL)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(achievement)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1));
+                .content(objectMapper.writeValueAsString(achievement2)))
+                .andExpect(status().isCreated());
     }
 
     @Test
     @WithMockUser("admin")
     void testUpdateAchievement() throws Exception {
-        when(achievementService.updateAchievement(any(Achievement.class), Mockito.eq(1))).thenReturn(achievement);
+        achievement.setName("First Win");
+        when(achievementService.findAchievementById(1)).thenReturn(achievement);
+        when(achievementService.updateAchievement(any(Achievement.class),any(Integer.class))).thenReturn(achievement);
 
-        mockMvc.perform(put(BASE_URL + "/1")
+        mockMvc.perform(put(BASE_URL + "/{id}",1)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(achievement)))

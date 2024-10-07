@@ -53,7 +53,7 @@ public class AchievementService {
         achievementRepository.save(achievement);
         return achievement;
     }
-        @Transactional
+    @Transactional
     public Achievement updateAchievement(Achievement achievement, int id) throws DataAccessException {
         Achievement toUpdate = findAchievementById(id);
         BeanUtils.copyProperties(achievement, toUpdate, "id");
