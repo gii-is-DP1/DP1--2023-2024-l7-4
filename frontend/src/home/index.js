@@ -124,7 +124,7 @@ export default function Home() {
         }
       };
     }
-  }, []);
+  }, [jwt]);
 
   async function handleJoinGame(id) {
     stompClient.send(

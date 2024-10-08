@@ -72,14 +72,6 @@ public class PlayerRestController {
 		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
 
-	// @GetMapping("/{username}/friends/online")
-	// public ResponseEntity<Set<Player>> getFriendsOnline(@PathVariable("username")
-	// String username) {
-	// Set<Player> friends =
-	// requestService.getFriendsOnline(playerService.findByUsername(username).getId());
-	// return new ResponseEntity<>(friends, HttpStatus.OK);
-	// }
-
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Player> create(@RequestBody @Valid Player player) throws URISyntaxException {

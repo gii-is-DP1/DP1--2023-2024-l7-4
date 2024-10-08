@@ -79,8 +79,6 @@ const WebSocketComponent = () => {
     if (typePlayer === 'CASUAL') {
       const timer = setInterval(() => {
         setTimeElapsed(prev => {
-          console.log(prev + 1);
-          console.log(advertiseTimeLimit)
           return prev + 1;
         });
       }, 1000);
