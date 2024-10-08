@@ -6,6 +6,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,8 @@ public class PlayerServiceTests {
         john.setAvatar("avatar.png");
         john.setNickname("johndoe");
         john.setEmail("john.doe@example.com");
+        john.setLocation("London");
+        john.setProfileType(ProfileType.HARDCORE);
     }
 
     @Test

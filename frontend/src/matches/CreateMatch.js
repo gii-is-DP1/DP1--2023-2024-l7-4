@@ -1,6 +1,6 @@
 import "../static/css/auth/authButton.css";
 import "../static/css/auth/authPage.css";
-import FormGenerator from "../components/formGenerator/formGenerator";
+import '../static/css/westernTheme.css';
 import { useEffect, useRef, useState } from "react";
 import { registerFormMatchInputs } from "./RegisterFormMatchInputs";
 import tokenService from "../services/token.service";
@@ -49,43 +49,45 @@ export default function CreateMatch() {
 
 
   function handleSubmit({ values }) {
-
     if (!creationFormRef.current.validate()) return;
 
     const request = {
-      name: values.name,
-      joinedPlayers: ([username]),
+        name: values.name,
+        joinedPlayers: [username],
     };
 
     fetch("/api/v1/matches", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(request),
-    }).then(function (response) {
-      if (response.status === 201) {
-        return response.json();
-      } else {
-        throw new Error(`Error en la solicitud: ${response.status}`);
-      }
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(request),
+    }).then(async (response) => {
+        if (response.status === 201) {
+            return response.json();
+        } else if (response.status === 403) {
+            const errorMessage = await response.text(); // Obtiene el mensaje del cuerpo de la respuesta
+            throw new Error(errorMessage || "Daily game limit reached. Try becoming HARDCORE to play without limitations!!");
+        } else {
+            throw new Error(`Error en la solicitud: ${response.status}`);
+        }
     })
-      .then(function (data) {
+    .then((data) => {
         const id = data.id;
         if (stompClient && stompClient.connected) {
-          stompClient.send('/app/match/messages', {}, JSON.stringify({
-            type: 'CREATED',
-            message: 'Match created'
-          }));
+            stompClient.send('/app/match/messages', {}, JSON.stringify({
+                type: 'CREATED',
+                message: 'Match created'
+            }));
         }
         window.location.href = (`/match/${id}/waitingRoom`);
-      })
-      .catch((message) => {
-        alert(message);
-      });
-  }
+    })
+    .catch((error) => {
+        alert(error.message); // Muestra el mensaje adecuado
+    });
+}
 
   useEffect(() => {
   });
@@ -94,7 +96,7 @@ export default function CreateMatch() {
     <div className="auth-page-container">
       <div className="hero-div">
         <h1>START DUEL</h1>
-        <div className="auth-form-container2">
+        <div className="western-form-container2">
           <FormWithSoundButtonGenerator
             ref={creationFormRef}
             inputs={

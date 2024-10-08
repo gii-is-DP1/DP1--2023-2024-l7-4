@@ -93,9 +93,9 @@ const FormWithSoundButtonGenerator = forwardRef((props, ref) => {
   }, [props.listenEnterKey]);
 
   return (
-    <div className="class-profile-form">
+    <div className="western-form-container2">
       <form
-        className="class-form"
+        className="western-form-container2"
         ref={formElement}
         style={
           props.numberOfColumns > 1

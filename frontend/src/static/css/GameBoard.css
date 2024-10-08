@@ -61,12 +61,13 @@ html,
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
-    height: 120vh;
+    height: 100%;
     width: 100%;
     background-size: cover;
     background-repeat: no-repeat;
-    /* Scroll */
     background-image: url('../../../public/backgroundGame.png');
+    background-attachment: fixed;
+    overflow: hidden;
 }
 
 .top-row {
@@ -74,9 +75,7 @@ html,
     justify-content: space-between;
     width: 30%;
     max-width: 700px;
-    /* Ajusta el ancho máximo según tus necesidades */
     margin-top: 20px;
-    /* Espacio entre las filas */
 }
 
 .bottom-row {
@@ -85,9 +84,7 @@ html,
     width: 90%;
     max-height: 900px;
     max-width: 80vw;
-    /* Ajusta el ancho máximo según tus necesidades */
     margin-bottom: 20px;
-    /* Espacio entre las filas */
 }
 
 .middle-row {
@@ -96,9 +93,7 @@ html,
     width: 90%;
     max-height: 900px;
     max-width: 80vw;
-    /* Ajusta el ancho máximo según tus necesidades */
     margin-bottom: 20px;
-    /* Espacio entre las filas */
 }
 
 .small-button {

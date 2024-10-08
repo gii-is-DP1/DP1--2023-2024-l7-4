@@ -2,12 +2,8 @@ package org.springframework.samples.petclinic.auth;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.samples.petclinic.clinic.ClinicService;
-import org.springframework.samples.petclinic.clinicowner.ClinicOwnerService;
-import org.springframework.samples.petclinic.owner.OwnerService;
 import org.springframework.samples.petclinic.user.AuthoritiesService;
 import org.springframework.samples.petclinic.user.UserService;
-import org.springframework.samples.petclinic.vet.VetService;
 
 @SpringBootTest
 public class AuthServiceTests {
@@ -16,14 +12,6 @@ public class AuthServiceTests {
 	protected AuthService authService;
 	@Autowired
 	protected UserService userService;
-	@Autowired
-	protected VetService vetService;
-	@Autowired
-	protected OwnerService ownerService;
-	@Autowired
-	protected ClinicService clinicService;
-	@Autowired
-	protected ClinicOwnerService clinicOwnerService;
 	@Autowired
 	protected AuthoritiesService authoritiesService;
 

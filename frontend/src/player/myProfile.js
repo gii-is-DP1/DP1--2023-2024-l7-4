@@ -24,6 +24,12 @@ export default function MyProfile() {
     avatar: "",
     nickname: "",
     email: "",
+    biography: '',
+    location: '',
+    birthdate: '',
+    favoriteGenres: '',
+    favoritePlatforms: '',
+    favoriteSagas: '',
   };
 
   const [player, setPlayer] = useFetchState(
@@ -63,7 +69,10 @@ export default function MyProfile() {
               </tbody>
             </Table>
             <Link to={`/players/edit/${username}`}>
-              <button className="auth-button">Edit Profile</button>
+              <button className="button-container">Edit Player</button>
+            </Link>
+            <Link to={`/players/edit2/${username}`}>
+              <button className="button-container">Edit Public Profile</button>
             </Link>
 
           </div>

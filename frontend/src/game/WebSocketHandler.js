@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
-import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
+import React, { useEffect } from "react";
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 
 const WebSocketHandler = ({
     username,
@@ -16,11 +16,16 @@ const WebSocketHandler = ({
     setShowCards,
     setWaiting,
     setStompClient,
+    setChatMessages,
     setChooseCard,
+    setShowConfirmationModal,
     tempCardPlayed,
-    setTempCardPlayed
+    setTempCardPlayed,
+    setPlayed,
+    setTypePlayer,
+    setShowAbandonedModal,
+    setMatchPlayerList
 }) => {
-
 
 
 
@@ -29,23 +34,39 @@ const WebSocketHandler = ({
             if (playerNumber === 0) {
                 setStatePlayer1(prevState => ({
                     ...prevState,
-                    cardPlayedBefore: prevState.cardPlayed,
                     cardPlayed: tempCardPlayed,
                     precisionBefore: prevState.precision,
                 }));
             } else {
                 setStatePlayer0(prevState => ({
                     ...prevState,
-                    cardPlayedBefore: prevState.cardPlayed,
                     cardPlayed: tempCardPlayed,
                     precisionBefore: prevState.precision,
                 }));
             }
-            setShowCards(false);
             setWaiting(true);
+            setShowCards(false);
             setTempCardPlayed(null);
         }
     }, [tempCardPlayed, playerNumber]);
+
+    const handleAssignTypePlayer = async (username) => {
+       const player = await fetch(`/api/v1/players/username/${username}`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+        return player;
+    }
 
     useEffect(() => {
         const handleAssignPlayers = async () => {
@@ -65,8 +86,13 @@ const WebSocketHandler = ({
                 })
                 .then(match => match.joinedPlayers)
                 .then(matchPlayerList => {
-                    setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
-                })
+                    setMatchPlayerList(matchPlayerList)
+                    if (matchPlayerList.includes(username))
+                        setPlayerNumber(Array.from(matchPlayerList).findIndex(value => value === username));
+                    return matchPlayerList;
+                }).then(matchPlayerList => {
+                    return handleAssignTypePlayer(matchPlayerList[playerNumber]);
+                }).then(player => setTypePlayer(player.profileType))
                 .catch(error => {
                     console.error('Error fetching match:', error);
                 });
@@ -74,7 +100,7 @@ const WebSocketHandler = ({
 
         if (matchId) handleAssignPlayers();
 
-        const socket = new SockJS('http://localhost:8080/ws');
+        const socket = new SockJS("http://localhost:8080/ws");
         const client = Stomp.over(socket);
 
         client.connect({}, () => {
@@ -91,20 +117,42 @@ const WebSocketHandler = ({
                             ...prevState,
                             cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
                         }));
-                        if (playerNumber === 1 && body.player1Cards.length === 8) {
+                        break;
+                    case 'READY':
+                        setDeckOfCards(body.deckCards);
+                        setStatePlayer1(prevState => ({
+                            ...prevState,
+                            cards: body.player1Cards.length !== 0 ? body.player1Cards : prevState.cards,
+                        }));
+                        setStatePlayer0(prevState => ({
+                            ...prevState,
+                            cards: body.player0Cards.length !== 0 ? body.player0Cards : prevState.cards,
+                        }));
+                        if (playerNumber === 0 && body.player0Cards.length === 8) {
+                            setReadyForDiscard(true);
+                            setReceived(true);
+                        }
+                        else if (playerNumber === 1 && body.player1Cards.length === 8) {
                             setReadyForDiscard(true);
                             setReceived(true);
                         }
                         break;
-                    case 'READY':
-                        setReceived(true);
-                        break;
                     case 'PLAYEDCARD':
                         if (playerNumber === 0 && body.playedCard1 !== -1) {
                             setTempCardPlayed(body.playedCard1);
+                        } else if (playerNumber !== 1 && body.playedCard1 !== -1) {
+                            setStatePlayer1(prevState => ({
+                                ...prevState,
+                                cardPlayed: body.playedCard1
+                            }))
                         }
                         if (playerNumber === 1 && body.playedCard0 !== -1) {
                             setTempCardPlayed(body.playedCard0);
+                        } else if (playerNumber !== 0 && body.playedCard0 !== -1) {
+                            setStatePlayer0(prevState => ({
+                                ...prevState,
+                                cardPlayed: body.playedCard0
+                            }))
                         }
                         break;
                     case 'CHOOSE':
@@ -114,31 +162,20 @@ const WebSocketHandler = ({
                             setChooseCard(body.playedCard1);
                         }
                         break;
+                    case 'PLAYERINFO':
+                        setDeckOfCards(body.deckCards);
+                        updatePlayers();
+                        break;
+                    case 'END':
+                        setShowAbandonedModal(true);
+                        break;
                     default:
                         break;
                 }
             });
 
-            client.subscribe(`/topic/match/${matchId}/players`, (message) => {
-                const body = JSON.parse(message.body);
-                if (body.type === 'PLAYERINFO') {
-                    if (body.playerNumber === 1) {
-                        setStatePlayer1(prevState => ({
-                            ...prevState,
-                            health: body.health,
-                            bullets: body.bullets,
-                            precision: body.precision,
-                        }));
-                    }
-                    if (body.playerNumber === 0) {
-                        setStatePlayer0(prevState => ({
-                            ...prevState,
-                            health: body.health,
-                            bullets: body.bullets,
-                            precision: body.precision,
-                        }));
-                    }
-                }
+            client.subscribe(`/topic/chat/${matchId}`, (message) => {
+                fetchChatMessages();
             });
 
             setStompClient(client);
@@ -150,6 +187,96 @@ const WebSocketHandler = ({
             }
         };
     }, [matchId, playerNumber]);
+
+    const updatePlayers = async () => {
+        await fetch(`/api/v1/gunfighters/${matchId}/0`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(player0 => {
+                setStatePlayer0(
+                    prevState => ({
+                        ...prevState,
+                        health: player0.health,
+                        bullets: player0.bullets,
+                        precision: player0.precision,
+                        cards: player0.cards,
+                    }));
+                if (playerNumber === 0 && player0.cardPlayed === -1) {
+                    setShowConfirmationModal(true);
+
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching gunfighter:', error);
+            });
+
+        await fetch(`/api/v1/gunfighters/${matchId}/1`, {
+            method: 'GET',
+            headers: {
+                "Authorization": `Bearer ${jwt}`,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(player1 => {
+                setStatePlayer1(
+                    prevState => ({
+                        ...prevState,
+                        health: player1.health,
+                        bullets: player1.bullets,
+                        precision: player1.precision,
+                        cards: player1.cards,
+                    }));
+                if (playerNumber === 1 && player1.cardPlayed === -1) {
+                    setShowConfirmationModal(true);
+                    setPlayed(false);
+
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching gunfighter:', error);
+            });
+    };
+
+    const fetchChatMessages = async () => {
+        await fetch(`/api/v1/chats/${matchId}`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${jwt}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((chatMessages) => {
+                setChatMessages(chatMessages);
+            })
+            .catch((error) => {
+                console.error("Error fetching the chat:", error);
+            });
+    };
 
     return null;
 };
