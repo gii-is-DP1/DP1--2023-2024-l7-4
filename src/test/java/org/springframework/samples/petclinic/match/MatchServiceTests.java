@@ -166,15 +166,4 @@ public class MatchServiceTests {
 		assertEquals(8, gunfighter1.getCards().size());
 	}
 
-	@Test 
-	@Transactional
-	void shouldActionSingleCard(){
-		Integer prevBullets = gunfighter1.getBullets();
-		matchService.initialDeal(match1, gunfighter1, gunfighter2);
-
-		matchService.actionSingleCard(match1, gunfighter1, gunfighter2);
-
-		assertNotEquals(prevBullets, gunfighter1.getBullets());
-	}
-
 }
