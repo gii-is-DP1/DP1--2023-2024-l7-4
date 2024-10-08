@@ -3,12 +3,17 @@ package org.springframework.samples.petclinic.achievement;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.match.Match;
+import org.springframework.samples.petclinic.match.MatchRepository;
 import org.springframework.samples.petclinic.match.MatchService;
 import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -19,13 +24,15 @@ public class AchievementService {
     private AchievementRepository achievementRepository;
     private UserRepository userRepository;
     private MatchService matchService;
+    private MatchRepository matchRepository;
 
 
     @Autowired
-    public AchievementService(AchievementRepository achievementRepository, UserRepository userRepository,MatchService matchService) {
+    public AchievementService(AchievementRepository achievementRepository, UserRepository userRepository,MatchService matchService, MatchRepository matchRepository) {
         this.achievementRepository = achievementRepository;
         this.userRepository = userRepository;
         this.matchService= matchService;
+        this.matchRepository= matchRepository;
 
     }
     @Transactional(readOnly = true)
@@ -41,7 +48,7 @@ public class AchievementService {
         achievementRepository.save(achievement);
         return achievement;
     }
-        @Transactional
+    @Transactional
     public Achievement updateAchievement(Achievement achievement, int id) throws DataAccessException {
         Achievement toUpdate = findAchievementById(id);
         BeanUtils.copyProperties(achievement, toUpdate, "id");
@@ -93,7 +100,34 @@ public Boolean Success(Integer u, Integer achievementId) throws DataAccessExcept
             }
          }
 
+    } 
+    if(threshold == Threshold.CARDPLAYED){
+        Collection<Match> closedMatches=matchRepository.findMatchsClosed();
+        Map<Integer, Integer> cardCount  = new HashMap<>();
+         for (Match match : closedMatches) {
+            List<String> players = match.getJoinedPlayers();
+            if(players.contains(userName)){
+                if(players.get(0).equals(userName)){
+                    List<Integer> playedCards = match.getPlayedCards0();
+                    if (playedCards != null){
+                        for (Integer card : playedCards) {
+                            cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
+                        }
+                    }
+                 } else {
+                    List<Integer> playedCards = match.getPlayedCards1();
+                    if (playedCards != null){
+                        for (Integer card : playedCards) {
+                            cardCount.put(card, cardCount.getOrDefault(card, 0) + 1);
+                        }
+                    }
+                 }
+            }
+        }
+        if(cardCount.containsKey(metric)){
+            res = true;
+        }
     }
-    return res;
-    }
+    return res; 
+}
 }

@@ -24,13 +24,13 @@ INSERT INTO players(id, name, surname, avatar, nickname, email, biography, locat
 INSERT INTO players(id, name, surname, avatar, nickname, email, biography, location, birthdate, favorite_genres, favorite_platforms, favorite_sagas, profile_type, games_played_today, last_game_date, online) VALUES 
 (9, 'Seco', 'Keyo Marlin', 'https://cdn-icons-png.flaticon.com/512/603/603855.png', 'sukeyo', 'secaca@gmail.com', 'I do not know what is this', 'Don Benito', '2012-02-13', 'Drama', 'Disney Plus', null, 'HARDCORE', 0, null, 'false');
 
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (2, 'Match 2',null,null, 'CLOSED', null);
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (3, 'DO_NOT_ENTRY',null,null, 'OPEN', null);
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (4, 'Match 3','2024-09-11T17:59:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (5, 'Match 4','2024-09-11T17:43:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (6, 'Match 5','2024-09-11T17:46:36','2024-09-11T17:40:53', 'CLOSED', 'player2');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (7, 'Match 6','2024-09-11T18:00:36','2024-09-11T17:40:53', 'CLOSED', 'player1');
-INSERT INTO matches (id, name,finish_date,start_date, match_state, winner) VALUES (8, 'Match 7','2024-09-11T17:49:36','2024-09-11T17:40:53', 'CLOSED', 'player3');
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (2, 'Match 2',null,null, 'CLOSED', null,null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (3, 'DO_NOT_ENTRY',null,null, 'OPEN', null,null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (4, 'Match 3','2024-09-11T17:59:36','2024-09-11T17:40:53', 'CLOSED', 'player1',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (5, 'Match 4','2024-09-11T17:43:36','2024-09-11T17:40:53', 'CLOSED', 'player1',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (6, 'Match 5','2024-09-11T17:46:36','2024-09-11T17:40:53', 'CLOSED', 'player2',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (7, 'Match 6','2024-09-11T18:00:36','2024-09-11T17:40:53', 'CLOSED', 'player1',null,null);
+INSERT INTO matches (id, name,finish_date,start_date, match_state, winner,played_cards0,played_cards1) VALUES (8, 'Match 7','2024-09-11T17:49:36','2024-09-11T17:40:53', 'CLOSED', 'player3',null,null);
 
 
 
@@ -56,6 +56,7 @@ INSERT INTO achievement(id,metric,threshold,name) VALUES (4,5,'VICTORIES','Win 5
 INSERT INTO achievement(id,metric,threshold,name) VALUES (5,100,'GAMESPLAYED','Play 100 Game');
 INSERT INTO achievement(id,metric,threshold,name) VALUES (6,1,'TOTALPLAYTIME','Play 1 minutes');
 INSERT INTO achievement(id,metric,threshold,name) VALUES (7,100,'TOTALPLAYTIME','Play 100 minutes');
+INSERT INTO achievement(id,metric,threshold,name) VALUES (8,13,'CARDPLAYED','Play card with id 13');
 
 INSERT INTO request (id, player_one_id, player_two_id, status) VALUES (1,4,5,'ACCEPTED'); 
 

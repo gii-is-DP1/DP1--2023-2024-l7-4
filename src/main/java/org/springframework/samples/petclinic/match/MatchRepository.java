@@ -1,3 +1,4 @@
+
 package org.springframework.samples.petclinic.match;
 
 import java.util.Collection;
@@ -6,7 +7,6 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
 
 @Repository
 public interface MatchRepository extends CrudRepository<Match, Integer> {
@@ -28,5 +28,8 @@ public interface MatchRepository extends CrudRepository<Match, Integer> {
 
     @Query("SELECT m FROM Match m WHERE m.matchState IN (IN_PROGRESS)")
     public Collection<Match> findAllInProgress();
+    
+    @Query("SELECT COUNT(m) FROM Match m WHERE m.winner = :username AND :username MEMBER OF m.joinedPlayers")
+    public Integer findWinMatchsByPlayer(String username);
 
 }

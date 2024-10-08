@@ -84,7 +84,8 @@ export default function PlayerStadisticLogros() {
   );
 
   return (
-    <div className="auth-page-purple">
+    <div className='admin-page-container'>
+            <div className="hero-div">
       <Container style={{ marginTop: "15px" }} fluid>
         <h1 className="text-center">Statistics</h1>
         <div className="auth-page-yellow d-flex justify-content-center">
@@ -135,6 +136,7 @@ export default function PlayerStadisticLogros() {
           )}
         </Row>
       </Container>
+    </div>
     </div>
   );
 }

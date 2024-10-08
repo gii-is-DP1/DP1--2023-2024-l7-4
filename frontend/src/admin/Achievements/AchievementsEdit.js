@@ -9,13 +9,12 @@ export default function PlayerStadisticLogros() {
   const userId = user.id;
   
   const [achievements, setAchievements] = useState([]);
-  const [successMap, setSuccessMap] = useState({});
   const [selectedAchievement, setSelectedAchievement] = useState(null);
   const [editedAchievement, setEditedAchievement] = useState({});
   const [isModalEdit, setIsModalEdit] = useState(false);
   const [isModalCreate, setIsModalCreate] = useState(false);
   const [isModalDelete, setIsModalDelete] = useState(false);
-  const thresholdOptions = ['VICTORIES', 'GAMESPLAYED', 'TOTALPLAYTIME']
+  const thresholdOptions = ['','VICTORIES', 'GAMESPLAYED', 'TOTALPLAYTIME']
 
   const toggleModalEdit = () => setIsModalEdit(!isModalEdit);
   const toggleModalCreate = () => setIsModalCreate(!isModalCreate);
@@ -37,39 +36,6 @@ export default function PlayerStadisticLogros() {
       console.error(error.message);
     }
   };
-
-  const checkSuccess = async (achievementId) => {
-    try {
-      const response = await fetch(`/api/v1/achievements/${userId}/${achievementId}`, {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error(`Error al verificar logro`);
-      }
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error(error.message);
-      return false;
-    }
-  };
-
-  useEffect(() => {
-    const verifyAchievements = async () => {
-      const newSuccessMap = {};
-      for (const achievement of achievements) {
-        const isSuccess = await checkSuccess(achievement.id);
-        newSuccessMap[achievement.id] = isSuccess;
-      }
-      setSuccessMap(newSuccessMap);
-    };
-
-    if (achievements.length > 0) {
-      verifyAchievements();
-    }
-  }, [achievements]);
 
   useEffect(() => {
     fetchAchievements();
@@ -164,16 +130,15 @@ export default function PlayerStadisticLogros() {
   );
 
   return (
-    <div className="auth-page-purple">
+    <div className='admin-page-container'>
       <Container style={{ marginTop: "5px" }} fluid>
-        <h1 className="text-center">Achievements</h1>
+        <h1 className="text-center" >Achievements</h1>
         <Row>
           {achievements.length > 0 ? (
             achievements.map((achievement) => (
               <Col sm="6" key={achievement.id}>
                 <LogroBox>
                   <p>{achievement.name}</p>
-                  <p>{successMap[achievement.id] ? "✔️" : "❌"}</p>
                   <div style={{ position: "absolute", right: "10px", top: "10px" }}>
                     <Button color="warning" size="sm" onClick={() => handleEdit(achievement)}>Edit</Button>
                     {' '}

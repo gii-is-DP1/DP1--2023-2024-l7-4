@@ -1,12 +1,12 @@
-import {Button,Container,Row,Col} from "reactstrap";
+import {Button,Container} from "reactstrap";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 
 export default function PlayerStadisticList() {
-  const [, set] = useState([]);
 
   return (
-    <div className="auth-page-purple">
+    <div className='admin-page-container'>
+            <div className="hero-div">
    <Container style={{ marginTop: "15px" }} fluid>
           <h1 className="text-center">Statistics</h1>
           <div className="auth-page-yellow d-flex justify-content-center">
@@ -40,6 +40,7 @@ export default function PlayerStadisticList() {
           </div>
         </Container>
 
+    </div>
     </div>
   );
 }

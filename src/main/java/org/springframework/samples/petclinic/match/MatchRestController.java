@@ -262,12 +262,16 @@ public class MatchRestController {
                     gunfighter0.setPreventDamage(true);
                 }
                 gunfighter0.setCardPlayed(deckMessage.getPlayedCard0());
+                match.getPlayedCards0().add(deckMessage.getPlayedCard0());
+                matchService.saveMatch(match);
                 gunfighterService.save(gunfighter0);
             } else {
                 if (deckMessage.getPlayedCard1() == 30 && deckMessage.getPlayer1Cards().size() > 0) {
                     gunfighter1.setPreventDamage(true);
                 }
                 gunfighter1.setCardPlayed(deckMessage.getPlayedCard1());
+                match.getPlayedCards1().add(deckMessage.getPlayedCard1());
+                matchService.saveMatch(match);
                 gunfighterService.save(gunfighter1);
             }
 
@@ -367,12 +371,15 @@ public class MatchRestController {
     public ResponseEntity<Map<String, String>> maxPlayerPlayed(@PathVariable("username") Integer username) {
         return new ResponseEntity<>(matchService.maxPlayerPlayedByUserName(username),HttpStatus.OK);
     }
+    @GetMapping("/maxCardPlayed/{username}")
+    public ResponseEntity<Map<String, Integer>> maxCardPlayed(@PathVariable("username") Integer username) {
+        return new ResponseEntity<>(matchService.maxCardPlayedByUserName(username),HttpStatus.OK);
+    }
     //RANKING
     @GetMapping("/winners")
     public ResponseEntity<Map<String, Integer>> maxWinnerPlayer() {
         return new ResponseEntity<>(matchService.maxWinnerPlayer(),HttpStatus.OK);
     }
-
 
 
     //PUBLIC
@@ -400,35 +407,12 @@ public class MatchRestController {
     @GetMapping("/avgTimePlayedPublic/{username}")
         public Double averageTimePlayedPublic(@PathVariable("username") String username) {
             return matchService.averageTimePlayedPublic(username);
+        }
+    
+    @GetMapping("/timePlayed")
+    public ResponseEntity<Map<String, Double>> timePlayedPlayer() {
+        return new ResponseEntity<>(matchService.maxTimePlayer(),HttpStatus.OK);
     }
 
-
-    /*
-     * @MessageMapping("/match/{id}/players")
-     * 
-     * @SendTo("/topic/match/{id}/players")
-     * public MatchGunfighterMessage
-     * particularGamePlayerMessage(@DestinationVariable int id,
-     * Integer playerNumber) {
-     * Gunfighter gunfighter = gunfighterService.findByMatchAndGunfighter(id,
-     * playerNumber);
-     * return new MatchGunfighterMessage(TypeMessage.PLAYERINFO,
-     * gunfighter.getHealth(),
-     * gunfighter.getBullets(),
-     * gunfighter.getPrecision(), gunfighter.getPlayerNumber(),
-     * gunfighter.getCards());
-     * }
-     * 
-     * @MessageMapping("/match/{id}/actions")
-     * 
-     * @SendTo("/topic/match/{id}/actions")
-     * public MatchActionsPlayersMessage
-     * particularGameActionMessage(@DestinationVariable int id,
-     * MatchActionsPlayersMessage actionMessage) {
-     * return new MatchActionsPlayersMessage(actionMessage.getAction(),
-     * actionMessage.getPlayerNumber());
-     * }
-     * 
-     */
 
 }
