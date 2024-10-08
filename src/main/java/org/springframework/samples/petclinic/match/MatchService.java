@@ -13,7 +13,6 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.card.CardService;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
-import org.springframework.samples.petclinic.gunfighter.GunfighterService;
 import org.springframework.samples.petclinic.user.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -83,10 +83,10 @@ public class AuthController {
 
 	@PatchMapping("/signout")
 	public ResponseEntity<MessageResponse> signOut(@Valid @RequestBody String username) {
-		if (!(username == "admin1")){
-		Player p = playerService.findByUsername(username.replace("\"", ""));
-		p.setOnline(false);
-		playerService.savePlayer(p);
+		if (!(username=="admin1")){
+			Player p = playerService.findByUsername(username.replace("\"", ""));
+			p.setOnline(false);
+			playerService.savePlayer(p);
 		}
 		return ResponseEntity.ok(new MessageResponse("Player signed out successfully!"));
 	}

@@ -84,32 +84,32 @@ export default function PlayerEditAdmin() {
             <div className="main-info">
               <h1>Player</h1>
               <FormGroup>
-                <Label for="name">Name</Label>
+                <Label for="name">Name<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="name" id="name" value={player.name || ""}
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="surname">Surname</Label>
+                <Label for="surname">Surname<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="surname" id="surname" value={player.surname || ""}
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="nickname">Nickname</Label>
+                <Label for="nickname">Nickname<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="nickname" id="nickname" value={player.nickname || ""}
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="email">Email</Label>
+                <Label for="email">Email<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="email" id="email" value={player.email || ""}
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="username">Username</Label>
+                <Label for="username">Username<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="username" id="username" value={player.username || ""}
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="password">Password</Label>
+                <Label for="password">Password<span className="required-asterisk">*</span></Label>
                 <Input type="password" required name="password" id="password" value={player.password || ""}
                   onChange={handleChange} />
               </FormGroup>
@@ -118,7 +118,7 @@ export default function PlayerEditAdmin() {
             <div className="public-info">
               <h1>Public Profile</h1>
               <FormGroup>
-                <Label for="avatar">Avatar</Label>
+                <Label for="avatar">Avatar<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="avatar" id="avatar" value={player.avatar || ""}
                   onChange={handleChange} />
               </FormGroup>
@@ -128,7 +128,7 @@ export default function PlayerEditAdmin() {
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="location">Location</Label>
+                <Label for="location">Location<span className="required-asterisk">*</span></Label>
                 <Input type="text" required name="location" id="location" value={player.location || ""}
                   onChange={handleChange} />
               </FormGroup>
@@ -153,7 +153,7 @@ export default function PlayerEditAdmin() {
                   onChange={handleChange} />
               </FormGroup>
               <FormGroup>
-                <Label for="profileType">Profile Type</Label>
+                <Label for="profileType">Profile Type<span className="required-asterisk">*</span></Label>
                 <Input type="select" required name="profileType" id="profileType" value={player.profileType || "CASUAL"} onChange={handleChange}>
                   <option value="HARDCORE">HARDCORE</option>
                   <option value="CASUAL">CASUAL</option>

@@ -25,10 +25,10 @@ const WebSocketComponent = () => {
   const [showEndModal, setShowEndModal] = useState(false);
   const [chooseCard, setChooseCard] = useState(0);
   const [tempCardPlayed, setTempCardPlayed] = useState(0);
+  const [timeElapsed, setTimeElapsed] = useState(0);
   const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
   const [messageTerm, setMessageTerm] = useState("");
   const [chatMessages, setChatMessages] = useState([]);
-  const [timeElapsed, setTimeElapsed] = useState(0);
   const [showAbandonedModal, setShowAbandonedModal] = useState(false);
   const [matchPlayerList, setMatchPlayerList] = useState([]);
   const [advertiseTimeLimit, setAdvertiseTimeLimit] = useState(0);
@@ -60,8 +60,16 @@ const WebSocketComponent = () => {
   const [stompClient, setStompClient] = useState(null);
   const [typePlayer, setTypePlayer] = useState(null);
 
-
   const matchId = getIdFromUrl(2);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeElapsed(prev => prev + 1);
+    }, 1000); // Incrementar cada segundo
+    return () => clearInterval(timer); // Limpiar el temporizador al desmontar
+  }, []);
+  useEffect(() => {
+  }, [timeElapsed])
 
   const handleMessageChange = (e) => {
     setMessageTerm(e.target.value);

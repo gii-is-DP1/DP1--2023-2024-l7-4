@@ -4,7 +4,7 @@ import tokenService from "../services/token.service";
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
 import jwtDecode from 'jwt-decode';
-import { Button, Table } from 'reactstrap';
+import { Table } from 'reactstrap';
 import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 import ImageButton from '../components/buttons/imageButton';
@@ -183,7 +183,7 @@ export default function Home() {
           <div className="hero-div">
             Online Friends
             <div>
-              {jwt && friendsOnline.map((f) => (
+              {jwt && Array.isArray(friendsOnline) && friendsOnline.map((f) => (
                 <div key={f.id}>{f.nickname}
                   {inProgressMatches.map((match) => {
                     const allFriendsInMatch = match.joinedPlayers.includes(f.username) && match.joinedPlayers.every(player =>

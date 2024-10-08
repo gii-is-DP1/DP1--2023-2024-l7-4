@@ -124,6 +124,11 @@ public class PlayerRestController {
 	@GetMapping(value = "/public/{username}")
 	public ResponseEntity<PlayerDetailDTO> getPlayerDetails(@PathVariable("username") String username) {
     	Player player = playerService.findByUsername(username);
+
+		if (player == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
     	PlayerDetailDTO dto = new PlayerDetailDTO();
 		dto.setNickname(player.getNickname());
     	dto.setAvatar(player.getAvatar());

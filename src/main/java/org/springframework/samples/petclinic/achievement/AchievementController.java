@@ -8,12 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.configuration.services.NotificationService;
-import org.springframework.samples.petclinic.gunfighter.GunfighterService;
-import org.springframework.samples.petclinic.match.MatchService;
-import org.springframework.samples.petclinic.match.MatchState;
-import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,12 +27,10 @@ import jakarta.validation.Valid;
 @SecurityRequirement(name = "bearerAuth")
 public class AchievementController {
 
-    private MatchService matchService;
     private AchievementService achievementService;
 
     @Autowired
-    public AchievementController(MatchService matchService,AchievementService achievementService) {
-        this.matchService = matchService;
+    public AchievementController(AchievementService achievementService) {
         this.achievementService= achievementService;
 
     }

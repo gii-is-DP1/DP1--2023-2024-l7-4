@@ -364,3 +364,7 @@ thead.entrada-tabla {
     margin-top: 10px;
 }
 
+.required-asterisk {
+    color: red;
+}
+
