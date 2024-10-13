@@ -114,6 +114,7 @@ class PlayerRestControllerTests {
     @WithMockUser("admin")
     void shouldCreatePlayer() throws Exception {
         Player newPlayer = new Player();
+        newPlayer.setId(2);
         newPlayer.setUsername("jane.doe");
         newPlayer.setPassword("password");
         newPlayer.setAuthority(authorities);
@@ -121,7 +122,8 @@ class PlayerRestControllerTests {
         newPlayer.setSurname("Doe");
         newPlayer.setAvatar("avatar2.png");
         newPlayer.setNickname("janedoe");
-        newPlayer.setEmail("jane.doe@example.com");
+        newPlayer.setEmail("sadas@gmail.com");
+        newPlayer.setLocation("London");
 
         when(playerService.savePlayer(any(Player.class))).thenReturn(newPlayer);
 
@@ -131,6 +133,7 @@ class PlayerRestControllerTests {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name").value("Jane"))
                 .andExpect(jsonPath("$.username").value("jane.doe"));
+
     }
 
     @Test
@@ -182,12 +185,12 @@ class PlayerRestControllerTests {
     @Test
     @WithMockUser("admin")
     void shouldReturnEmptyListWhenNoPlayersExist() throws Exception {
-        
+
         when(playerService.findAll()).thenReturn(List.of());
 
         mockMvc.perform(get(BASE_URL + "/public"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isEmpty()); 
+                .andExpect(jsonPath("$").isEmpty());
     }
 
     @Test
