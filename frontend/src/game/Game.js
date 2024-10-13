@@ -1,57 +1,37 @@
-import React, { useEffect, useState } from "react";
-import {
-  Form,
-  FormGroup,
-  Label,
-  Modal,
-  ModalBody,
-  ModalFooter,
-  ModalHeader,
-  Input,
-  Button,
-  Card,
-  // Add Text import here
-} from "reactstrap";
-import axios from "axios";
-
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
+import React, { useEffect, useState } from 'react';
 import getIdFromUrl from "../util/getIdFromUrl";
-import tokenService from "../services/token.service";
-import jwtDecode from "jwt-decode";
-import "../static/css/GameBoard.css";
-import "../static/css/playerStats.css";
-import CardButton from "../components/buttons/cardButton";
-import {
-  generateNewRandomNumbers,
-  generateUniqueRandomNumbers,
-  initialDeal,
-  handleActionCard,
-} from "../util/game/utils";
-import DiscardCardsModalContent from "../components/modals/DiscardCardsModalContent";
-import CardRow from "../components/modals/CardRow";
-import TopRow from "../components/modals/TopRow";
-import PlayerStats from "../util/game/playerStatsModal";
-import GameModals from "../components/modals/GameModals";
-import WebSocketHandler from "./WebSocketHandler";
+import tokenService from '../services/token.service';
+import jwtDecode from 'jwt-decode';
+import axios from 'axios';
+import '../static/css/GameBoard.css';
+import '../static/css/playerStats.css';
+import CardButton from '../components/buttons/cardButton';
+import CardRow from '../components/modals/CardRow';
+import TopRow from '../components/modals/TopRow';
+import PlayerStats from '../util/game/playerStatsModal';
+import GameModals from '../components/modals/GameModals';
+import WebSocketHandler from './WebSocketHandler';
+import { Button } from 'reactstrap';
+
 
 const WebSocketComponent = () => {
   const jwt = tokenService.getLocalAccessToken();
   const username = jwt ? jwtDecode(jwt).sub : "null";
   const [playerNumber, setPlayerNumber] = useState(null);
   const [received, setReceived] = useState(false);
-  const [rightButtonImg, setRightButtonImg] = useState("");
+  const [rightButtonImg, setRightButtonImg] = useState('');
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showCards, setShowCards] = useState(false);
   const [showEndModal, setShowEndModal] = useState(false);
   const [chooseCard, setChooseCard] = useState(0);
   const [tempCardPlayed, setTempCardPlayed] = useState(0);
-  const [
-    showConfirmationDiscardToPrevent,
-    setShowConfirmationDiscardToPrevent,
-  ] = useState(false);
-  const [chatMessages, setChatMessages] = useState([]);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [showConfirmationDiscardToPrevent, setShowConfirmationDiscardToPrevent] = useState(false);
   const [messageTerm, setMessageTerm] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
+  const [showAbandonedModal, setShowAbandonedModal] = useState(false);
+  const [matchPlayerList, setMatchPlayerList] = useState([]);
+  const [advertiseTimeLimit, setAdvertiseTimeLimit] = useState(0);
 
   const [statePlayer0, setStatePlayer0] = useState({
     health: 2,
@@ -60,7 +40,6 @@ const WebSocketComponent = () => {
     cards: [],
     cardPlayed: null,
     playerNumber: 0,
-    doubleCard: false,
   });
 
   const [statePlayer1, setStatePlayer1] = useState({
@@ -70,7 +49,6 @@ const WebSocketComponent = () => {
     cards: [],
     cardPlayed: null,
     playerNumber: 1,
-    doubleCard: false,
   });
 
   const [waiting, setWaiting] = useState(false);
@@ -78,46 +56,82 @@ const WebSocketComponent = () => {
   const [readyForDiscard, setReadyForDiscard] = useState(false);
   const [discardedCards, setDiscardedCards] = useState([]);
 
-  const [deckOfCards, setDeckOfCards] = useState(generateUniqueRandomNumbers());
+  const [deckOfCards, setDeckOfCards] = useState([]);
   const [stompClient, setStompClient] = useState(null);
+  const [typePlayer, setTypePlayer] = useState(null);
 
   const matchId = getIdFromUrl(2);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeElapsed(prev => prev + 1);
+    }, 1000); // Incrementar cada segundo
+    return () => clearInterval(timer); // Limpiar el temporizador al desmontar
+  }, []);
+  useEffect(() => {
+  }, [timeElapsed])
 
   const handleMessageChange = (e) => {
     setMessageTerm(e.target.value);
   };
 
+  useEffect(() => {
+    if (typePlayer === 'CASUAL') {
+      const timer = setInterval(() => {
+        setTimeElapsed(prev => {
+          return prev + 1;
+        });
+      }, 1000);
+
+      return () => clearInterval(timer);
+    }
+  }, [typePlayer]);
+
+  useEffect(() => {
+    if (timeElapsed >= 240) {
+      setAdvertiseTimeLimit(2);
+    } else if (timeElapsed === 200)
+      setAdvertiseTimeLimit(1);
+  }, [timeElapsed])
+
+  useEffect(() => {
+    return () => {
+      handleSendDeckMessage('END');
+    };
+  }, []);
+
   //UseEffect inicial para recibir las cartas
   useEffect(() => {
-    if (!received) handleSendDeckMessage("READY");
-  }, [stompClient, received]);
+    if (!received && (playerNumber === 1 || playerNumber === 0))
+      handleSendDeckMessage('READY');
+    else
+      setShowCards(true)
+  }, [stompClient, received, playerNumber]);
 
-  //Rebarajar las cartas
+
   useEffect(() => {
-    if (
-      deckOfCards.length < 1 &&
-      statePlayer0.cards.length !== 0 &&
-      statePlayer1.cards.length !== 0
-    )
-      setDeckOfCards(
-        generateNewRandomNumbers(statePlayer0.cards, statePlayer1.cards)
-      );
-  }, [deckOfCards]);
+    if (waiting)
+      setShowCards(false);
+  }, [waiting])
 
-  //Acciones
+  //Acciones 
   useEffect(() => {
     if (statePlayer0.cardPlayed > 0 && statePlayer1.cardPlayed > 0 && played) {
       setShowCards(true);
       setWaiting(false);
-      setPlayed(false);
     }
   }, [statePlayer0.cardPlayed, statePlayer1.cardPlayed, played]);
 
+
   //Accionar el final de partida
   useEffect(() => {
-    if (statePlayer0.health < 1 || statePlayer1.health < 1)
+    if (statePlayer0.health < 1 || statePlayer1.health < 1) {
+      setShowConfirmationModal(false);
       setShowEndModal(true);
+    }
+
   }, [statePlayer0.health, statePlayer1.health]);
+
 
   useEffect(() => {
     if (
@@ -136,17 +150,17 @@ const WebSocketComponent = () => {
   const handleActionConfirmed = async () => {
     setShowConfirmationModal(false);
     setShowCards(false);
-    console.log(`${waiting}, ${playerNumber}`);
+    setPlayed(false);
     if (waiting) {
       switch (playerNumber) {
         case 0:
-          setStatePlayer0((prevState) => ({
+          setStatePlayer0(prevState => ({
             ...prevState,
             cardPlayed: -1,
           }));
           break;
         case 1:
-          setStatePlayer1((prevState) => ({
+          setStatePlayer1(prevState => ({
             ...prevState,
             cardPlayed: -1,
           }));
@@ -155,11 +169,11 @@ const WebSocketComponent = () => {
           break;
       }
     } else {
-      setStatePlayer0((prevState) => ({
+      setStatePlayer0(prevState => ({
         ...prevState,
         cardPlayed: -1,
       }));
-      setStatePlayer1((prevState) => ({
+      setStatePlayer1(prevState => ({
         ...prevState,
         cardPlayed: -1,
       }));
@@ -280,6 +294,20 @@ const WebSocketComponent = () => {
         })
       );
     }
+    else if (type === "END") {
+      stompClient.send(
+        `/app/match/${matchId}/cards`,
+        {},
+        JSON.stringify({
+          type: "END",
+          deckCards: deckOfCards,
+          player0Cards: playerNumber === 0 ? statePlayer0.cards : Array.of(),
+          player1Cards: playerNumber === 1 ? statePlayer1.cards : Array.of(),
+          playedCard0: -1,
+          playedCard1: -1,
+        })
+      );
+    }
   };
 
   const handleSendChatMessage = async (message) => {
@@ -318,13 +346,27 @@ const WebSocketComponent = () => {
 
   const handleGoToLobby = () => {
     if (playerNumber === 0) {
-      if (statePlayer0.health < 1) window.location.href = "/";
-      else handleSetMatchWinner();
+      if (statePlayer0.health < 1)
+        window.location.href = ('/');
+      else
+        handleSetMatchWinner(username);
     } else {
-      if (statePlayer1.health < 1) window.location.href = "/";
-      else handleSetMatchWinner();
+      if (statePlayer1.health < 1)
+        window.location.href = ('/');
+      else
+        handleSetMatchWinner(username);
     }
   };
+
+  const handleCasualLeaves = () => {
+    if (advertiseTimeLimit === 2) {
+      if (playerNumber === 0)
+        handleSetMatchWinner(matchPlayerList[1]);
+      else if (playerNumber === 1)
+        handleSetMatchWinner(matchPlayerList[0]);
+    }else if(advertiseTimeLimit === 1)
+      setAdvertiseTimeLimit(0)
+  }
 
   const intimidationCardInHand = (cards) => {
     if (cards.includes(45)) {
@@ -332,26 +374,25 @@ const WebSocketComponent = () => {
     }
   };
 
-  const handleSetMatchWinner = async () => {
-    await fetch(`/api/v1/matches/${matchId}/winner`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: `${username}`,
-    })
-      .then((response) => {
+  const handleSetMatchWinner = async (playerUsername) => {
+    try {
+      await fetch(`/api/v1/matches/${matchId}/winner`, {
+        method: 'PATCH',
+        headers: {
+          "Authorization": `Bearer ${jwt}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: `${playerUsername}`
+      }).then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        return response.json();
-      })
-      .then((window.location.href = "/"))
-      .catch((error) => {
-        console.error("Error setting the winner:", error);
-      });
+      }).then(handleSendDeckMessage('END')).then(window.location.href = '/')
+
+    } catch (error) {
+      console.error('Error setting the winner:', error);
+    }
   };
 
   const handleSetDiscardCard = (player, cardNumber) => {
@@ -389,45 +430,41 @@ const WebSocketComponent = () => {
         setReadyForDiscard={setReadyForDiscard}
         setReceived={setReceived}
         setShowCards={setShowCards}
+        setPlayed={setPlayed}
         setWaiting={setWaiting}
         setStompClient={setStompClient}
         setChatMessages={setChatMessages}
-        chatMessages={chatMessages}
         setChooseCard={setChooseCard}
         setShowConfirmationModal={setShowConfirmationModal}
         tempCardPlayed={tempCardPlayed}
         setTempCardPlayed={setTempCardPlayed}
+        setTypePlayer={setTypePlayer}
+        setShowAbandonedModal={setShowAbandonedModal}
+        setMatchPlayerList={setMatchPlayerList}
       />
-      <PlayerStats
-        health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health}
-        bullets={
-          playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets
-        }
-        precision={
-          playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision
-        }
-      />
-      {playerNumber === 0 ? (
-        intimidationCardInHand(statePlayer1.cards) ? (
-          <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h>
-        ) : (
-          ""
-        )
-      ) : intimidationCardInHand(statePlayer0.cards) ? (
-        <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h>
-      ) : (
-        ""
-      )}
-      <TopRow />
-      {playerNumber === 0 && (
+      <PlayerStats health={playerNumber === 0 ? statePlayer1.health : statePlayer0.health} bullets={playerNumber === 0 ? statePlayer1.bullets : statePlayer0.bullets} precision={playerNumber === 0 ? statePlayer1.precision : statePlayer0.precision} />
+      {playerNumber !== 1 && playerNumber !== 0 &&
+        <div className='western-message2'>
+          Player 0
+        </div>}
+      {playerNumber === 0 ?
+        (intimidationCardInHand(statePlayer1.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+        : playerNumber === 1 ?
+          (intimidationCardInHand(statePlayer0.cards) ? <h>'THE ENEMY HAS THE INTIMIDATION CARD!!' </h> : '')
+          : ''
+      }
+      {(playerNumber !== 0 && playerNumber !== 1) ?
+        <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer1.cards : statePlayer0.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
+        : <TopRow />}
+      {playerNumber === 0 ?
         <div className="middle-row">
           {chatMessages && (
             <div className="hero-div">
-              {chatMessages.slice(-3).map((message, index) => (
-                <h3 key={index}>
+              {chatMessages.slice(-7).map((message, index) => (
+                <h2 key={index}>
                   {message.playerNumber === playerNumber ? "You" : "Enemy"}:
                   {message.message}
-                </h3>
+                </h2>
               ))}
 
               <input
@@ -438,6 +475,7 @@ const WebSocketComponent = () => {
                 className="search-input"
               />
               <Button
+                className='button-container'
                 color="primary"
                 onClick={() => handleSendChatMessage(messageTerm)}
               >
@@ -445,89 +483,52 @@ const WebSocketComponent = () => {
               </Button>
             </div>
           )}
-          <CardButton
-            className="middleleft-button"
-            imgSrc={
-              statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1
-                ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png`
-                : `${process.env.PUBLIC_URL}/cards/backface.png`
-            }
-          />
-          <CardButton
-            className="middleright-button"
-            imgSrc={
-              statePlayer1.cardPlayed &&
-              statePlayer1.cardPlayed !== -1 &&
-              showCards
-                ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png`
-                : `${process.env.PUBLIC_URL}/cards/backface.png`
-            }
-          />
+          <CardButton className="middleleft-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+          <CardButton className="middleright-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
           <CardButton className="right-button" imgSrc={rightButtonImg} />
         </div>
-      )}
-      {playerNumber === 1 && (
-        <div className="middle-row">
-          {chatMessages && (
-            <div className="hero-div">
-              {chatMessages.slice(-3).map((message, index) => (
-                <h3 key={index}>
-                  {message.playerNumber === playerNumber ? "You" : "Enemy"}:
-                  {message.message}
-                </h3>
-              ))}
-              <input
-                type="text"
-                placeholder="Write a message..."
-                value={messageTerm}
-                onChange={handleMessageChange}
-                className="search-input"
-              />
-              <Button
-                color="primary"
-                onClick={() => handleSendChatMessage(messageTerm)}
-              >
-                Send
-              </Button>
-            </div>
-          )}
-          <CardButton
-            className="middleleft-button"
-            imgSrc={
-              statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1
-                ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png`
-                : `${process.env.PUBLIC_URL}/cards/backface.png`
-            }
-          />
-          <CardButton
-            className="middleright-button"
-            imgSrc={
-              statePlayer0.cardPlayed &&
-              statePlayer0.cardPlayed !== -1 &&
-              showCards
-                ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png`
-                : `${process.env.PUBLIC_URL}/cards/backface.png`
-            }
-          />
-          <CardButton className="right-button" imgSrc={rightButtonImg} />
-        </div>
-      )}
-      <PlayerStats
-        health={playerNumber === 0 ? statePlayer0.health : statePlayer1.health}
-        bullets={
-          playerNumber === 0 ? statePlayer0.bullets : statePlayer1.bullets
-        }
-        precision={
-          playerNumber === 0 ? statePlayer0.precision : statePlayer1.precision
-        }
-      />
-      <CardRow
-        player={playerNumber}
-        cards={playerNumber === 0 ? statePlayer0.cards : statePlayer1.cards}
-        handleSetCardPlayed={handleSetCardPlayed}
-        handleMouseEnter={handleMouseEnter}
-      />
+        : playerNumber === 1 ?
+          <div className="middle-row">
+            {chatMessages && (
+              <div className="hero-div">
+                {chatMessages.slice(-7).map((message, index) => (
+                  <h2 key={index}>
+                    {message.playerNumber === playerNumber ? "You" : "Enemy"}:
+                    {message.message}
+                  </h2>
+                ))}
 
+                <input
+                  type="text"
+                  placeholder="Write a message..."
+                  value={messageTerm}
+                  onChange={handleMessageChange}
+                  className="search-input"
+                />
+                <Button
+                  color="primary"
+                  onClick={() => handleSendChatMessage(messageTerm)}
+                  className='button-container'
+                >
+                  Send
+                </Button>
+              </div>
+            )}
+            <CardButton className="middleleft-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+            <CardButton className="middleright-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+            <CardButton className="right-button" imgSrc={rightButtonImg} />
+          </div> :
+          <div>
+            <CardButton className="middleleft-button" imgSrc={statePlayer1.cardPlayed && statePlayer1.cardPlayed !== -1 ? `${process.env.PUBLIC_URL}/cards/card${statePlayer1.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+            <CardButton className="middleright-button" imgSrc={statePlayer0.cardPlayed && statePlayer0.cardPlayed !== -1 && showCards ? `${process.env.PUBLIC_URL}/cards/card${statePlayer0.cardPlayed}.png` : `${process.env.PUBLIC_URL}/cards/backface.png`} />
+          </div>
+      }
+      <PlayerStats health={playerNumber === 0 ? statePlayer0.health : statePlayer1.health} bullets={playerNumber === 0 ? statePlayer0.bullets : statePlayer1.bullets} precision={playerNumber === 0 ? statePlayer0.precision : statePlayer1.precision} />
+      {playerNumber !== 1 && playerNumber !== 0 &&
+        <div className='western-message2'>
+          Player 1
+        </div>}
+      <CardRow player={playerNumber} cards={playerNumber === 0 ? statePlayer0.cards : statePlayer1.cards} handleSetCardPlayed={handleSetCardPlayed} handleMouseEnter={handleMouseEnter} />
       <GameModals
         showConfirmationModal={showConfirmationModal && chooseCard === 0}
         handleActionConfirmed={handleActionConfirmed}
@@ -549,9 +550,10 @@ const WebSocketComponent = () => {
         setDeckOfCards={setDeckOfCards}
         handleSendDeckMessage={handleSendDeckMessage}
         showConfirmationDiscardToPrevent={showConfirmationDiscardToPrevent}
-        setShowConfirmationDiscardToPrevent={
-          setShowConfirmationDiscardToPrevent
-        }
+        setShowConfirmationDiscardToPrevent={setShowConfirmationDiscardToPrevent}
+        showAbandonedModal={showAbandonedModal}
+        advertiseTimeLimit={advertiseTimeLimit}
+        handleCasualLeaves={handleCasualLeaves}
       />
     </div>
   );

@@ -63,10 +63,11 @@ public class AuthController {
 			UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 			List<String> roles = userDetails.getAuthorities().stream().map(item -> item.getAuthority())
 					.collect(Collectors.toList());
-			Player p = playerService.findByUsername(userDetails.getUsername());
-			p.setOnline(true);
-			playerService.savePlayer(p);
-
+			if (!roles.contains("ADMIN")) {
+				Player p = playerService.findByUsername(userDetails.getUsername());
+				p.setOnline(true);
+				playerService.savePlayer(p);
+			}
 			return ResponseEntity.ok()
 					.body(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(), roles));
 		} catch (BadCredentialsException exception) {
@@ -82,9 +83,11 @@ public class AuthController {
 
 	@PatchMapping("/signout")
 	public ResponseEntity<MessageResponse> signOut(@Valid @RequestBody String username) {
-		Player p = playerService.findByUsername(username.replace("\"", ""));
-		p.setOnline(false);
-		playerService.savePlayer(p);
+		if (!(username=="admin1")){
+			Player p = playerService.findByUsername(username.replace("\"", ""));
+			p.setOnline(false);
+			playerService.savePlayer(p);
+		}
 		return ResponseEntity.ok(new MessageResponse("Player signed out successfully!"));
 	}
 

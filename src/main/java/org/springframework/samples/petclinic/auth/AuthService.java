@@ -36,6 +36,13 @@ public class AuthService {
 		player.setNickname(request.getNickname());
 		player.setEmail(request.getEmail());
 		player.setUsername(request.getUsername());
+		player.setLocation(request.getLocation());
+		player.setBiography(request.getBiography());
+		player.setBirthdate(request.getBirthdate());
+		player.setFavoriteGenres(request.getFavoriteGenres());
+		player.setFavoritePlatforms(request.getFavoritePlatforms());
+		player.setFavoriteSagas(request.getFavoriteSagas());
+		player.setProfileType(request.getProfileType());
 		player.setPassword(encoder.encode(request.getPassword()));
 		player.setAuthority(role);
 		playerService.savePlayer(player);

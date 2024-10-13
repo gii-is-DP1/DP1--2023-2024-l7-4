@@ -1,8 +1,10 @@
 package org.springframework.samples.petclinic.match;
 
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +17,12 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.samples.petclinic.configuration.services.NotificationService;
 import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.gunfighter.GunfighterService;
-import org.springframework.samples.petclinic.match.messages.MatchChatMessage;
 import org.springframework.samples.petclinic.match.messages.MatchDeckMessage;
 import org.springframework.samples.petclinic.match.messages.MatchMessage;
 import org.springframework.samples.petclinic.match.messages.TypeMessage;
+import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
+import org.springframework.samples.petclinic.player.ProfileType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -58,16 +61,21 @@ public class MatchRestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted) {
-        if (sorted)
+    public ResponseEntity<List<Match>> findAll(@RequestParam(required = false, name = "open") boolean sorted,
+            @RequestParam(required = false, name = "inProgress") boolean inProgress) {
+        if (sorted){
             return new ResponseEntity<>((List<Match>) this.matchService.findAllOpenList(), HttpStatus.OK);
-        return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
+        }else if (inProgress)
+            return new ResponseEntity<>((List<Match>) matchService.findAllInprogressList(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>((List<Match>) matchService.findAll(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Match> findById(@PathVariable(name = "id") int id) {
         return new ResponseEntity<>(matchService.findMatchById(id), HttpStatus.OK);
     }
+
 
     @GetMapping("/player/{username}")
     public ResponseEntity<List<Match>> findAllByUsername(@PathVariable(name = "username") String username) {
@@ -77,6 +85,28 @@ public class MatchRestController {
     @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Match> create(@RequestBody @Valid Match match) throws URISyntaxException {
+        String username = match.getJoinedPlayers().get(0);
+        Player player = playerService.findByUsername(username);
+
+        if (player.getProfileType() == ProfileType.CASUAL) {
+            LocalDate today = LocalDate.now();
+
+            if (player.getLastGameDate() == null || !player.getLastGameDate().isEqual(today)) {
+                player.setGamesPlayedToday(0);
+                player.setLastGameDate(today);
+            }
+
+            if (player.getGamesPlayedToday() == null) {
+                player.setGamesPlayedToday(0);
+            }
+
+            if (player.getGamesPlayedToday() >= 2) {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
+        }
+
+        player.setGamesPlayedToday(player.getGamesPlayedToday() + 1);
+        playerService.savePlayer(player);
         Match newMatch = new Match();
         BeanUtils.copyProperties(match, newMatch, "id", "matchState");
         newMatch.setMatchState(MatchState.OPEN);
@@ -84,6 +114,7 @@ public class MatchRestController {
 
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
     // FUNCION PARA JOIN
 
     @PutMapping("/{id}/join")
@@ -114,6 +145,7 @@ public class MatchRestController {
         Match savedMatch = matchService.saveMatch(m);
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
+
 
     @PatchMapping("/{id}/winner")
     @ResponseStatus(HttpStatus.CREATED)
@@ -163,9 +195,18 @@ public class MatchRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMatch(@PathVariable(name = "id") int id) {
+        Match match = matchService.findMatchById(id);
+        if (match == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND); 
+        }
+        String creator = match.getJoinedPlayers().get(0);
+        Player player = playerService.findByUsername(creator);
+        player.setGamesPlayedToday(player.getGamesPlayedToday() - 1);
+        playerService.savePlayer(player); 
         matchService.deleteMatch(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
     @MessageMapping("/match/messages")
     @SendTo("/topic/match/messages")
@@ -221,12 +262,16 @@ public class MatchRestController {
                     gunfighter0.setPreventDamage(true);
                 }
                 gunfighter0.setCardPlayed(deckMessage.getPlayedCard0());
+                match.getPlayedCards0().add(deckMessage.getPlayedCard0());
+                matchService.saveMatch(match);
                 gunfighterService.save(gunfighter0);
             } else {
                 if (deckMessage.getPlayedCard1() == 30 && deckMessage.getPlayer1Cards().size() > 0) {
                     gunfighter1.setPreventDamage(true);
                 }
                 gunfighter1.setCardPlayed(deckMessage.getPlayedCard1());
+                match.getPlayedCards1().add(deckMessage.getPlayedCard1());
+                matchService.saveMatch(match);
                 gunfighterService.save(gunfighter1);
             }
 
@@ -237,17 +282,38 @@ public class MatchRestController {
 
             if (gunfighter0.getCardPlayed() != -1 && gunfighter1.getCardPlayed() != -1) {
 
-                matchService.actionCards(match, gunfighter0, gunfighter1);
-                matchService.saveMatch(match);
-                gunfighterService.resetState(gunfighter0);
-                gunfighterService.resetState(gunfighter1);
+                if (gunfighter0.getCardPlayedBefore() == 41) {
 
-                return new MatchDeckMessage(TypeMessage.PLAYERINFO, match.getDeck(), List.of(), List.of(), -1,
-                        -1);
-            } else {
-                return null;
+                    matchService.actionCards(match, gunfighter0, gunfighter1);
+                    gunfighterService.resetPartialState(gunfighter0);
+                    gunfighterService.save(gunfighter1);
+
+                } else if (gunfighter1.getCardPlayedBefore() == 41) {
+
+                    matchService.actionCards(match, gunfighter0, gunfighter1);
+                    gunfighterService.resetPartialState(gunfighter1);
+                    gunfighterService.save(gunfighter0);
+
+                } else {
+                    if ((gunfighter0.getCardPlayedBefore() != 41 && gunfighter0.getInsidious() > 0)
+                            || (gunfighter1.getCardPlayedBefore() != 41 && gunfighter1.getInsidious() > 0)) {
+                        matchService.actionSingleCard(match, gunfighter0, gunfighter1);
+                    } else {
+                        matchService.actionCards(match, gunfighter0, gunfighter1);
+                    }
+                    gunfighterService.resetState(gunfighter0);
+                    gunfighterService.resetState(gunfighter1);
+                }
+
+                matchService.saveMatch(match);
+
+                return new MatchDeckMessage(TypeMessage.PLAYERINFO, match.getDeck(), List.of(), List.of(), -1, -1);
             }
+
+            return null;
+
         }
+
         return new MatchDeckMessage(deckMessage.getType(), match.getDeck(), gunfighter0.getCards(),
                 gunfighter1.getCards(), gunfighter0.getCardPlayed(), gunfighter1.getCardPlayed());
 
@@ -298,8 +364,55 @@ public class MatchRestController {
     }
 
     @GetMapping("/avgTimePlayed/{username}")
-    public Double averageTimePlayedByUserName(@PathVariable("username") Integer username) {
-        return matchService.averageTimePlayedByUserName(username);
+        public Double averageTimePlayedByUserName(@PathVariable("username") Integer username) {
+            return matchService.averageTimePlayedByUserName(username);
     }
+    @GetMapping("/maxPlayerPlayed/{username}")
+    public ResponseEntity<Map<String, String>> maxPlayerPlayed(@PathVariable("username") Integer username) {
+        return new ResponseEntity<>(matchService.maxPlayerPlayedByUserName(username),HttpStatus.OK);
+    }
+    @GetMapping("/maxCardPlayed/{username}")
+    public ResponseEntity<Map<String, Integer>> maxCardPlayed(@PathVariable("username") Integer username) {
+        return new ResponseEntity<>(matchService.maxCardPlayedByUserName(username),HttpStatus.OK);
+    }
+    //RANKING
+    @GetMapping("/winners")
+    public ResponseEntity<Map<String, Integer>> maxWinnerPlayer() {
+        return new ResponseEntity<>(matchService.maxWinnerPlayer(),HttpStatus.OK);
+    }
+
+
+    //PUBLIC
+
+    @GetMapping("/winMatchesPublic/{username}")
+        public Integer findWinMatchPublic(@PathVariable("username") String username) {
+            return matchService.findWinMatchsPublic(username);
+    }
+
+    @GetMapping("/timePlayedPublic/{username}")
+        public Double timePlayedPublic(@PathVariable("username") String username) {
+            return matchService.timePlayedPublic(username);
+    }
+    
+    @GetMapping("/maxTimePlayedPublic/{username}")
+        public Double maxTimePlayedPublic(@PathVariable("username") String username) {
+            return matchService.maxTimePlayedPublic(username);
+    }
+
+    @GetMapping("/minTimePlayedPublic/{username}")
+        public Double minTimePlayedPublic(@PathVariable("username") String username) {
+            return matchService.minTimePlayedPublic(username);
+    }
+
+    @GetMapping("/avgTimePlayedPublic/{username}")
+        public Double averageTimePlayedPublic(@PathVariable("username") String username) {
+            return matchService.averageTimePlayedPublic(username);
+        }
+    
+    @GetMapping("/timePlayed")
+    public ResponseEntity<Map<String, Double>> timePlayedPlayer() {
+        return new ResponseEntity<>(matchService.maxTimePlayer(),HttpStatus.OK);
+    }
+
 
 }

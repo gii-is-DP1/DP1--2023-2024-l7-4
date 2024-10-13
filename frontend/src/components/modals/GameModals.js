@@ -24,7 +24,11 @@ const GameModals = ({
     setDeckOfCards,
     handleSendDeckMessage,
     showConfirmationDiscardToPrevent,
-    setShowConfirmationDiscardToPrevent
+    setShowConfirmationDiscardToPrevent,
+    showAbandonedModal,
+    advertiseTimeLimit,
+    handleCasualLeaves,
+    
 }) => {
 
     const handleCancelActionCard30 = () => {
@@ -35,6 +39,10 @@ const GameModals = ({
     const handleConfirmActionCard30 = () => {
         handleSendDeckMessage('PLAYEDCARD30', 30)
         setShowConfirmationDiscardToPrevent(false);
+    };
+
+    const handleLeave = () => {
+        window.location.href = "/";
     };
     return (
         <>
@@ -80,10 +88,31 @@ const GameModals = ({
             <Modal isOpen={showEndModal}>
                 <ModalHeader>THE GAME HAS ENDED</ModalHeader>
                 <ModalBody>
-                    {(playerNumber === 0 && statePlayer0.health > 0) || (playerNumber === 1 && statePlayer1.health > 0) ? 'YOU WON!!' : 'YOU LOST :('}
+                    {(playerNumber === 0 && statePlayer0.health > 0) || (playerNumber === 1 && statePlayer1.health > 0) ? 'YOU WON!!' :
+                        playerNumber !== 1 && playerNumber !== 0 ? (statePlayer0.health < 0 ? 'PLAYER 0 LOST' : 'PLAYER 1 LOST') : 'YOU LOST :('}
                 </ModalBody>
                 <ModalFooter>
                     <Button color="danger" onClick={handleGoToLobby}>Go to lobby</Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={showAbandonedModal}>
+                <ModalHeader>PLAYER LEFT</ModalHeader>
+                <ModalBody>
+                    The enemy has left the game, you won it!!!
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleLeave}>Go to lobby</Button>
+                </ModalFooter>
+            </Modal>
+            <Modal isOpen={advertiseTimeLimit > 0}>
+                <ModalHeader>{advertiseTimeLimit === 1 ? "TIME LIMIT CLOSE!!" : "TIME'S UP"}</ModalHeader>
+                <ModalBody>
+                    {advertiseTimeLimit === 1 ? "You have only 40 seconds to play " : "TIME'S UP"}               
+                </ModalBody>
+                <ModalFooter>
+                    <Button color="danger" onClick={handleCasualLeaves}>
+                    {advertiseTimeLimit === 1?"Accept":"Go to lobby"}
+                    </Button>
                 </ModalFooter>
             </Modal>
             <ChooseCardModal

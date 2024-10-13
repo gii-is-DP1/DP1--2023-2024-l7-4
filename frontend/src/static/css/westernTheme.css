@@ -29,6 +29,12 @@ body {
     text-shadow: 1px 1px #8b4513;
 }
 
+.hero-div h2 {
+    font-family: 'Almendra SC', serif;
+    font-size: 1.0rem;
+    text-shadow: 1px 1px #8b4513;
+}
+
 .button-container {
 
     background-color: #8b4513 !important;
@@ -58,9 +64,27 @@ body {
     text-decoration: none !important;
 }
 
+.button-container-secondary {
+    background-color: #856c21 !important;
+    border: none !important;
+    color: white !important;
+    padding: 10px 20px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 1rem !important;
+    margin: 10px 5px !important;
+    transition-duration: 0.2s !important;
+    cursor: pointer !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3) !important;
+    font-family: 'Almendra SC', serif !important;
+
+}
+
 .button-container-bad {
     
-    background-color: #484644 !important;
+    background-color: #7e1919 !important;
     border: none !important;
     color: white !important;
     padding: 10px 20px !important;
@@ -95,13 +119,19 @@ body {
     margin-top: 15px;
     display: block;
 }
+.western-message2 {
+    font-family: 'Almendra SC', serif;
+    color: #ffffff;
+    font-size: 1.2rem;
+    text-shadow: 1px 1px 2px #000;
+    margin-top: 15px;
+    display: block;
+}
 
 .table-western {
     .table-western {
         background-color: transparent;
-        /* Asegúrate de que el fondo sea transparente */
         border-collapse: collapse;
-        /* Elimina los espacios entre celdas si es necesario */
     }
 
     margin-top: 20px;
@@ -254,6 +284,14 @@ body {
     font-family: 'Almendra SC', serif;
 }
 
+.western-form-container2 label {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    color: #4d2e0a;
+    text-shadow: 1px 1px 2px #000;
+    font-family: 'Almendra SC', serif;
+}
+
 .western-form-container2 input {
     font-family: 'Almendra SC', serif;
     font-size: 1rem;
@@ -266,7 +304,26 @@ body {
     background-color: #fdfdfd;
 }
 
+.western-form-container2 textarea {
+    font-family: 'Almendra SC', serif;
+    font-size: 1rem;
+    padding: 8px;
+    border: 2px solid #8b4513;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 15px;
+    background-color: #fdfdfd;
+}
+
 .western-form-container2 .options-row {
+    font-family: 'Almendra SC', cursive;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.western-form-container2 select {
     font-family: 'Almendra SC', cursive;
     display: flex;
     justify-content: space-between;
@@ -305,5 +362,9 @@ thead.entrada-tabla {
     font-family: 'Almendra SC', cursive;
     font-size: medium;
     margin-top: 10px;
+}
+
+.required-asterisk {
+    color: red;
 }
 

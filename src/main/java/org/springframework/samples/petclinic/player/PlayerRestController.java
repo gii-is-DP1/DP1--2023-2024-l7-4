@@ -2,6 +2,8 @@ package org.springframework.samples.petclinic.player;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import java.util.Set;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,14 +72,6 @@ public class PlayerRestController {
 		return new ResponseEntity<>(friends, HttpStatus.OK);
 	}
 
-	// @GetMapping("/{username}/friends/online")
-	// public ResponseEntity<Set<Player>> getFriendsOnline(@PathVariable("username")
-	// String username) {
-	// Set<Player> friends =
-	// requestService.getFriendsOnline(playerService.findByUsername(username).getId());
-	// return new ResponseEntity<>(friends, HttpStatus.OK);
-	// }
-
 	@PostMapping()
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Player> create(@RequestBody @Valid Player player) throws URISyntaxException {
@@ -104,4 +98,41 @@ public class PlayerRestController {
 		playerService.deletePlayer(username);
 		return new ResponseEntity<>(new MessageResponse("Player deleted!"), HttpStatus.OK);
 	}
+
+	@GetMapping("/public")
+	public ResponseEntity<List<PlayerListDTO>> listAllPlayers() {
+    	List<Player> players = playerService.findAll();
+    	List<PlayerListDTO> playerDTOs = players.stream().map(player -> {
+        	PlayerListDTO dto = new PlayerListDTO();
+			dto.setUsername(player.getUsername());
+        	dto.setNickname(player.getNickname());
+        	dto.setAvatar(player.getAvatar());
+        	return dto;
+    	}).collect(Collectors.toList());
+    
+    	return new ResponseEntity<>(playerDTOs, HttpStatus.OK);
+	}
+
+	@GetMapping(value = "/public/{username}")
+	public ResponseEntity<PlayerDetailDTO> getPlayerDetails(@PathVariable("username") String username) {
+    	Player player = playerService.findByUsername(username);
+
+		if (player == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+
+    	PlayerDetailDTO dto = new PlayerDetailDTO();
+		dto.setNickname(player.getNickname());
+    	dto.setAvatar(player.getAvatar());
+    	dto.setBiography(player.getBiography());
+    	dto.setLocation(player.getLocation());
+    	dto.setBirthdate(player.getBirthdate());
+    	dto.setFavoriteGenres(player.getFavoriteGenres());
+    	dto.setFavoritePlatforms(player.getFavoritePlatforms());
+    	dto.setFavoriteSagas(player.getFavoriteSagas());
+		dto.setProfileType(player.getProfileType());
+
+    	return new ResponseEntity<>(dto, HttpStatus.OK);
+	}
+
 }

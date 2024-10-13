@@ -37,6 +37,9 @@ function AppNavbar() {
                     <NavItem>
                         <NavLink className='western-navlink' tag={Link} to="/allMatches">Matches</NavLink>
                     </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/achievementsEdit">Achievements</NavLink>
+                    </NavItem>
                 </>
             )
         }
@@ -48,7 +51,9 @@ function AppNavbar() {
                     </NavItem>
                     <NavItem>
                         <NavLink className='western-navlink' tag={Link} to="/statistics">Statistics</NavLink>
-
+                    </NavItem>
+                    <NavItem>
+                        <NavLink className='western-navlink' tag={Link} to="/players">Players</NavLink>
                     </NavItem>
                     <NavItem>
                         <NavLink className='western-navlink' tag={Link} to="/myFriends">Friends</NavLink>

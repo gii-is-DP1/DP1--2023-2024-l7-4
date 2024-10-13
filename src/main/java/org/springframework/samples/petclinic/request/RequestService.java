@@ -80,7 +80,7 @@ public class RequestService {
 
                 if (r.getPlayerOne().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)) {
                     friends.add(r.getPlayerTwo());
-                } else if (r.getPlayerTwo().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED)) {
+                } else if (r.getPlayerTwo().getId().equals(id) && r.getStatus().equals(RequestState.ACCEPTED) && r.getPlayerOne().getOnline() == true) {
                     friends.add(r.getPlayerOne());
                 }
             }

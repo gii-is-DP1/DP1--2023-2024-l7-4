@@ -116,7 +116,6 @@ export default function WaitingRoom() {
 
       const intervalId = setInterval(updateFriendsOnline, 5000); // Actualiza cada 5 segundos
 
-      // Limpia el intervalo cuando el componente se desmonte
       return () => clearInterval(intervalId);
     }
   }, [playerId, jwt]);
@@ -124,9 +123,8 @@ export default function WaitingRoom() {
   useEffect(() => {
     if (jwt) {
       setJoinedPlayers([]);
-      const intervalId = setInterval(updateJoinedPlayers, 10000); // Actualiza cada 5 segundos
+      const intervalId = setInterval(updateJoinedPlayers, 10000); 
 
-      // Limpia el intervalo cuando el componente se desmonte
       return () => clearInterval(intervalId);
     }
   }, [playerId, jwt]);
@@ -141,7 +139,6 @@ export default function WaitingRoom() {
 
   const handleFriendSelect = (event) => {
     setSelectedFriend(event.target.value);
-    // Aquí puedes agregar la lógica para enviar la invitación al amigo seleccionado
   };
 
   const handleFriendSelect2 = (event) => {
@@ -153,7 +150,7 @@ export default function WaitingRoom() {
     const socket = new SockJS("http://localhost:8080/ws");
     const client = Stomp.over(socket);
 
-    handleUpdateMatch(); //Fetch initial match data
+    handleUpdateMatch();
 
     client.connect({}, () => {
       client.subscribe(`/topic/match/${id}/messages`, (message) => {
@@ -292,18 +289,15 @@ export default function WaitingRoom() {
     }
   };
 
-  // Mostrar el modal de confirmación al intentar salir de la página
   const handleConfirmLeave = () => {
     setShowConfirmationModal(true);
   };
 
-  // Redirigir a Lobby cuando se confirme la salida
   const handleConfirmGoToLobby = () => {
     setShowConfirmationModal(false);
     handleGoToLobby();
   };
 
-  // Cancelar la salida y cerrar el modal
   const handleCancelLeave = () => {
     setShowConfirmationModal(false);
   };

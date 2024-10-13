@@ -3,11 +3,12 @@ import "../static/css/westernTheme.css";
 import tokenService from "../services/token.service";
 import { Link } from "react-router-dom";
 import useFetchState from "../util/useFetchState";
-import jwtDecode from "jwt-decode";
-import { Table } from "reactstrap";
-import SockJS from "sockjs-client";
-import Stomp from "stompjs";
-import ImageButton from "../components/buttons/imageButton";
+import jwtDecode from 'jwt-decode';
+import { Table } from 'reactstrap';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+import ImageButton from '../components/buttons/imageButton';
+
 
 const jwt = tokenService.getLocalAccessToken();
 
@@ -18,9 +19,17 @@ export default function Home() {
   const [message, setMessage] = useState(null);
   const [stompClient, setStompClient] = useState(null);
   const [visible, setVisible] = useState(false);
-  const [matches, setMatches] = useFetchState(
+  const [openMatches, setOpenMatches] = useFetchState(
     [],
     `/api/v1/matches?open=true`,
+    jwt,
+    setMessage,
+    setVisible
+  );
+
+  const [inProgressMatches, setInProgressMatches] = useFetchState(
+    [],
+    `/api/v1/matches?inProgress=true`,
     jwt,
     setMessage,
     setVisible
@@ -34,8 +43,6 @@ export default function Home() {
     setVisible
   );
 
-  console.log(friendsOnline);
-
   useEffect(() => {
     setFriendsOnline([]);
     const intervalId = setInterval(updateFriendsOnline, 5000); // Actualiza cada 5 segundos
@@ -45,39 +52,54 @@ export default function Home() {
   }, [playerId, jwt]);
 
   async function updateFriendsOnline() {
-    try {
-      const response = await fetch(
-        `/api/v1/players/${playerId}/friends/online`,
-        {
+    if (jwt) {
+      try {
+        const response = await fetch(
+          `/api/v1/players/${playerId}/friends/online`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const newFriendsOnline = await response.json();
+        console.log("newFriendsOnline", newFriendsOnline);
+        setFriendsOnline(newFriendsOnline);
+      } catch (error) {
+        console.error("Error fetching new friends online:", error);
+      }
+    }
+  }
+
+  async function handleUpdateMatches() {
+    if (jwt) {
+      try {
+        let response = await fetch(`/api/v1/matches?open=true`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
             Accept: "application/json",
             "Content-Type": "application/json",
           },
-        }
-      );
-      const newFriendsOnline = await response.json();
-      setFriendsOnline(newFriendsOnline);
-    } catch (error) {
-      console.error("Error fetching new friends online:", error);
-    }
-  }
-
-  async function handleUpdateMatches() {
-    try {
-      const response = await fetch(`/api/v1/matches?open=true`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      const newMatches = await response.json();
-      setMatches(newMatches);
-    } catch (error) {
-      console.error("Error fetching matches:", error);
+        });
+        let newMatches = await response.json();
+        setOpenMatches(newMatches);
+        response = await fetch(`/api/v1/matches?inProgress=true`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        });
+        newMatches = await response.json();
+        setInProgressMatches(newMatches);
+      } catch (error) {
+        console.error("Error fetching matches:", error);
+      }
     }
   }
 
@@ -92,9 +114,9 @@ export default function Home() {
           if (body.type === "CREATED" || "DELETE" || "START")
             handleUpdateMatches();
         });
-
-        setStompClient(client);
       });
+
+      setStompClient(client);
 
       return () => {
         if (client && client.connected) {
@@ -102,7 +124,7 @@ export default function Home() {
         }
       };
     }
-  }, []);
+  }, [jwt]);
 
   async function handleJoinGame(id) {
     stompClient.send(
@@ -126,7 +148,7 @@ export default function Home() {
       </div>
     );
   } else {
-    const matchesList = matches.map((m) => {
+    const matchesList = openMatches.map((m) => {
       return (
         <tr key={m.id}>
           <td className="table-western td">{m.name}</td>
@@ -161,8 +183,24 @@ export default function Home() {
           <div className="hero-div">
             Online Friends
             <div>
-              {friendsOnline.map((f) => (
-                <div key={f.id}>{f.nickname}</div>
+              {jwt && Array.isArray(friendsOnline) && friendsOnline.map((f) => (
+                <div key={f.id}>{f.nickname}
+                  {inProgressMatches.map((match) => {
+                    const allFriendsInMatch = match.joinedPlayers.includes(f.username) && match.joinedPlayers.every(player =>
+                      friendsOnline.some(friend => friend.username === player)
+                    );
+
+                    if (allFriendsInMatch) {
+                      return (
+                        <Link className='button-container' key={match.id} to={`/game/${match.id}`}>
+                          Spectate game
+                        </Link>
+                      );
+                    }
+
+                    return null;
+                  })}
+                </div>
               ))}
             </div>
           </div>
@@ -183,8 +221,8 @@ export default function Home() {
               <div style={{ textAlign: "center" }}>
                 <ImageButton
                   to="/match/create"
-                  imgSrc={`${process.env.PUBLIC_URL}/scope.png`} // Cambia esto a la ruta de tu imagen
-                  style={{ width: "50px", height: "50px" }} // Ajusta el tamaño según tus necesidades
+                  imgSrc={`${process.env.PUBLIC_URL}/scope.png`}
+                  style={{ width: "50px", height: "50px" }}
                 />
               </div>
             </div>
