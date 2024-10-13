@@ -1,5 +1,7 @@
 package org.springframework.samples.petclinic.gameRequests;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -101,61 +103,65 @@ public class GameRequestRestControllerTests {
                 .andExpect(jsonPath("$.length()").value(2));
     }
 
-    // @Test
-    // @WithMockUser(username = "admin")
-    // void testCreate() throws Exception {
-    // GameRequestDTO gameRequestDTO = new GameRequestDTO();
-    // gameRequestDTO.setPlayerOne("1");
-    // gameRequestDTO.setPlayerTwo("2");
-    // gameRequestDTO.setMatchId("1");
-    // gameRequestDTO.setType("player");
+    @Test
+    @WithMockUser(username = "admin")
+    void testCreate() throws Exception {
+        GameRequestDTO gameRequestDTO = new GameRequestDTO();
+        gameRequestDTO.setPlayerOne("1");
+        gameRequestDTO.setPlayerTwo("2");
+        gameRequestDTO.setMatchId("1");
+        gameRequestDTO.setType("player");
+        gameRequestDTO.setStatus("PENDING");
 
-    // // Crear objetos Player y Match con IDs
-    // Player playerOne = new Player();
-    // playerOne.setId(1);
+        // Crear objetos Player y Match con IDs
+        Player playerOne = new Player();
+        playerOne.setId(1);
 
-    // Player playerTwo = new Player();
-    // playerTwo.setId(2);
+        Player playerTwo = new Player();
+        playerTwo.setId(2);
 
-    // Match match = new Match();
-    // match.setId(1);
+        Match match = new Match();
+        match.setId(1);
 
-    // // Configurar los mocks para devolver estos objetos
-    // when(playerService.findPlayer(1)).thenReturn(playerOne);
-    // when(playerService.findPlayer(2)).thenReturn(playerTwo);
-    // when(matchService.findMatchById(1)).thenReturn(match);
+        // Configurar los mocks para devolver estos objetos
+        when(playerService.findPlayer(1)).thenReturn(playerOne);
+        when(playerService.findPlayer(2)).thenReturn(playerTwo);
+        when(matchService.findMatchById(1)).thenReturn(match);
 
-    // // Asigna el ID al GameRequest simulado
-    // gameRequest1.setId(1);
-    // when(gameRequestService.saveRequest(any(GameRequest.class))).thenReturn(gameRequest1);
+        // Asigna el ID al GameRequest simulado
+        gameRequest1.setId(1);
+        when(gameRequestService.saveRequest(any(GameRequest.class))).thenReturn(gameRequest1);
 
-    // // Realiza la petición POST y verifica el estado y el ID
-    // mockMvc.perform(post(BASE_URL)
-    // .contentType(MediaType.APPLICATION_JSON)
-    // .content(new ObjectMapper().writeValueAsString(gameRequestDTO))
-    // .with(csrf()))
-    // .andExpect(status().isCreated()) // Verifica que el estado es 201 Created
-    // .andExpect(jsonPath("$.id").value(1)); // Verifica que el ID es 1 en la
-    // respuesta
-    // }
+        // Realiza la petición POST y verifica el estado y el ID
+        mockMvc.perform(post(BASE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(gameRequestDTO))
+                .with(csrf()))
+                .andExpect(status().isCreated()) // Verifica que el estado es 201 Created
+                .andExpect(jsonPath("$.id").value(1)); // Verifica que el ID es 1 en la
+    }
 
-    // @Test
-    // @WithMockUser(username = "admin")
-    // void testUpdate() throws Exception {
-    // GameRequest updatedGameRequest = new GameRequest();
-    // updatedGameRequest.setId(1);
-    // updatedGameRequest.setStatus(GameRequestStatus.ACCEPTED);
+    @Test
+    @WithMockUser(username = "admin")
+    void testUpdate() throws Exception {
+        GameRequest updatedGameRequest = new GameRequest();
+        updatedGameRequest.setId(1);
+        updatedGameRequest.setStatus(GameRequestStatus.ACCEPTED);
+        updatedGameRequest.setPlayerOne(new Player());
+        updatedGameRequest.setPlayerTwo(new Player());
+        updatedGameRequest.setMatchId(new Match().getId());
+        updatedGameRequest.setType(GameRequestType.PLAYER);
 
-    // when(gameRequestService.findById(1)).thenReturn(gameRequest1);
-    // when(gameRequestService.saveRequest(any(GameRequest.class))).thenReturn(updatedGameRequest);
+        when(gameRequestService.findById(1)).thenReturn(gameRequest1);
+        when(gameRequestService.acceptRequest(any(GameRequest.class), eq(1))).thenReturn(updatedGameRequest);
 
-    // mockMvc.perform(put(BASE_URL + "/1")
-    // .contentType(MediaType.APPLICATION_JSON)
-    // .content(new ObjectMapper().writeValueAsString(updatedGameRequest))
-    // .with(csrf()))
-    // .andExpect(status().isOk())
-    // .andExpect(jsonPath("$.status").value("ACCEPTED"));
-    // }
+        mockMvc.perform(put(BASE_URL + "/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(new ObjectMapper().writeValueAsString(updatedGameRequest))
+                .with(csrf()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value("ACCEPTED"));
+    }
 
     @Test
     @WithMockUser(username = "admin")

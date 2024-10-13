@@ -37,7 +37,8 @@ public class GameRequestService {
         for (GameRequest request : requests) {
             if (request.getPlayerOne().getId() == gameRequest.getPlayerOne().getId()
                     && request.getPlayerTwo().getId() == gameRequest.getPlayerTwo().getId()
-                    && request.getStatus() == GameRequestStatus.PENDING) {
+                    && request.getStatus() == GameRequestStatus.PENDING
+                    && request.getMatchId() == gameRequest.getMatchId()) {
                 throw new IllegalStateException("Request already exists");
             }
         }

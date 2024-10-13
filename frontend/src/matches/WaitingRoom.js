@@ -25,7 +25,10 @@ export default function WaitingRoom() {
   const username = jwtDecode(jwt).sub;
   const user = tokenService.getUser();
   const [showDropdown, setShowDropdown] = useState(null);
+  const [showDropdown2, setShowDropdown2] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState(null);
+  const [selectedFriend2, setSelectedFriend2] = useState(null);
+
   const playerId = user ? user.id : null;
 
   const [message, setMessage] = useState(null);
@@ -56,7 +59,8 @@ export default function WaitingRoom() {
         setWaitingMessage(
           "Both players have joined, the host can start the game"
         );
-        setShowDropdown(null);
+        // setShowDropdown(null);
+        // setShowDropdown2(null);
       }
     }
   }, [match, joinedPlayers]);
@@ -129,8 +133,17 @@ export default function WaitingRoom() {
     setShowDropdown(index);
   };
 
+  const handleInviteClick2 = () => {
+    setShowDropdown2(true);
+  };
+
   const handleFriendSelect = (event) => {
     setSelectedFriend(event.target.value);
+  };
+
+  const handleFriendSelect2 = (event) => {
+    setSelectedFriend2(event.target.value);
+    // Aquí puedes agregar la lógica para enviar la invitación al amigo seleccionado
   };
 
   useEffect(() => {
@@ -314,6 +327,32 @@ export default function WaitingRoom() {
     }
   }
 
+  async function handleSendGameRequest2(friend) {
+    try {
+      const id = getIdFromUrl(2);
+
+      const gamerequest = {
+        status: "PENDING",
+        matchId: id,
+        playerOne: String(playerId),
+        playerTwo: friend,
+        type: "spectator",
+      };
+
+      const response = await axios.post(`/api/v1/gameRequests`, gamerequest, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${jwt}`,
+        },
+      });
+      if (response.status !== 201) {
+        throw new Error("Failed to invite friend to match");
+      }
+    } catch (error) {
+      console.error("Error inviting friend:", error);
+    }
+  }
+
   return (
     <div className="admin-page-container">
       <Modal isOpen={showConfirmationModal}>
@@ -384,7 +423,7 @@ export default function WaitingRoom() {
                                   <option value="player">Player</option>
                                   <option value="spectator">Spectator</option>
                                 </select>
-                                {console.log(selectedMode)}
+
                                 {selectedMode && ( // Mostrar el botón solo si se ha seleccionado el modo
                                   <button
                                     onClick={() => {
@@ -405,6 +444,37 @@ export default function WaitingRoom() {
                       </td>
                     </tr>
                   ))}
+                {joinedPlayers.length === 2 &&
+                  username === joinedPlayers[0] && (
+                    <Button onClick={() => handleInviteClick2()}>
+                      Invite Spectator
+                    </Button>
+                  )}
+                {showDropdown2 && (
+                  <select onChange={handleFriendSelect2}>
+                    <option value="">Select a friend</option>
+                    {friendsOnline.map(
+                      (friend, i) =>
+                        friend.username !== joinedPlayers[0] &&
+                        friend.username !== joinedPlayers[1] && (
+                          <option key={friend.id} value={friend.id}>
+                            {friend.username}
+                          </option>
+                        )
+                    )}
+                  </select>
+                )}
+                {selectedFriend2 && (
+                  <Button
+                    onClick={() => {
+                      handleSendGameRequest2(selectedFriend2);
+                      setShowDropdown2(false);
+                      setSelectedFriend2(null);
+                    }}
+                  >
+                    Send
+                  </Button>
+                )}
               </tbody>
             </Table>
           </div>

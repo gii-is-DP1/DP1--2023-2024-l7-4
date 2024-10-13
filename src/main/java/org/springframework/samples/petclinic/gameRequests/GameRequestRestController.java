@@ -65,6 +65,16 @@ public class GameRequestRestController {
         if (gameRequestDTO.getPlayerOne() == null || gameRequestDTO.getPlayerTwo() == null) {
             return ResponseEntity.badRequest().body(null);
         }
+        List<GameRequest> requests = gameRequestService.findAll();
+
+        for (GameRequest r : requests) {
+            if (r.getMatchId() == Integer.parseInt(gameRequestDTO.getMatchId())
+                    && r.getPlayerOne().getId().equals(Integer.parseInt(gameRequestDTO.getPlayerOne()))
+                    && r.getPlayerTwo().getId().equals(Integer.parseInt(gameRequestDTO.getPlayerTwo()))
+                    && r.getType().toString() == gameRequestDTO.getType()) {
+                return ResponseEntity.badRequest().body(null);
+            }
+        }
 
         Player playerOne = playerService.findPlayer(Integer.parseInt(gameRequestDTO.getPlayerOne()));
         Player playerTwo = playerService.findPlayer(Integer.parseInt(gameRequestDTO.getPlayerTwo()));

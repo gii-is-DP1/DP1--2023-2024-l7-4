@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.samples.petclinic.gameRequests.GameRequest;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -107,27 +108,51 @@ class RequestRestControllerTests {
     @Test
     @WithMockUser("admin")
     void testCreateRequest() throws Exception {
-        Request req = new Request();
-        req.setStatus(RequestState.PENDING);
-        req.setPlayerOne(new Player());
-        req.setPlayerTwo(new Player());
 
-        mockMvc.perform(post(BASE_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(req))).andExpect(status().isCreated());
+        RequestDTO requestDTO = new RequestDTO();
+        requestDTO.setPlayerOne("1");
+        requestDTO.setPlayerTwo("2");
+        requestDTO.setStatus("PENDING");
+        
+
+        Player playerOne = new Player();
+        playerOne.setId(1);
+
+        Player playerTwo = new Player();
+        playerTwo.setId(2);
+
+        when(playerService.findByUsername(requestDTO.getPlayerOne())).thenReturn(playerOne);
+        when(playerService.findByUsername(requestDTO.getPlayerTwo())).thenReturn(playerTwo);
+
+        request.setId(1);
+
+        when(requestService.saveRequest(any(Request.class))).thenReturn(request);
+
+       mockMvc.perform(post(BASE_URL)
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(new ObjectMapper().writeValueAsString(requestDTO))
+        .with(csrf()))
+        .andExpect(status().isCreated()) 
+        .andExpect(jsonPath("$.id").value(1));
     }
 
 
     @Test
     @WithMockUser("admin")
-    void should_Accept_Request() throws Exception {
-        when(requestService.findRequestById(1)).thenReturn(request);
-        when(requestService.saveRequest(any(Request.class))).thenReturn(request);
+    void should_Update_Request() throws Exception {
 
-        mockMvc.perform(put(BASE_URL + "1")
-                .with(csrf())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated());
+        Request updatedRequest = new Request();
+        updatedRequest.setId(1);
+        updatedRequest.setStatus(RequestState.ACCEPTED);
+
+        when(requestService.findRequestById(1)).thenReturn(request);
+        when(requestService.saveRequest(any(Request.class))).thenReturn(updatedRequest);
+
+    mockMvc.perform(put(BASE_URL + "/1")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(new ObjectMapper().writeValueAsString(updatedRequest))
+        .with(csrf()))
+        .andExpect(status().isOk());
     }
 
     @Test
