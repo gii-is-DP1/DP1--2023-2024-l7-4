@@ -68,10 +68,10 @@ class RequestRestControllerTests {
         request.setStatus(RequestState.PENDING);
 
         request2 = new Request();
-        request.setId(2);
-        request.setPlayerOne(new Player());
-        request.setPlayerTwo(new Player());
-        request.setStatus(RequestState.PENDING);
+        request2.setId(2);
+        request2.setPlayerOne(new Player());
+        request2.setPlayerTwo(new Player());
+        request2.setStatus(RequestState.PENDING);
     }
 
     @Test
