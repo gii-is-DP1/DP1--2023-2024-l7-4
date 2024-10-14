@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +24,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerRepository;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
-// @DataJpaTest(includeFilters =
-// {@ComponentScan.Filter(Service.class),@ComponentScan.Filter(PasswordEncoder.class)})
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureTestDatabase
 public class RequestServiceTests {

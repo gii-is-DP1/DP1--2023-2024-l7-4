@@ -22,13 +22,14 @@ import org.springframework.samples.petclinic.match.MatchService;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.user.User;
 import org.springframework.samples.petclinic.user.UserRepository;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
 @AutoConfigureTestDatabase
-class AchievementServiceTests {
+public class AchievementServiceTests {
 
     @Mock
     private AchievementRepository achievementRepository;
