@@ -5,7 +5,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.samples.petclinic.model.BaseEntity;
 import org.springframework.samples.petclinic.player.Player;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.EnumType;
 
 import jakarta.persistence.Column;

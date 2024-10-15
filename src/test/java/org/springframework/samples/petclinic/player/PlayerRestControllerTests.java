@@ -38,6 +38,7 @@ class PlayerRestControllerTests {
     private static final int TEST_PLAYER_ID = 1;
     private static final String BASE_URL = "/api/v1/players";
 
+    @SuppressWarnings("unused")
     @Autowired
     private PlayerRestController playerController;
 
@@ -152,6 +153,7 @@ class PlayerRestControllerTests {
                 .andExpect(jsonPath("$.surname").value("UpdatedSurname"));
     }
 
+    @SuppressWarnings("unchecked")
     @Test
     @WithMockUser("admin")
     void shouldDeletePlayer() throws Exception {

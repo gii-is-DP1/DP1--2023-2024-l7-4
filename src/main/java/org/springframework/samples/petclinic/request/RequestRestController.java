@@ -3,8 +3,6 @@ package org.springframework.samples.petclinic.request;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.samples.petclinic.gameRequests.GameRequest;
-import org.springframework.samples.petclinic.gameRequests.GameRequestStatus;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.samples.petclinic.util.RestPreconditions;

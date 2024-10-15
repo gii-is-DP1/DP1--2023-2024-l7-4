@@ -51,6 +51,7 @@ public class AuthController {
 
 	}
 
+	@SuppressWarnings("rawtypes")
 	@PostMapping("/signin")
 	public ResponseEntity authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 		try {

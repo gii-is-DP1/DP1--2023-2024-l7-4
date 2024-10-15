@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.samples.petclinic.gameRequests.GameRequest;
 import org.springframework.samples.petclinic.player.Player;
 import org.springframework.samples.petclinic.player.PlayerService;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -42,8 +41,6 @@ class RequestRestControllerTests {
     @MockBean
     private PlayerService playerService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
 
     private Request request;
     private Request request2;

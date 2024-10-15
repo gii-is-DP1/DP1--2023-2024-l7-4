@@ -2,30 +2,20 @@ package org.springframework.samples.petclinic.chatMessage;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataAccessException;
-import org.springframework.samples.petclinic.exceptions.ResourceNotFoundException;
-import org.springframework.samples.petclinic.gunfighter.Gunfighter;
 import org.springframework.samples.petclinic.match.Match;
 import org.springframework.samples.petclinic.match.chat.ChatMessage;
 import org.springframework.samples.petclinic.match.chat.ChatMessageRepository;
 import org.springframework.samples.petclinic.match.chat.ChatMessageService;
-import org.springframework.samples.petclinic.player.Player;
-import org.springframework.samples.petclinic.user.Authorities;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
